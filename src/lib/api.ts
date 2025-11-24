@@ -1,4 +1,5 @@
 import { supabase } from "./supabaseClient";
+import { toast } from "sonner";
 import {
   UserRole,
   Query,
@@ -8,7 +9,6 @@ import {
   MediaList,
   AgencyFounderProfile,
   PitchComment,
-  BillingAccount,
   SubscriptionStatus,
 } from "@/types";
 import { normalizeCategoryId, sanitizeCategoryTitle } from "./categories";
@@ -628,6 +628,23 @@ export const createPitch = async (pitch: {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
+
+  // Check usage limits
+  const billing = await getBillingAccount();
+  if (
+    billing &&
+    billing.remainingPitches <= 0 &&
+    billing.maxPitches < 9999999
+  ) {
+    toast.error("Pitch limit reached", {
+      description: "You have reached your monthly pitch limit.",
+      action: {
+        label: "Upgrade",
+        onClick: () => (window.location.href = "/founder/settings"),
+      },
+    });
+    throw new Error("Pitch limit reached");
+  }
 
   const { data, error } = await supabase
     .from("pitches")

@@ -17,13 +17,12 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, LogOut, CreditCard, Bell } from "lucide-react";
 import { useSubscriptionStatus } from "@/hooks/use-subscription";
 import { Progress } from "@/components/ui/progress";
+import { ProfileForm, ProfileFormData } from "@/components/profile/ProfileForm";
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -38,13 +37,6 @@ const Settings = () => {
 
   const { data: subscription, isLoading: isLoadingSubscription } =
     useSubscriptionStatus();
-
-  const { data: allCategories = [], isLoading: isLoadingCategories } = useQuery(
-    {
-      queryKey: ["categories"],
-      queryFn: getCategories,
-    }
-  );
 
   const updateProfileMutation = useMutation({
     mutationFn: updateProfile,
@@ -82,15 +74,21 @@ const Settings = () => {
     }
   };
 
-  const toggleCategory = (categoryId: string) => {
+  const handleSaveProfile = async (formData: ProfileFormData) => {
     if (!profile) return;
 
-    const currentCategories = profile.categories || [];
-    const newCategories = currentCategories.includes(categoryId)
-      ? currentCategories.filter((id) => id !== categoryId)
-      : [...currentCategories, categoryId];
-
-    updateProfileMutation.mutate({ categories: newCategories });
+    updateProfileMutation.mutate({
+      press: formData.press,
+      company: formData.company,
+      website: formData.website,
+      linkedin: formData.linkedin,
+      x_handle: formData.xHandle,
+      categories: formData.categories,
+      meta: {
+        ...profile.meta,
+        publisherProfile: formData.publisherProfile,
+      },
+    });
   };
 
   const toggleAlerts = (enabled: boolean) => {
@@ -104,7 +102,7 @@ const Settings = () => {
     });
   };
 
-  if (isLoadingProfile || isLoadingCategories) {
+  if (isLoadingProfile) {
     return (
       <div className="p-8 flex justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -141,66 +139,24 @@ const Settings = () => {
         </p>
       </div>
 
-      {/* Notifications Section */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Bell className="h-5 w-5 text-primary" />
-            <CardTitle>Notifications</CardTitle>
-          </div>
-          <CardDescription>
-            Configure how you want to be notified about new queries.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center justify-between space-x-2">
-            <Label htmlFor="email-alerts" className="flex flex-col space-y-1">
-              <span>Email Alerts</span>
-              <span className="font-normal text-sm text-muted-foreground">
-                Receive emails when new queries match your selected categories.
-              </span>
-            </Label>
-            <Switch
-              id="email-alerts"
-              checked={emailAlertsEnabled}
-              onCheckedChange={toggleAlerts}
-              disabled={updateProfileMutation.isPending}
-            />
-          </div>
-
-          <Separator />
-
-          <div className="space-y-4">
-            <Label>Alert Categories</Label>
-            <p className="text-sm text-muted-foreground mb-4">
-              Select the categories you want to receive alerts for.
-            </p>
-
-            <div className="flex flex-wrap gap-2">
-              {allCategories.map((category) => {
-                const isSelected = profile?.categories?.includes(category.id);
-                return (
-                  <Badge
-                    key={category.id}
-                    variant={isSelected ? "default" : "outline"}
-                    className={`cursor-pointer hover:bg-primary/90 px-3 py-1 text-sm transition-all ${
-                      !isSelected && "hover:bg-muted hover:text-foreground"
-                    }`}
-                    onClick={() => toggleCategory(category.id)}
-                  >
-                    {category.title}
-                  </Badge>
-                );
-              })}
-            </div>
-            {allCategories.length === 0 && (
-              <p className="text-sm text-muted-foreground italic">
-                No categories available.
-              </p>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+      {/* Profile Section */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">Profile Settings</h2>
+        <ProfileForm
+          role={profile?.role || "founder"}
+          initialData={{
+            press: profile?.press || "",
+            company: profile?.company || "",
+            website: profile?.website || "",
+            linkedin: profile?.linkedin || "",
+            xHandle: profile?.x_handle || "",
+            publisherProfile: profile?.meta?.publisherProfile || "",
+            categories: profile?.categories || [],
+          }}
+          onSave={handleSaveProfile}
+          isSaving={updateProfileMutation.isPending}
+        />
+      </div>
 
       {/* Billing Section */}
       <Card>
@@ -263,6 +219,35 @@ const Settings = () => {
               </div>
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      {/* Notifications Section */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Bell className="h-5 w-5 text-primary" />
+            <CardTitle>Notifications</CardTitle>
+          </div>
+          <CardDescription>
+            Configure how you want to be notified about new queries.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="flex items-center justify-between space-x-2">
+            <Label htmlFor="email-alerts" className="flex flex-col space-y-1">
+              <span>Email Alerts</span>
+              <span className="font-normal text-sm text-muted-foreground">
+                Receive emails when new queries match your selected categories.
+              </span>
+            </Label>
+            <Switch
+              id="email-alerts"
+              checked={emailAlertsEnabled}
+              onCheckedChange={toggleAlerts}
+              disabled={updateProfileMutation.isPending}
+            />
+          </div>
         </CardContent>
       </Card>
 

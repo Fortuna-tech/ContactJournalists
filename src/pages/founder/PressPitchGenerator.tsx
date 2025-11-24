@@ -8,9 +8,12 @@ import { Loader2, Copy, Wand2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabaseClient";
 import { getProfile } from "@/lib/api";
+import { useSubscriptionStatus } from "@/hooks/use-subscription";
 
 const PressPitchGenerator = () => {
   const [isGenerating, setIsGenerating] = useState(false);
+  const { data: subscription, isLoading: isLoadingSubscription } =
+    useSubscriptionStatus();
   const [formData, setFormData] = useState({
     beat: "",
     businessInfo: "",
@@ -54,6 +57,20 @@ const PressPitchGenerator = () => {
       toast.error(
         "Please fill in the required fields (Beat and Business Info)"
       );
+      return;
+    }
+
+    if (
+      subscription?.remainingPitchGen <= 0 &&
+      subscription?.maxPitchGen < 9999999 &&
+      !isLoadingSubscription
+    ) {
+      toast.error("You have reached your monthly pitch generation limit.", {
+        action: {
+          label: "Upgrade",
+          onClick: () => (window.location.href = "/founder/settings"),
+        },
+      });
       return;
     }
 
