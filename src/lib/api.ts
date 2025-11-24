@@ -143,12 +143,9 @@ export const getBillingAccount = async (): Promise<BillingAccount | null> => {
     .from("billing_accounts")
     .select("*")
     .eq("profile_id", user.id)
-    .single();
+    .maybeSingle();
 
   if (error) {
-    if (error.code === "PGRST116") {
-      return null;
-    }
     throw error;
   }
 
