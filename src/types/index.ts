@@ -46,6 +46,17 @@ export interface BillingAccount {
   cancelAtPeriodEnd?: boolean;
 }
 
+export interface SubscriptionStatus {
+  plan: string;
+  status: string;
+  maxPitches: number;
+  remainingPitches: number;
+  maxPitchGen: number;
+  remainingPitchGen: number;
+  maxUsers: number;
+  remainingUsers: number;
+}
+
 export interface Category {
   id: string;
   title: string;

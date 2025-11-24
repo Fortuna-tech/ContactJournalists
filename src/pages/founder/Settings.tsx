@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
-import { getProfile, getCategories, updateProfile } from "@/lib/api";
+import {
+  getProfile,
+  getCategories,
+  updateProfile,
+  createPortalSession,
+} from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,16 +22,22 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, LogOut, CreditCard, Bell } from "lucide-react";
+import { useSubscriptionStatus } from "@/hooks/use-subscription";
+import { Progress } from "@/components/ui/progress";
 
 const Settings = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [isPortalLoading, setIsPortalLoading] = useState(false);
 
   const { data: profile, isLoading: isLoadingProfile } = useQuery({
     queryKey: ["profile"],
     queryFn: getProfile,
   });
+
+  const { data: subscription, isLoading: isLoadingSubscription } =
+    useSubscriptionStatus();
 
   const { data: allCategories = [], isLoading: isLoadingCategories } = useQuery(
     {
@@ -53,6 +64,22 @@ const Settings = () => {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate("/auth");
+  };
+
+  const handleManageBilling = async () => {
+    setIsPortalLoading(true);
+    try {
+      const { url } = await createPortalSession(window.location.href);
+      window.location.href = url;
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load billing portal",
+        variant: "destructive",
+      });
+    } finally {
+      setIsPortalLoading(false);
+    }
   };
 
   const toggleCategory = (categoryId: string) => {
@@ -86,6 +113,24 @@ const Settings = () => {
   }
 
   const emailAlertsEnabled = profile?.meta?.email_alerts ?? false;
+
+  const pitchUsageUsed = subscription
+    ? subscription.maxPitches - subscription.remainingPitches
+    : 0;
+
+  // Avoid division by zero or infinity for display
+  const pitchPercent =
+    subscription?.maxPitches && subscription.maxPitches > 0
+      ? (pitchUsageUsed / subscription.maxPitches) * 100
+      : 0;
+
+  const pitchGenUsed = subscription
+    ? subscription.maxPitchGen - subscription.remainingPitchGen
+    : 0;
+  const pitchGenPercent =
+    subscription?.maxPitchGen && subscription.maxPitchGen > 0
+      ? (pitchGenUsed / subscription.maxPitchGen) * 100
+      : 0;
 
   return (
     <div className="p-8 max-w-5xl mx-auto space-y-8">
@@ -168,14 +213,56 @@ const Settings = () => {
             Manage your subscription and payment details.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <p className="font-medium">Current Plan</p>
-              <p className="text-sm text-muted-foreground">Free Trial</p>
+              <p className="text-sm text-muted-foreground capitalize">
+                {subscription?.plan || "Free Trial"} •{" "}
+                {subscription?.status || "Inactive"}
+              </p>
             </div>
-            <Button variant="outline">Manage Billing</Button>
+            <Button
+              variant="outline"
+              onClick={handleManageBilling}
+              disabled={isPortalLoading}
+            >
+              {isPortalLoading && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Manage Billing
+            </Button>
           </div>
+
+          {subscription && (
+            <div className="space-y-4 pt-4 border-t">
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="font-medium">Pitches Used</span>
+                  <span className="text-muted-foreground">
+                    {pitchUsageUsed} /{" "}
+                    {subscription.maxPitches >= 9999999
+                      ? "Unlimited"
+                      : subscription.maxPitches}
+                  </span>
+                </div>
+                <Progress value={pitchPercent} className="h-2" />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="font-medium">AI Pitch Generations</span>
+                  <span className="text-muted-foreground">
+                    {pitchGenUsed} /{" "}
+                    {subscription.maxPitchGen >= 1000
+                      ? "Unlimited"
+                      : subscription.maxPitchGen}
+                  </span>
+                </div>
+                <Progress value={pitchGenPercent} className="h-2" />
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 

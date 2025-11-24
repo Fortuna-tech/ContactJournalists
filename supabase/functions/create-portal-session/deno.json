@@ -1,0 +1,5 @@
+{
+  "permissions": {
+    "env": ["STRIPE_SECRET_KEY", "SUPABASE_URL", "SUPABASE_ANON_KEY"]
+  }
+}

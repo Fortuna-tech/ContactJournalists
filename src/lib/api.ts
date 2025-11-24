@@ -9,6 +9,7 @@ import {
   AgencyFounderProfile,
   PitchComment,
   BillingAccount,
+  SubscriptionStatus,
 } from "@/types";
 import { normalizeCategoryId, sanitizeCategoryTitle } from "./categories";
 
@@ -49,6 +50,41 @@ export const createCheckoutSession = async (
   const data = await response.json();
   if (!response.ok) {
     throw new Error(data.error || "Failed to create checkout session");
+  }
+
+  return data;
+};
+
+export const createPortalSession = async (returnUrl: string) => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not authenticated");
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) throw new Error("No session");
+
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const response = await fetch(
+    `${supabaseUrl}/functions/v1/create-portal-session`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        returnUrl,
+      }),
+    }
+  );
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error || "Failed to create portal session");
   }
 
   return data;
@@ -133,35 +169,24 @@ export const updateProfile = async (updates: {
   return data;
 };
 
-export const getBillingAccount = async (): Promise<BillingAccount | null> => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
+export const getBillingAccount =
+  async (): Promise<SubscriptionStatus | null> => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error("Not authenticated");
 
-  const { data, error } = await supabase
-    .from("billing_accounts")
-    .select("*")
-    .eq("profile_id", user.id)
-    .maybeSingle();
+    const { data, error } = await supabase.functions.invoke(
+      "get-subscription-status"
+    );
 
-  if (error) {
-    throw error;
-  }
+    if (error) {
+      console.error("Error fetching subscription status:", error);
+      throw error;
+    }
 
-  if (!data) return null;
-
-  return {
-    id: data.id,
-    profileId: data.profile_id,
-    planId: data.plan_id,
-    priceId: data.price_id,
-    status: data.status,
-    trialEndsAt: data.trial_ends_at,
-    currentPeriodEnd: data.current_period_end,
-    cancelAtPeriodEnd: data.cancel_at_period_end,
+    return data;
   };
-};
 
 interface SearchProfileResult {
   id: string;
