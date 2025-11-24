@@ -1,11 +1,12 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import Stripe from "stripe";
+import Stripe from "https://esm.sh/stripe@14?target=denonext";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") ?? "", {
-  apiVersion: "2023-10-16",
-  httpClient: Stripe.createFetchHttpClient(),
+  apiVersion: "2025-07-30.basil",
 });
+
+const cryptoProvider = Stripe.createSubtleCryptoProvider();
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
 const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
@@ -24,7 +25,13 @@ serve(async (req) => {
     let event: Stripe.Event;
 
     try {
-      event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+      event = await stripe.webhooks.constructEventAsync(
+        body,
+        signature,
+        webhookSecret,
+        undefined,
+        cryptoProvider
+      );
     } catch (err) {
       console.error("Webhook signature verification failed:", err);
       return new Response(`Webhook Error: ${err.message}`, { status: 400 });
@@ -74,20 +81,18 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error("Webhook handler error:", error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      {
-        headers: { "Content-Type": "application/json" },
-        status: 500,
-      }
-    );
+    return new Response(JSON.stringify({ error: error.message }), {
+      headers: { "Content-Type": "application/json" },
+      status: 500,
+    });
   }
 });
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const customerId = session.customer as string;
   const subscriptionId = session.subscription as string;
-  const customerEmail = session.customer_email || session.customer_details?.email;
+  const customerEmail =
+    session.customer_email || session.customer_details?.email;
 
   if (!customerEmail) {
     console.error("No customer email in checkout session");
@@ -117,7 +122,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   if (subscriptionId) {
     const subscription = await stripe.subscriptions.retrieve(subscriptionId);
     const price = subscription.items.data[0]?.price;
-    
+
     if (price) {
       priceId = price.id;
       // Map price ID to plan ID from your billing config
@@ -125,30 +130,32 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     }
 
     status = subscription.status;
-    trialEndsAt = subscription.trial_end ? new Date(subscription.trial_end * 1000) : null;
-    currentPeriodEnd = subscription.current_period_end ? new Date(subscription.current_period_end * 1000) : null;
+    trialEndsAt = subscription.trial_end
+      ? new Date(subscription.trial_end * 1000)
+      : null;
+    currentPeriodEnd = subscription.current_period_end
+      ? new Date(subscription.current_period_end * 1000)
+      : null;
     cancelAtPeriodEnd = subscription.cancel_at_period_end;
   }
 
   // Upsert billing account
-  const { error: upsertError } = await supabase
-    .from("billing_accounts")
-    .upsert(
-      {
-        profile_id: profile.id,
-        stripe_customer_id: customerId,
-        stripe_subscription_id: subscriptionId,
-        plan_id: planId,
-        price_id: priceId,
-        status: status,
-        trial_ends_at: trialEndsAt?.toISOString() || null,
-        current_period_end: currentPeriodEnd?.toISOString() || null,
-        cancel_at_period_end: cancelAtPeriodEnd,
-      },
-      {
-        onConflict: "profile_id",
-      }
-    );
+  const { error: upsertError } = await supabase.from("billing_accounts").upsert(
+    {
+      profile_id: profile.id,
+      stripe_customer_id: customerId,
+      stripe_subscription_id: subscriptionId,
+      plan_id: planId,
+      price_id: priceId,
+      status: status,
+      trial_ends_at: trialEndsAt?.toISOString() || null,
+      current_period_end: currentPeriodEnd?.toISOString() || null,
+      cancel_at_period_end: cancelAtPeriodEnd,
+    },
+    {
+      onConflict: "profile_id",
+    }
+  );
 
   if (upsertError) {
     console.error("Error upserting billing account:", upsertError);
@@ -170,8 +177,12 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
 
   const planId = await mapPriceIdToPlanId(price.id);
   const status = subscription.status;
-  const trialEndsAt = subscription.trial_end ? new Date(subscription.trial_end * 1000) : null;
-  const currentPeriodEnd = subscription.current_period_end ? new Date(subscription.current_period_end * 1000) : null;
+  const trialEndsAt = subscription.trial_end
+    ? new Date(subscription.trial_end * 1000)
+    : null;
+  const currentPeriodEnd = subscription.current_period_end
+    ? new Date(subscription.current_period_end * 1000)
+    : null;
   const cancelAtPeriodEnd = subscription.cancel_at_period_end;
 
   const { error: updateError } = await supabase
@@ -210,7 +221,10 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     .eq("stripe_customer_id", customerId);
 
   if (updateError) {
-    console.error("Error updating billing account on cancellation:", updateError);
+    console.error(
+      "Error updating billing account on cancellation:",
+      updateError
+    );
     throw updateError;
   }
 
@@ -225,8 +239,12 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
     return; // One-time payment, not subscription-related
   }
 
-  const subscription = await stripe.subscriptions.retrieve(subscriptionId as string);
-  const currentPeriodEnd = subscription.current_period_end ? new Date(subscription.current_period_end * 1000) : null;
+  const subscription = await stripe.subscriptions.retrieve(
+    subscriptionId as string
+  );
+  const currentPeriodEnd = subscription.current_period_end
+    ? new Date(subscription.current_period_end * 1000)
+    : null;
 
   const { error: updateError } = await supabase
     .from("billing_accounts")
@@ -237,7 +255,10 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
     .eq("stripe_customer_id", customerId);
 
   if (updateError) {
-    console.error("Error updating billing account on payment success:", updateError);
+    console.error(
+      "Error updating billing account on payment success:",
+      updateError
+    );
   } else {
     console.log(`Payment succeeded for customer: ${customerId}`);
   }
@@ -254,7 +275,10 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
     .eq("stripe_customer_id", customerId);
 
   if (updateError) {
-    console.error("Error updating billing account on payment failure:", updateError);
+    console.error(
+      "Error updating billing account on payment failure:",
+      updateError
+    );
   } else {
     console.log(`Payment failed for customer: ${customerId}`);
   }
@@ -265,16 +289,15 @@ async function mapPriceIdToPlanId(priceId: string): Promise<string | null> {
   // Price IDs from your billing.ts config
   const priceToPlanMap: Record<string, string> = {
     // Starter
-    "price_1SWz11H32orQYBkNHqpgl0rz": "starter", // monthly
-    "price_1SWz3ZH32orQYBkN2hPYlrjc": "starter", // annual
+    price_1SWz11H32orQYBkNHqpgl0rz: "starter", // monthly
+    price_1SWz3ZH32orQYBkN2hPYlrjc: "starter", // annual
     // Growth
-    "price_1SWz1fH32orQYBkNrkXU2IQn": "growth", // monthly
-    "price_1SWz3HH32orQYBkNkQxvrFpb": "growth", // annual
+    price_1SWz1fH32orQYBkNrkXU2IQn: "growth", // monthly
+    price_1SWz3HH32orQYBkNkQxvrFpb: "growth", // annual
     // Team
-    "price_1SWz29H32orQYBkNjBCd4p8b": "team", // monthly
-    "price_1SWz2tH32orQYBkNsaBMWwhN": "team", // annual
+    price_1SWz29H32orQYBkNjBCd4p8b: "team", // monthly
+    price_1SWz2tH32orQYBkNsaBMWwhN: "team", // annual
   };
 
   return priceToPlanMap[priceId] || null;
 }
-
