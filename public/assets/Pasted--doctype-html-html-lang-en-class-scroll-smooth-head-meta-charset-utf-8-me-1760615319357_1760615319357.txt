@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Affiliate Program – ContactJournalists.com</title>
+    <meta name="description" content="Earn 20% recurring commission promoting ContactJournalists.com — the AI-powered way UK brands get press. Join free and start earning." />
+    <meta property="og:title" content="Affiliate Program – ContactJournalists.com" />
+    <meta property="og:description" content="Earn 20% recurring commission promoting ContactJournalists.com — the AI-powered way UK brands get press. Join free and start earning." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/og-dark.png" />
+
+    <!-- Inter font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] },
+            colors: {
+              base: { 900: "#0B0F14", 800: "#0f1722", 700: "#111827" },
+              accent: { blue: "#3B82F6", violet: "#8B5CF6", mint: "#34D399" }
+            },
+            boxShadow: {
+              glow: "0 0 0 1px rgba(255,255,255,0.06), 0 40px 80px -20px rgba(0,0,0,0.5)",
+            },
+            backgroundImage: {
+              darkgradient: "radial-gradient(1200px 600px at 8% -10%, rgba(59,130,246,0.12), transparent 40%), radial-gradient(900px 600px at 100% 0%, rgba(139,92,246,0.10), transparent 35%)",
+              gridglow: "linear-gradient(transparent 0%, rgba(255,255,255,0.04) 2%, transparent 2%), linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 2%, transparent 2%)"
+            },
+            keyframes: {
+              floaty: { '0%,100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-6px)' } },
+            },
+            animation: {
+              floaty: 'floaty 6s ease-in-out infinite'
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      :focus-visible { outline: 2px solid #3B82F6; outline-offset: 2px; }
+      @keyframes glowPulse { 0%,100%{ box-shadow: 0 0 25px rgba(59,130,246,.28), 0 0 60px rgba(139,92,246,.16) } 50%{ box-shadow: 0 0 45px rgba(59,130,246,.42), 0 0 90px rgba(139,92,246,.24) } }
+      .animate-glow { animation: glowPulse 5s ease-in-out infinite; }
+    </style>
+  </head>
+  <body class="bg-base-900 text-slate-200 antialiased selection:bg-accent-blue/20 selection:text-white">
+    <!-- Decorative background -->
+    <div class="pointer-events-none fixed inset-0 bg-darkgradient"></div>
+
+    <!-- Header (kept consistent with home) -->
+    <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-base-900/70 border-b border-white/5">
+      <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+        <a href="/" class="flex items-center gap-2 font-extrabold text-lg tracking-tight">
+          <span class="inline-block h-2.5 w-2.5 rounded-sm bg-gradient-to-br from-accent-blue to-accent-violet"></span>
+          Contact<span class="text-slate-400">Journalists</span>
+        </a>
+        <ul class="hidden md:flex items-center gap-6 text-sm">
+          <li><a class="hover:text-white/90 text-slate-300" href="/index.html#features">Features</a></li>
+          <li><a class="hover:text-white/90 text-slate-300" href="/index.html#how">How it Works</a></li>
+          <li><a class="hover:text-white/90 text-slate-300" href="/index.html#pricing">Pricing</a></li>
+          <li><a class="hover:text-white/90 text-slate-300" href="/index.html#faq">FAQ</a></li>
+          <li><a class="ml-2 inline-flex items-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-4 py-2 font-semibold text-white shadow-glow hover:opacity-95" href="/index.html#pricing">Get Started</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main" class="relative">
+      <!-- HERO -->
+      <section class="relative overflow-hidden">
+        <!-- subtle SVG vectors -->
+        <svg class="absolute -top-24 -right-24 w-[520px] h-[520px] opacity-30 animate-floaty" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.6"/>
+            </linearGradient>
+          </defs>
+          <path d="M80 10C120 20 160 60 170 100s-10 70-60 80-90-10-100-50S40 0 80 10Z" fill="url(#g1)"/>
+        </svg>
+
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 lg:pt-24 pb-16">
+          <div class="grid lg:grid-cols-12 gap-10 items-center">
+            <div class="lg:col-span-7">
+              <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight">Affiliate with ContactJournalists.com</h1>
+              <p class="mt-4 text-lg text-slate-300">Earn <span class="font-semibold text-white">20% recurring commission</span> helping UK brands get press — with verified contacts, AI pitch templates, and export-ready lists.</p>
+              <div class="mt-8 flex flex-wrap gap-3">
+                <a href="#apply" class="inline-flex items-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-5 py-3 font-semibold text-white shadow-glow hover:opacity-95">Apply Now</a>
+                <a href="#how" class="inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-semibold text-slate-200 hover:bg-white/10">How It Works</a>
+              </div>
+              <div class="mt-8 flex items-center gap-4 text-xs text-slate-400">
+                <span class="inline-flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span> Built in London</span>
+                <span>GDPR-respectful</span>
+                <span>Trusted by founders</span>
+              </div>
+            </div>
+
+            <!-- Card: Commission Calculator -->
+            <div class="lg:col-span-5">
+              <div class="relative rounded-2xl border border-white/10 bg-base-700/60 shadow-glow p-6 animate-glow">
+                <div class="flex items-center gap-2 text-xs text-slate-400">
+                  <div class="flex gap-1"><span class="h-2 w-2 rounded-full bg-red-500/70"></span><span class="h-2 w-2 rounded-full bg-yellow-400/70"></span><span class="h-2 w-2 rounded-full bg-emerald-400/70"></span></div>
+                  <span>Affiliate Earnings Preview</span>
+                </div>
+                <div class="mt-4 space-y-3 text-sm">
+                  <div class="flex items-center justify-between">
+                    <span>Growth plan (£99/mo)</span>
+                    <span class="font-semibold">£19.80 / month</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span>Team plan (£199/mo)</span>
+                    <span class="font-semibold">£39.80 / month</span>
+                  </div>
+                  <div class="mt-3 rounded-lg border border-white/10 bg-black/30 p-3 text-slate-300">
+                    <p>Refer 10 Growth users → <span class="font-semibold text-white">£198/mo</span> recurring</p>
+                    <p>Refer 10 Team users → <span class="font-semibold text-white">£398/mo</span> recurring</p>
+                  </div>
+                </div>
+                <a href="#apply" class="mt-5 inline-flex w-full justify-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-4 py-2 font-semibold">Start Earning</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WHY JOIN -->
+      <section id="why" class="relative">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+          <div class="max-w-2xl">
+            <h2 class="text-3xl font-bold">Why join now</h2>
+            <p class="mt-3 text-slate-300">Be an early partner in a fast-growing UK SaaS. Your audience gets a tool that works. You get predictable, recurring income.</p>
+          </div>
+          <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="rounded-2xl border border-white/10 bg-base-700/50 p-6">
+              <div class="mb-3 text-accent-blue"><!-- icon -->
+                <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v18M3 12h18"/></svg>
+              </div>
+              <h3 class="font-semibold">20% recurring</h3>
+              <p class="mt-2 text-slate-300">Earn every month your referrals stay subscribed. No caps, no expiry.</p>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-base-700/50 p-6">
+              <div class="mb-3 text-accent-blue">
+                <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12l6 6L21 6"/></svg>
+              </div>
+              <h3 class="font-semibold">High conversion</h3>
+              <p class="mt-2 text-slate-300">Real value: verified contacts, AI pitch templates, export-ready lists.</p>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-base-700/50 p-6">
+              <div class="mb-3 text-accent-blue">
+                <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+              </div>
+              <h3 class="font-semibold">Fast setup</h3>
+              <p class="mt-2 text-slate-300">Unique link, ready-made assets, and a dashboard with live stats.</p>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-base-700/50 p-6">
+              <div class="mb-3 text-accent-blue">
+                <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 3 2-7L2 9h7z"/></svg>
+              </div>
+              <h3 class="font-semibold">Founder support</h3>
+              <p class="mt-2 text-slate-300">Get priority help, feature input, and co-marketing for top partners.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WHAT YOU'RE PROMOTING -->
+      <section id="promote" class="relative">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+          <div class="max-w-2xl">
+            <h2 class="text-3xl font-bold">What you’re promoting</h2>
+            <p class="mt-3 text-slate-300">ContactJournalists.com helps founders get press without expensive retainers.</p>
+          </div>
+          <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <article class="rounded-2xl border border-white/10 bg-base-700/50 p-6 hover:bg-white/5 transition">
+              <h3 class="font-semibold">Verified Contacts</h3>
+              <p class="mt-2 text-slate-300">Journalists and bloggers by beat, region, and outlet — cleaned and deduped.</p>
+            </article>
+            <article class="rounded-2xl border border-white/10 bg-base-700/50 p-6 hover:bg-white/5 transition">
+              <h3 class="font-semibold">AI Pitch Generator</h3>
+              <p class="mt-2 text-slate-300">Angles and subject lines that actually get opened.</p>
+            </article>
+            <article class="rounded-2xl border border-white/10 bg-base-700/50 p-6 hover:bg-white/5 transition">
+              <h3 class="font-semibold">Smart Exports</h3>
+              <p class="mt-2 text-slate-300">Google Sheets & CSV with notes and easy follow-up flows.</p>
+            </article>
+            <article class="rounded-2xl border border-white/10 bg-base-700/50 p-6 hover:bg-white/5 transition">
+              <h3 class="font-semibold">Reply Templates</h3>
+              <p class="mt-2 text-slate-300">Faster responses to journalist tweets and press queries.</p>
+            </article>
+            <article class="rounded-2xl border border-white/10 bg-base-700/50 p-6 hover:bg-white/5 transition">
+              <h3 class="font-semibold">GDPR-respectful</h3>
+              <p class="mt-2 text-slate-300">We respect inboxes. Export responsibly and honor opt-outs.</p>
+            </article>
+            <article class="rounded-2xl border border-white/10 bg-base-700/50 p-6 hover:bg-white/5 transition">
+              <h3 class="font-semibold">Built in London</h3>
+              <p class="mt-2 text-slate-300">Founder-led, responsive support, early feature access.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- WHO IT'S FOR + HOW IT WORKS -->
+      <section id="how" class="relative">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+          <div class="grid lg:grid-cols-12 gap-10 items-start">
+            <div class="lg:col-span-6">
+              <h2 class="text-3xl font-bold">Who it’s perfect for</h2>
+              <ul class="mt-6 space-y-3 text-slate-300">
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-accent-blue"></span> Newsletter writers and business creators</li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-accent-blue"></span> Marketing coaches and PR agencies</li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-accent-blue"></span> Startup community owners and growth consultants</li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-accent-blue"></span> LinkedIn educators and YouTube creators</li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-accent-blue"></span> Founders recommending tools they actually use</li>
+              </ul>
+            </div>
+            <div class="lg:col-span-6">
+              <h2 class="text-3xl font-bold">How it works</h2>
+              <ol class="mt-6 space-y-3 text-slate-300 list-decimal list-inside">
+                <li><span class="font-semibold text-white">Apply</span> using the form below (free to join).</li>
+                <li><span class="font-semibold text-white">Get your unique link</span> and ready-to-use assets.</li>
+                <li><span class="font-semibold text-white">Share</span> in newsletters, socials, client docs, or trainings.</li>
+                <li><span class="font-semibold text-white">Earn 20% monthly</span> for every active subscriber you refer.</li>
+              </ol>
+              <div class="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4">
+                <p class="text-sm text-slate-300">✨ <span class="font-semibold text-white">Early Partner Advantage:</span> join now to lock in 20% lifetime commission. We’ll never reduce your rate.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- AFFILIATE MAILING LIST (Brevo embed, styled wrapper) -->
+      <section id="subscribe" class="relative">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+          <div class="mx-auto max-w-2xl text-center">
+            <h2 class="text-3xl font-bold">Get affiliate updates & assets</h2>
+            <p class="mt-3 text-slate-300">Join the insider list for launch news, promo assets, and partner-only perks. No spam. Unsubscribe anytime.</p>
+          </div>
+          <div class="mx-auto mt-8 max-w-2xl rounded-2xl border border-white/10 bg-base-700/50 p-4 shadow-glow">
+            <div class="rounded-xl border border-white/10 bg-black/30 p-2">
+              <div class="relative w-full" style="max-width:100%;">
+                <iframe width="540" height="305" src="https://db7e141b.sibforms.com/serve/MUIFAP8jCA4qF5wjAyUwITTKmZT8h-6JrD6GcGn__ZMHrXuEgA_Wyjq6G02Qi5t1tI23gHC_2PKcgs-zH3DSVmiOkQpluNWMpGXzwZ3-vIwyiBCFAp1X5KqNcGGWStwCv_Ub22KPM_uEHGS43rJxAMiG09iPB2igCbeTWyb5Dr_UWOnG_PvO4ciAt79rvfePaenYmZwZ0FuL-e-N" frameborder="0" scrolling="auto" allowfullscreen allowtransparency="true" style="display:block;margin-left:auto;margin-right:auto;max-width:100%;border-radius:0.75rem;background:transparent;"></iframe>
+              </div>
+            </div>
+            <p class="mt-3 text-xs text-slate-400">We’ll only email you about affiliate updates, launch opportunities, and assets. Read our <a href="#" class="underline decoration-dotted underline-offset-4">privacy policy</a>.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- APPLY FORM -->
+      <section id="apply" class="relative">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+          <div class="mx-auto max-w-2xl text-center">
+            <h2 class="text-3xl font-bold">Apply to join</h2>
+            <p class="mt-3 text-slate-300">We approve partners who genuinely help founders and growing brands.</p>
+          </div>
+          <form class="mx-auto mt-8 max-w-2xl rounded-2xl border border-white/10 bg-base-700/50 p-6 shadow-glow">
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label for="name" class="block text-sm text-slate-300">Your name</label>
+                <input id="name" type="text" required class="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 focus:outline-none" placeholder="Fortuna" />
+              </div>
+              <div>
+                <label for="email" class="block text-sm text-slate-300">Email</label>
+                <input id="email" type="email" required class="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 focus:outline-none" placeholder="you@domain.com" />
+              </div>
+              <div>
+                <label for="audience" class="block text-sm text-slate-300">Audience size (approx.)</label>
+                <input id="audience" type="text" class="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 focus:outline-none" placeholder="e.g. 2,500 newsletter subs" />
+              </div>
+              <div>
+                <label for="platforms" class="block text-sm text-slate-300">Platforms</label>
+                <input id="platforms" type="text" class="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 focus:outline-none" placeholder="LinkedIn, Newsletter, YouTube" />
+              </div>
+              <div class="sm:col-span-2">
+                <label for="notes" class="block text-sm text-slate-300">How will you promote us?</label>
+                <textarea id="notes" rows="4" class="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 focus:outline-none" placeholder="Tell us where you’ll share your link and who your audience is."></textarea>
+              </div>
+            </div>
+            <div class="mt-6 flex items-center justify-between">
+              <p class="text-xs text-slate-400">We’ll reply within 2 business days. By applying you agree to our <a href="#" class="underline decoration-dotted underline-offset-4">terms</a>.</p>
+              <button type="submit" class="rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-5 py-2.5 font-semibold">Submit Application</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section id="faq" class="relative">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+          <div class="mx-auto max-w-3xl">
+            <h2 class="text-3xl font-bold text-center">Affiliate FAQ</h2>
+            <div class="mt-8 divide-y divide-white/5 border border-white/10 rounded-2xl overflow-hidden">
+              <details class="group open:bg-white/5">
+                <summary class="flex cursor-pointer items-center justify-between px-5 py-4 text-left font-medium hover:bg-white/5">Is 20% really recurring?<span class="ml-4 text-slate-400 group-open:rotate-180 transition"><svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"/></svg></span></summary>
+                <div class="px-5 pb-5 text-slate-300">Yes. You earn 20% every month your referral remains subscribed. It’s not a one-time bounty.</div>
+              </details>
+              <details class="group">
+                <summary class="flex cursor-pointer items-center justify-between px-5 py-4 text-left font-medium hover:bg-white/5">How do I get paid?<span class="ml-4 text-slate-400 group-open:rotate-180 transition"><svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"/></svg></span></summary>
+                <div class="px-5 pb-5 text-slate-300">Monthly via Stripe or PayPal. Your dashboard shows live clicks, trials, and conversions.</div>
+              </details>
+              <details class="group">
+                <summary class="flex cursor-pointer items-center justify-between px-5 py-4 text-left font-medium hover:bg-white/5">Any promotion rules?<span class="ml-4 text-slate-400 group-open:rotate-180 transition"><svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"/></svg></span></summary>
+                <div class="px-5 pb-5 text-slate-300">Be honest. Don’t run misleading ads. Disclose affiliate links where required. Keep it GDPR-friendly.</div>
+              </details>
+              <details class="group">
+                <summary class="flex cursor-pointer items-center justify-between px-5 py-4 text-left font-medium hover:bg-white/5">Do you offer custom deals for big partners?<span class="ml-4 text-slate-400 group-open:rotate-180 transition"><svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"/></svg></span></summary>
+                <div class="px-5 pb-5 text-slate-300">Yes. If you can drive meaningful volume, we’ll discuss tiered rates and co-marketing.</div>
+              </details>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA STRIP -->
+      <section class="border-t border-white/5 bg-gradient-to-r from-accent-blue/10 to-accent-violet/10">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p class="text-sm text-slate-200">Ready to partner with a tool founders love? <span class="text-slate-400">Earn 20% recurring for every referral.</span></p>
+          <a href="#apply" class="inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-4 py-2 font-semibold hover:bg-white/10">Apply to the Affiliate Program</a>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/5">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 text-sm">
+        <div>
+          <div class="font-extrabold text-lg">Contact<span class="text-slate-400">Journalists</span></div>
+          <p class="mt-3 text-slate-400">Made in London. GDPR-respectful outreach.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold">Product</h3>
+          <ul class="mt-3 space-y-2 text-slate-300">
+            <li><a class="hover:underline underline-offset-4" href="/index.html#features">Features</a></li>
+            <li><a class="hover:underline underline-offset-4" href="/index.html#pricing">Pricing</a></li>
+            <li><a class="hover:underline underline-offset-4" href="#">Roadmap</a></li>
+            <li><a class="hover:underline underline-offset-4" href="#">Changelog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-semibold">Company</h3>
+          <ul class="mt-3 space-y-2 text-slate-300">
+            <li><a class="hover:underline underline-offset-4" href="#">About</a></li>
+            <li><a class="hover:underline underline-offset-4" href="#">Careers</a></li>
+            <li><a class="hover:underline underline-offset-4" href="#apply">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-semibold">Resources</h3>
+          <ul class="mt-3 space-y-2 text-slate-300">
+            <li><a class="hover:underline underline-offset-4" href="#faq">Affiliate FAQ</a></li>
+            <li><a class="hover:underline underline-offset-4" href="#">Press Kit</a></li>
+            <li><a class="hover:underline underline-offset-4" href="#">Privacy</a></li>
+            <li><a class="hover:underline underline-offset-4" href="#">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-white/5">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+          <p>© <span id="year"></span> ContactJournalists.com · London, UK</p>
+          <a class="hover:underline underline-offset-4" href="/index.html">Back to Home</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>

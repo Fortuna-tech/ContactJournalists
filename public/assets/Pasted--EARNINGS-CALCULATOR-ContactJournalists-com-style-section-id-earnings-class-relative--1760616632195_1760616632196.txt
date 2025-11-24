@@ -1,0 +1,242 @@
+<!-- EARNINGS CALCULATOR (ContactJournalists.com style) -->
+<section id="earnings" class="relative">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+    <div class="max-w-2xl">
+      <h2 class="text-3xl font-bold">Affiliate earnings calculator</h2>
+      <p class="mt-3 text-slate-300">
+        See what you’ll earn with <span class="font-semibold text-white">20% recurring commission</span>.
+        Adjust your expected active referrals by plan.
+      </p>
+    </div>
+
+    <div class="mt-8 grid gap-6 lg:grid-cols-12">
+      <!-- Controls -->
+      <div class="lg:col-span-7 rounded-2xl border border-white/10 bg-base-700/60 p-6 shadow-glow">
+        <!-- Starter -->
+        <div class="mb-6">
+          <div class="flex items-center justify-between">
+            <label for="refStarter" class="block font-medium">Starter (£45/mo)</label>
+            <div class="text-sm text-slate-400">Active referrals: <span id="valStarter" class="text-slate-200 font-semibold">5</span></div>
+          </div>
+          <input id="refStarter" type="range" min="0" max="200" value="5"
+                 class="w-full mt-3 h-2 rounded-lg appearance-none bg-white/10 accent-current"/>
+          <div class="mt-2 flex gap-2 text-xs">
+            <button data-preset="starter-1" class="preset badge">+1</button>
+            <button data-preset="starter-5" class="preset badge">+5</button>
+            <button data-preset="starter-10" class="preset badge">+10</button>
+            <button data-preset="starter-reset" class="preset badge">Reset</button>
+          </div>
+        </div>
+
+        <!-- Growth -->
+        <div class="mb-6">
+          <div class="flex items-center justify-between">
+            <label for="refGrowth" class="block font-medium">Growth (£99/mo) <span class="ml-2 rounded-full bg-accent-blue/20 px-2 py-0.5 text-xs text-accent-blue">Most popular</span></label>
+            <div class="text-sm text-slate-400">Active referrals: <span id="valGrowth" class="text-slate-200 font-semibold">10</span></div>
+          </div>
+          <input id="refGrowth" type="range" min="0" max="200" value="10"
+                 class="w-full mt-3 h-2 rounded-lg appearance-none bg-white/10 accent-current"/>
+          <div class="mt-2 flex gap-2 text-xs">
+            <button data-preset="growth-1" class="preset badge">+1</button>
+            <button data-preset="growth-5" class="preset badge">+5</button>
+            <button data-preset="growth-10" class="preset badge">+10</button>
+            <button data-preset="growth-reset" class="preset badge">Reset</button>
+          </div>
+        </div>
+
+        <!-- Team -->
+        <div class="mb-6">
+          <div class="flex items-center justify-between">
+            <label for="refTeam" class="block font-medium">Team (£199/mo)</label>
+            <div class="text-sm text-slate-400">Active referrals: <span id="valTeam" class="text-slate-200 font-semibold">3</span></div>
+          </div>
+          <input id="refTeam" type="range" min="0" max="200" value="3"
+                 class="w-full mt-3 h-2 rounded-lg appearance-none bg-white/10 accent-current"/>
+          <div class="mt-2 flex gap-2 text-xs">
+            <button data-preset="team-1" class="preset badge">+1</button>
+            <button data-preset="team-5" class="preset badge">+5</button>
+            <button data-preset="team-10" class="preset badge">+10</button>
+            <button data-preset="team-reset" class="preset badge">Reset</button>
+          </div>
+        </div>
+
+        <!-- Annual toggle -->
+        <div class="mt-6 flex items-center gap-3">
+          <span class="text-sm text-slate-400">Show annual estimate</span>
+          <button id="annualToggle" class="relative inline-flex h-7 w-12 items-center rounded-full bg-white/10">
+            <span id="annualDot" class="inline-block h-5 w-5 translate-x-1 rounded-full bg-white transition"></span>
+          </button>
+        </div>
+
+        <p class="mt-3 text-xs text-slate-400">
+          * Estimates assume <span class="font-semibold text-slate-300">20% recurring commission</span> on live subscriptions.
+          Actual results vary by audience and promotion.
+        </p>
+      </div>
+
+      <!-- Results -->
+      <div class="lg:col-span-5 rounded-2xl border border-white/10 bg-base-700/60 p-6 shadow-glow">
+        <div class="flex items-center gap-2 text-xs text-slate-400">
+          <div class="flex gap-1">
+            <span class="h-2 w-2 rounded-full bg-red-500/70"></span>
+            <span class="h-2 w-2 rounded-full bg-yellow-400/70"></span>
+            <span class="h-2 w-2 rounded-full bg-emerald-400/70"></span>
+          </div>
+          <span>Earnings Preview</span>
+        </div>
+
+        <div class="mt-4 grid grid-cols-2 gap-4">
+          <div class="rounded-xl border border-white/10 bg-black/30 p-4">
+            <div class="text-xs uppercase tracking-wide text-slate-400">Estimated monthly</div>
+            <div id="outMonthly" class="mt-1 text-3xl font-extrabold">£—</div>
+          </div>
+          <div class="rounded-xl border border-white/10 bg-black/30 p-4">
+            <div class="text-xs uppercase tracking-wide text-slate-400">Estimated annual</div>
+            <div id="outAnnual" class="mt-1 text-3xl font-extrabold">£—</div>
+          </div>
+        </div>
+
+        <!-- Breakdown -->
+        <div class="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
+          <div class="text-sm font-semibold">Breakdown</div>
+          <ul class="mt-2 space-y-1 text-sm text-slate-300">
+            <li>Starter: <span id="breakStarter" class="font-semibold text-white">£—/mo</span></li>
+            <li>Growth: <span id="breakGrowth" class="font-semibold text-white">£—/mo</span></li>
+            <li>Team: <span id="breakTeam" class="font-semibold text-white">£—/mo</span></li>
+          </ul>
+        </div>
+
+        <!-- Progress bars -->
+        <div class="mt-6 space-y-3">
+          <div class="text-xs text-slate-400">Relative earnings by tier</div>
+          <div class="h-2 rounded bg-white/10">
+            <div id="barStarter" class="h-2 rounded bg-white/40" style="width: 0%"></div>
+          </div>
+          <div class="h-2 rounded bg-white/10">
+            <div id="barGrowth" class="h-2 rounded bg-accent-blue/70" style="width: 0%"></div>
+          </div>
+          <div class="h-2 rounded bg-white/10">
+            <div id="barTeam" class="h-2 rounded bg-accent-violet/70" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <a href="#apply" class="mt-6 inline-flex w-full justify-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-4 py-2 font-semibold">
+          Apply & start earning
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- tiny style helpers for buttons/range -->
+  <style>
+    .badge{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);padding:.35rem .6rem;border-radius:.5rem}
+    input[type="range"]::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:18px;height:18px;border-radius:9999px;background:#fff;border:2px solid rgba(59,130,246,.9); }
+    input[type="range"]::-moz-range-thumb{ width:18px;height:18px;border-radius:9999px;background:#fff;border:2px solid rgba(59,130,246,.9); }
+  </style>
+
+  <script>
+    (() => {
+      const COMM = 0.20;
+      const PRICES = { starter: 45, growth: 99, team: 199 };
+
+      const els = {
+        starter: document.getElementById('refStarter'),
+        growth : document.getElementById('refGrowth'),
+        team   : document.getElementById('refTeam'),
+        valStarter: document.getElementById('valStarter'),
+        valGrowth : document.getElementById('valGrowth'),
+        valTeam   : document.getElementById('valTeam'),
+        outMonthly: document.getElementById('outMonthly'),
+        outAnnual : document.getElementById('outAnnual'),
+        breakStarter: document.getElementById('breakStarter'),
+        breakGrowth : document.getElementById('breakGrowth'),
+        breakTeam   : document.getElementById('breakTeam'),
+        barStarter: document.getElementById('barStarter'),
+        barGrowth : document.getElementById('barGrowth'),
+        barTeam   : document.getElementById('barTeam'),
+        annualToggle: document.getElementById('annualToggle'),
+        annualDot   : document.getElementById('annualDot'),
+      };
+
+      let showAnnual = false;
+
+      function currency(n){
+        // Round to nearest penny, fixed 2 decimals if needed
+        const value = Math.round(n * 100) / 100;
+        return '£' + value.toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+      }
+
+      function compute(){
+        const rS = Number(els.starter.value);
+        const rG = Number(els.growth.value);
+        const rT = Number(els.team.value);
+
+        els.valStarter.textContent = rS;
+        els.valGrowth.textContent  = rG;
+        els.valTeam.textContent    = rT;
+
+        const earnS = rS * PRICES.starter * COMM;
+        const earnG = rG * PRICES.growth  * COMM;
+        const earnT = rT * PRICES.team    * COMM;
+
+        const monthly = earnS + earnG + earnT;
+        const annual  = monthly * 12;
+
+        els.breakStarter.textContent = currency(earnS) + '/mo';
+        els.breakGrowth.textContent  = currency(earnG) + '/mo';
+        els.breakTeam.textContent    = currency(earnT) + '/mo';
+
+        // Bars
+        const max = Math.max(earnS, earnG, earnT, 1);
+        els.barStarter.style.width = (earnS / max * 100) + '%';
+        els.barGrowth.style.width  = (earnG / max * 100) + '%';
+        els.barTeam.style.width    = (earnT / max * 100) + '%';
+
+        // Output
+        els.outMonthly.textContent = currency(monthly);
+        els.outAnnual.textContent  = currency(annual);
+
+        // Annual toggle styling (just changes emphasis, values already shown)
+        if (showAnnual) {
+          els.outAnnual.classList.add('text-white');
+          els.outMonthly.classList.remove('text-white');
+        } else {
+          els.outMonthly.classList.add('text-white');
+          els.outAnnual.classList.remove('text-white');
+        }
+      }
+
+      // Events
+      ['input','change'].forEach(evt => {
+        els.starter.addEventListener(evt, compute);
+        els.growth .addEventListener(evt, compute);
+        els.team   .addEventListener(evt, compute);
+      });
+
+      // Presets
+      document.querySelectorAll('.preset').forEach(btn=>{
+        btn.addEventListener('click', e=>{
+          const id = e.currentTarget.getAttribute('data-preset');
+          const delta = id.endsWith('reset') ? 'reset' : Number(id.split('-')[1]);
+          if(id.startsWith('starter')){
+            els.starter.value = (delta==='reset') ? 0 : Math.min(200, Number(els.starter.value)+delta);
+          } else if(id.startsWith('growth')){
+            els.growth.value = (delta==='reset') ? 0 : Math.min(200, Number(els.growth.value)+delta);
+          } else if(id.startsWith('team')){
+            els.team.value = (delta==='reset') ? 0 : Math.min(200, Number(els.team.value)+delta);
+          }
+          compute();
+        });
+      });
+
+      // Annual toggle
+      els.annualToggle?.addEventListener('click', ()=>{
+        showAnnual = !showAnnual;
+        if (els.annualDot) els.annualDot.style.transform = showAnnual ? 'translateX(28px)' : 'translateX(4px)';
+        compute();
+      });
+
+      compute();
+    })();
+  </script>
+</section>

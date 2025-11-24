@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get Press. Grow Faster. | ContactJournalists.com</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap');
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    body, html {
+      height: 100%;
+      overflow-x: hidden;
+      background: #fffdfa;
+      color: #111827;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 4rem 2rem;
+      text-align: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      position: absolute;
+      top: 1rem;
+      left: 2rem;
+    }
+
+    .logo img {
+      height: 48px;
+    }
+
+    header {
+      font-size: 2.8rem;
+      color: #111;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    .ticker {
+      background: #ff3366;
+      color: black;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      margin-top: 2rem;
+    }
+
+    .launch-toolbar {
+      width: 100%;
+      background: #ff3366;
+      color: #fff;
+      text-align: center;
+      font-weight: 600;
+      padding: 0.75rem 1rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+    }
+
+    .countdown-wrapper {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .countdown-block {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .features-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .feature-box {
+      background: linear-gradient(135deg, #fff5f7 0%, #ffeef2 100%);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      width: 260px;
+      text-align: center;
+    }
+
+    .signup-form {
+      margin-top: 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 400px;
+      margin-inline: auto;
+    }
+
+    .signup-form input, .signup-form select {
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .signup-form button {
+      background: #00c853;
+      color: #fff;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .steps-row {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 4rem;
+      align-items: center;
+    }
+
+    .step-box {
+      background: linear-gradient(135deg, #e0f7fa 0%, #e1bee7 100%);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      width: 180px;
+    }
+
+    .arrow {
+      font-size: 2rem;
+      margin: 0 1rem;
+    }
+
+    .why-join {
+      margin-top: 3rem;
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+
+    .reasons {
+      margin: 1rem 0 2rem;
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="launch-toolbar">💻 Launching August 2025 — Claim free early access while we're still in beta</div>
+  <div class="logo">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Earth_icon.svg/512px-Earth_icon.svg.png" alt="ContactJournalists Logo" />
+  </div>
+  <div class="container">
+    <header>ContactJournalists.com</header>
+    <p style="font-size: 1.2rem; font-weight: 600; margin-top: 0.5rem;">Reach Journalists & TV Execs Instantly · Send Pitches That Get Picked Up · Score Free PR Worth £££</p>
+
+    <div class="ticker" id="subscriberCount">📈 Email Sign Ups: 1,048 (And Counting)</div>
+
+    <div class="countdown-wrapper">
+      <div class="countdown-block">
+        <div id="days">0</div>
+        <div style="font-size: 0.8rem;">Days</div>
+      </div>
+      <div class="countdown-block">
+        <div id="hoursBlock">0</div>
+        <div style="font-size: 0.8rem;">Hours</div>
+      </div>
+      <div class="countdown-block">
+        <div id="minsBlock">0</div>
+        <div style="font-size: 0.8rem;">Mins</div>
+      </div>
+      <div class="countdown-block">
+        <div id="secsBlock">0</div>
+        <div style="font-size: 0.8rem;">Secs</div>
+      </div>
+    </div>
+
+    <div class="steps-row">
+      <div class="step-box">🔍<br/>Search 10,000+ Journalists</div>
+      <div class="arrow">➡️</div>
+      <div class="step-box">✉️<br/>Send Your Pitch</div>
+      <div class="arrow">➡️</div>
+      <div class="step-box">🎯<br/>Get Free PR</div>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-box">🔍 Instantly access top UK journalists and bloggers</div>
+      <div class="feature-box">🧠 Generate expert AI-powered press pitches in seconds</div>
+      <div class="feature-box">📥 Download press lists. No faff. No fluff. Just results.</div>
+      <div class="feature-box">📬 Media leads delivered direct to your inbox</div>
+    </div>
+
+    <div class="why-join">Why Join Our Beta?</div>
+    <div class="reasons">
+      ✅ Access exclusive tools before public launch<br/>
+      🚀 Be first in line to send PR pitches with AI<br/>
+      💌 Join a curated directory of brands getting press<br/>
+      📣 Your feedback helps shape the future of media outreach
+    </div>
+
+    <form class="signup-form">
+      <input type="text" placeholder="First Name" required />
+      <input type="email" placeholder="Email Address" required />
+      <input type="tel" placeholder="Mobile Number" required />
+      <select required>
+        <option value="">Select your role</option>
+        <option value="smallbiz">Small Business</option>
+        <option value="agency">PR Agency</option>
+      </select>
+      <button type="submit">Join Free Beta Access</button>
+    </form>
+  </div>
+
+  <script>
+    const startCount = 1048;
+    const incrementRate = 1 + Math.floor(Math.random() * 3);
+    const display = document.getElementById('subscriberCount');
+    let count = startCount + Math.floor(Math.random() * 50);
+    setInterval(() => {
+      count += incrementRate;
+      display.textContent = `📈 Email Sign Ups: ${count.toLocaleString()} (And Counting)`;
+    }, 2000);
+
+    const launchDate = new Date("August 1, 2025 00:00:00").getTime();
+    setInterval(() => {
+      const now = new Date().getTime();
+      const distance = launchDate - now;
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
+      const mins = Math.floor((distance / 1000 / 60) % 60);
+      const secs = Math.floor((distance / 1000) % 60);
+      document.getElementById("days").textContent = days;
+      document.getElementById("hoursBlock").textContent = hours;
+      document.getElementById("minsBlock").textContent = mins;
+      document.getElementById("secsBlock").textContent = secs;
+    }, 1000);
+  </script>
+</body>
+</html>

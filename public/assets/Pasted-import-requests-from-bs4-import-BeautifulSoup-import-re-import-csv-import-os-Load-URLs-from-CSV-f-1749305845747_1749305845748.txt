@@ -1,0 +1,71 @@
+import requests
+from bs4 import BeautifulSoup
+import re
+import csv
+import os
+
+# Load URLs from CSV file instead of hardcoding
+urls = []
+csv_file_path = "newspaper_homepage_guesses.csv"
+
+if os.path.exists(csv_file_path):
+    with open(csv_file_path, "r", encoding="utf-8") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            if row.get("Guessed Homepage"):
+                urls.append(row["Guessed Homepage"].strip())
+else:
+    print(f"❌ CSV file not found: {csv_file_path}")
+    exit()
+
+email_pattern = re.compile(r"[\w\.-]+@[\w\.-]+\.[a-zA-Z]{2,}")
+
+results = []
+
+for url in urls:
+    try:
+        print(f"Scraping: {url}")
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Search for emails and capture the source page
+        found_emails = set()
+        for match in re.finditer(email_pattern, soup.get_text()):
+            found_emails.add(match.group())
+
+        # Search for contact page links
+        contact_links = []
+        for a in soup.find_all("a", href=True):
+            href = a['href'].lower()
+            if "contact" in href or "about" in href or "newsdesk" in href:
+                if href.startswith("/"):
+                    href = url + href
+                elif not href.startswith("http"):
+                    href = url + "/" + href
+                contact_links.append(href)
+
+        results.append({
+            "Homepage": url,
+            "Emails Found": ", ".join(found_emails) if found_emails else "None",
+            "Contact Pages": ", ".join(contact_links) if contact_links else "None",
+            "Source URL": url
+        })
+
+    except Exception as e:
+        print(f"Error with {url}: {e}")
+        results.append({
+            "Homepage": url,
+            "Emails Found": "Error",
+            "Contact Pages": "Error",
+            "Source URL": url
+        })
+
+# Save results to CSV
+output_file = "scraped_emails.csv"
+with open(output_file, "w", newline="", encoding="utf-8") as f:
+    writer = csv.DictWriter(f, fieldnames=["Homepage", "Emails Found", "Contact Pages", "Source URL"])
+    writer.writeheader()
+    writer.writerows(results)
+
+print(f"✅ Scraping complete. Results saved to {output_file}")

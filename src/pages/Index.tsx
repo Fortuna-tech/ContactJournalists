@@ -792,11 +792,11 @@ const Index = () => {
                     explore all the platforms in detail below.
                   </p>
                   <a
-                    href="/blog/how-to-get-press-for-your-brand-without-a-pr-agency"
+                    href="/blog/ultimate-guide-best-platforms-contacting-journalists-2025"
                     onClick={(e) => {
                       e.preventDefault();
                       window.location.href =
-                        "/blog/how-to-get-press-for-your-brand-without-a-pr-agency";
+                        "/blog/ultimate-guide-best-platforms-contacting-journalists-2025";
                     }}
                     className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity"
                   >
@@ -816,6 +816,112 @@ const Index = () => {
                     </svg>
                   </a>
                 </div>
+              </article>
+
+              {/* P&L Template Blog Post */}
+              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-xs font-semibold text-accent-mint uppercase tracking-wide">
+                    Free Resource
+                  </span>
+                  <span className="text-xs text-slate-500">•</span>
+                  <span className="text-xs text-slate-400">Founder Tools</span>
+                </div>
+
+                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
+                  Free Small Business P&L Template (Google Sheets + Excel)
+                </h3>
+
+                <p className="text-sm text-slate-300 mb-4">
+                  Track your revenue, expenses, and profit with ease. Simple,
+                  clean, currency-agnostic P&L template made for founders who
+                  don't have time to wrestle with spreadsheets.
+                </p>
+
+                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
+                  <time>November 15, 2025</time>
+                  <span>•</span>
+                  <span>8 min read</span>
+                </div>
+
+                <a
+                  href="/blog/free-small-business-pl-template-google-sheets-excel"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href =
+                      "/blog/free-small-business-pl-template-google-sheets-excel";
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
+                  data-testid="link-blog-pl-template"
+                >
+                  Download Free Template
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
+              </article>
+
+              {/* Press Pitch Examples Blog Post */}
+              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-xs font-semibold text-accent-violet uppercase tracking-wide">
+                    Pitch Templates
+                  </span>
+                  <span className="text-xs text-slate-500">•</span>
+                  <span className="text-xs text-slate-400">Founder Guide</span>
+                </div>
+
+                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
+                  7 Press Pitch Examples That Actually Get Replies
+                </h3>
+
+                <p className="text-sm text-slate-300 mb-4">
+                  Real press pitch templates that work in 2025. Copy, customize,
+                  and start getting journalist replies with these
+                  founder-friendly pitch examples and timing strategies.
+                </p>
+
+                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
+                  <time>Sunday, November 16, 2025</time>
+                  <span>•</span>
+                  <span>12 min read</span>
+                </div>
+
+                <a
+                  href="/blog/press-pitch-examples-that-get-replies"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href =
+                      "/blog/press-pitch-examples-that-get-replies";
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
+                  data-testid="link-blog-press-pitch"
+                >
+                  Get Pitch Templates
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
               </article>
             </div>
           </div>

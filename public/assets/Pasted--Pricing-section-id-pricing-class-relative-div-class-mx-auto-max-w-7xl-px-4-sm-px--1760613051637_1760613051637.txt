@@ -1,0 +1,66 @@
+<!-- Pricing -->
+<section id="pricing" class="relative">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+    <div class="mx-auto max-w-2xl text-center">
+      <h2 class="text-3xl font-bold">Pricing</h2>
+      <p class="mt-3 text-slate-300">Everything you need to get coverage without hiring an agency. Cancel anytime.</p>
+    </div>
+
+    <div class="mt-6 flex items-center justify-center gap-3 text-sm">
+      <span class="text-slate-400">Monthly</span>
+      <button id="toggleBilling" class="relative inline-flex h-7 w-12 items-center rounded-full bg-white/10">
+        <span id="toggleDot" class="inline-block h-5 w-5 translate-x-1 rounded-full bg-white transition"></span>
+      </button>
+      <span class="text-slate-400">Annually <span class="ml-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-emerald-400 text-xs">Save 2 months</span></span>
+    </div>
+
+    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <!-- Starter -->
+      <div class="rounded-2xl border border-white/10 bg-base-700/50 p-6 shadow-glow">
+        <h3 class="font-semibold">Starter</h3>
+        <p class="mt-1 text-slate-400">For freelancers and solo founders.</p>
+        <div class="mt-4 text-3xl font-extrabold"><span class="price" data-month="£45" data-year="£450">£45</span><span class="text-base font-medium text-slate-400">/mo</span></div>
+        <ul class="mt-4 space-y-2 text-sm text-slate-300">
+          <li>300 searches/mo</li>
+          <li>200 exports</li>
+          <li>1 user</li>
+          <li>Pitch Generator (daily sample)</li>
+        </ul>
+        <a href="#" class="mt-6 inline-flex w-full justify-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-4 py-2 font-semibold">Start Free</a>
+      </div>
+
+      <!-- Growth (Most Popular) -->
+      <div class="relative rounded-2xl border border-accent-blue/40 bg-base-700/60 p-6 shadow-glow ring-2 ring-accent-blue/60">
+        <span class="absolute -top-3 right-4 rounded-full bg-accent-blue/20 px-2 py-1 text-xs text-accent-blue">Most popular</span>
+        <h3 class="font-semibold">Growth</h3>
+        <p class="mt-1 text-slate-400">For startups and growing agencies.</p>
+        <div class="mt-4 text-3xl font-extrabold"><span class="price" data-month="£99" data-year="£990">£99</span><span class="text-base font-medium text-slate-400">/mo</span></div>
+        <ul class="mt-4 space-y-2 text-sm text-slate-300">
+          <li>1,500 searches/mo</li>
+          <li>1,000 exports</li>
+          <li>Up to 3 users</li>
+          <li>Full Pitch Generator, saved lists</li>
+          <li>Affiliate dashboard access</li>
+        </ul>
+        <a href="#" class="mt-6 inline-flex w-full justify-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-4 py-2 font-semibold text-white">Start Free</a>
+      </div>
+
+      <!-- Team -->
+      <div class="rounded-2xl border border-white/10 bg-base-700/50 p-6 shadow-glow">
+        <h3 class="font-semibold">Team</h3>
+        <p class="mt-1 text-slate-400">For established agencies and marketing departments.</p>
+        <div class="mt-4 text-3xl font-extrabold"><span class="price" data-month="£199" data-year="£1990">£199</span><span class="text-base font-medium text-slate-400">/mo</span></div>
+        <ul class="mt-4 space-y-2 text-sm text-slate-300">
+          <li>Unlimited searches</li>
+          <li>5,000 exports</li>
+          <li>Up to 10 users</li>
+          <li>Priority support, early feature access</li>
+          <li>Custom integrations</li>
+        </ul>
+        <a href="#" class="mt-6 inline-flex w-full justify-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-4 py-2 font-semibold">Start Free</a>
+      </div>
+    </div>
+
+    <p class="mt-6 text-center text-sm text-slate-400">Founders’ Launch Offer — lock your plan at today’s price for life. Need more? <a class="underline decoration-dotted underline-offset-4 hover:text-white" href="#contact">Contact us</a> for custom solutions.</p>
+  </div>
+</section>
