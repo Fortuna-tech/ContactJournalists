@@ -39,7 +39,7 @@ const App = () => (
             path="/blog/how-to-get-press-for-your-brand-without-a-pr-agency"
             element={<BlogPost />}
           />
-          <Route path="/affiliate" element={<Affiliate />} />
+          <Route path="/affiliates" element={<Affiliate />} />
           <Route path="/profile/:id" element={<Profile />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/onboarding" element={<Onboarding />} />

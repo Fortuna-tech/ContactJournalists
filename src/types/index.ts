@@ -120,3 +120,14 @@ export interface MediaListMember {
   journalistId: string;
   createdAt: string;
 }
+
+export interface Affiliate {
+  id: string;
+  email: string;
+  payoutLink?: string | null;
+  code?: string | null;
+  cutPercentage: number;
+  status: "pending" | "active" | "banned";
+  createdAt: string;
+  updatedAt: string;
+}

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function Affiliate() {
   const [refStarter, setRefStarter] = useState(5);
@@ -17,19 +18,17 @@ export default function Affiliate() {
     const email = formData.get("email") as string;
 
     try {
-      const response = await fetch("/api/subscribe-affiliate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
+      const { error } = await supabase.from("affiliates").insert({ email });
 
-      if (response.ok) {
+      if (!error) {
         setSubmitMessage("✓ Thanks! We'll notify you when we launch.");
         (e.target as HTMLFormElement).reset();
       } else {
-        setSubmitMessage("Something went wrong. Please try again.");
+        if (error.code === "23505") {
+          setSubmitMessage("You are already subscribed!");
+        } else {
+          setSubmitMessage("Something went wrong. Please try again.");
+        }
       }
     } catch (error) {
       setSubmitMessage("Something went wrong. Please try again.");
