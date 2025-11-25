@@ -209,7 +209,7 @@ const Index = () => {
             <li>
               <a
                 className="ml-2 inline-flex items-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-4 py-2 font-semibold text-white shadow-glow hover:opacity-95"
-                href="/auth"
+                href="/waitlist-signup"
                 data-testid="button-get-started"
               >
                 Get Started
@@ -271,7 +271,7 @@ const Index = () => {
                 Login
               </a>
               <a
-                href="/auth"
+                href="/waitlist-signup"
                 onClick={closeMobileMenu}
                 className="mt-2 block rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-4 py-2.5 text-center font-semibold text-white shadow-glow hover:opacity-95 transition-opacity"
               >
@@ -317,7 +317,7 @@ const Index = () => {
             </div>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8 px-4">
               <a
-                href="/auth"
+                href="/waitlist-signup"
                 className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold text-white shadow-glow hover:opacity-95 transition-opacity w-full sm:w-auto"
                 data-testid="hero-get-started"
               >

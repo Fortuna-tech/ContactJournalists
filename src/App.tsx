@@ -26,6 +26,7 @@ import JournalistLayout from "@/layouts/JournalistLayout";
 import PressPitchExamplesBlog from "./pages/blog/PressPitchExamplesBlog";
 import { HelmetProvider } from "react-helmet-async";
 import PLTemplateBlogPost from "./pages/blog/PLTemplateBlog";
+import WaitlisSignup from "./pages/WaitlisSignup";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/waitlist-signup" element={<WaitlisSignup />} />
             <Route
               path="/blog/how-to-get-press-for-your-brand-without-a-pr-agency"
               element={<GetPress />}
