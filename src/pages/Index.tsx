@@ -33,7 +33,7 @@ const Index = () => {
     }, 2500); // Change word every 2.5 seconds
 
     // Countdown timer
-    const targetDate = new Date("2025-11-30T19:00:00").getTime();
+    const targetDate = new Date("2025-12-16T09:00:00").getTime();
 
     const calculateTimeLeft = () => {
       const now = new Date().getTime();
