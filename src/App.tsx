@@ -26,6 +26,7 @@ import JournalistLayout from "@/layouts/JournalistLayout";
 import PressPitchExamplesBlog from "./pages/blog/PressPitchExamplesBlog";
 import { HelmetProvider } from "react-helmet-async";
 import PLTemplateBlogPost from "./pages/blog/PLTemplateBlog";
+import UltimateGuideBlog from "./pages/blog/UltimateGuideBlog";
 import WaitlisSignup from "./pages/WaitlisSignup";
 
 const queryClient = new QueryClient();
@@ -52,6 +53,10 @@ const App = () => (
             <Route
               path="/blog/free-small-business-pl-template-google-sheets-excel"
               element={<PLTemplateBlogPost />}
+            />
+            <Route
+              path="/blog/ultimate-guide-best-platforms-contacting-journalists-2025"
+              element={<UltimateGuideBlog />}
             />
             <Route path="/affiliates" element={<Affiliate />} />
             <Route path="/profile/:id" element={<Profile />} />
