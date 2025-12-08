@@ -1,6 +1,5 @@
 import { ArrowLeft } from "lucide-react";
 import { Helmet } from "react-helmet-async";
-import { BrevoSignupForm } from "@/components/EmailForms/BrevoSignupForm";
 import calculatorImage from "@assets/pexels-karola-g-4476375_1763372979022.jpg";
 import revenueReportImage from "@assets/pexels-rdne-7947746_1763372982891.jpg";
 
@@ -89,11 +88,15 @@ const PLTemplateBlogPost = () => {
             </header>
 
             <div className="mb-12">
-              <BrevoSignupForm
-                title="📥 Download Your Free P&L Template"
-                description="✔ Google Sheets & Excel versions ✔ Works with any currency ✔ Founder-friendly layout ✔ Clear structure with no clutter. Enter your email to get instant access."
-                buttonText="Get Free Template"
-              />
+              <iframe 
+                width="540" 
+                height="305" 
+                src="https://db7e141b.sibforms.com/serve/MUIFAIIYRzBhiFb-31a5HL2cvFXdCnjhfOkbM3UtVhQYpC4OrwDrZ7zdRVPVmir5QP9J-9DMGEbXHJ543NcHker5aYHMSkTy0nw6kDLrOw4aMsPpFVojDeG6G9A838NpSxuqIUAuQJn0eaRojqoKVMmFqF4B-XhzMv3QBXz4Y-lYvXxSDhZeeFKW5Owl-51vMAMokzcs08lhJE1s" 
+                frameBorder="0" 
+                scrolling="auto" 
+                allowFullScreen 
+                style={{ display: "block", marginLeft: "auto", marginRight: "auto", maxWidth: "100%" }}
+              ></iframe>
             </div>
 
             <div className="prose prose-invert prose-lg max-w-none">
@@ -359,11 +362,15 @@ const PLTemplateBlogPost = () => {
               </p>
 
               <div className="mt-12">
-                <BrevoSignupForm
-                  title="Get Your Free P&L Template Now"
-                  description="Perfect for first-time founders, solopreneurs, SaaS founders, and bootstrapped startups. Download both Google Sheets and Excel versions instantly."
-                  buttonText="Download Free Template"
-                />
+                <iframe 
+                  width="540" 
+                  height="305" 
+                  src="https://db7e141b.sibforms.com/serve/MUIFAIIYRzBhiFb-31a5HL2cvFXdCnjhfOkbM3UtVhQYpC4OrwDrZ7zdRVPVmir5QP9J-9DMGEbXHJ543NcHker5aYHMSkTy0nw6kDLrOw4aMsPpFVojDeG6G9A838NpSxuqIUAuQJn0eaRojqoKVMmFqF4B-XhzMv3QBXz4Y-lYvXxSDhZeeFKW5Owl-51vMAMokzcs08lhJE1s" 
+                  frameBorder="0" 
+                  scrolling="auto" 
+                  allowFullScreen 
+                  style={{ display: "block", marginLeft: "auto", marginRight: "auto", maxWidth: "100%" }}
+                ></iframe>
               </div>
 
               <h2 className="text-2xl md:text-3xl font-bold text-white mt-12 mb-6">
@@ -511,11 +518,15 @@ const PLTemplateBlogPost = () => {
               </p>
 
               <div className="mt-12">
-                <BrevoSignupForm
-                  title="Claim Your Free P&L Template"
-                  description="Join hundreds of founders who've downloaded this template. Get both Google Sheets and Excel versions sent to your inbox instantly. Track revenue, expenses, and profit with ease."
-                  buttonText="Send Me The Template"
-                />
+                <iframe 
+                  width="540" 
+                  height="305" 
+                  src="https://db7e141b.sibforms.com/serve/MUIFAIIYRzBhiFb-31a5HL2cvFXdCnjhfOkbM3UtVhQYpC4OrwDrZ7zdRVPVmir5QP9J-9DMGEbXHJ543NcHker5aYHMSkTy0nw6kDLrOw4aMsPpFVojDeG6G9A838NpSxuqIUAuQJn0eaRojqoKVMmFqF4B-XhzMv3QBXz4Y-lYvXxSDhZeeFKW5Owl-51vMAMokzcs08lhJE1s" 
+                  frameBorder="0" 
+                  scrolling="auto" 
+                  allowFullScreen 
+                  style={{ display: "block", marginLeft: "auto", marginRight: "auto", maxWidth: "100%" }}
+                ></iframe>
               </div>
 
               <h2 className="text-2xl md:text-3xl font-bold text-white mt-12 mb-6">
