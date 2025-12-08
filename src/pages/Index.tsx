@@ -33,7 +33,7 @@ const Index = () => {
     }, 2500); // Change word every 2.5 seconds
 
     // Countdown timer
-    const targetDate = new Date("2025-12-16T09:00:00").getTime();
+    const targetDate = new Date("2025-11-30T19:00:00").getTime();
 
     const calculateTimeLeft = () => {
       const now = new Date().getTime();
@@ -639,7 +639,6 @@ const Index = () => {
                 </div>
                 <ul className="mt-4 space-y-2 text-sm text-slate-300">
                   <li>300 searches/mo</li>
-                  <li>200 exports</li>
                   <li>1 user</li>
                   <li>Pitch Generator (daily sample)</li>
                 </ul>
@@ -669,7 +668,6 @@ const Index = () => {
                 </div>
                 <ul className="mt-4 space-y-2 text-sm text-slate-300">
                   <li>1,500 searches/mo</li>
-                  <li>1,000 exports</li>
                   <li>Up to 3 users</li>
                   <li>Full Pitch Generator, saved lists</li>
                   <li>Affiliate dashboard access</li>
@@ -697,7 +695,6 @@ const Index = () => {
                 </div>
                 <ul className="mt-4 space-y-2 text-sm text-slate-300">
                   <li>Unlimited searches</li>
-                  <li>5,000 exports</li>
                   <li>Up to 10 users</li>
                   <li>Priority support, early feature access</li>
                   <li>Custom integrations</li>
