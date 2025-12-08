@@ -87,7 +87,7 @@ const PLTemplateBlogPost = () => {
               </div>
             </header>
 
-            <div className="mb-12">
+            <div className="mb-8">
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
                 📥 Download Your Free P&L Template
               </h2>
@@ -106,7 +106,7 @@ const PLTemplateBlogPost = () => {
             </div>
 
             <div className="prose prose-invert prose-lg max-w-none">
-              <p className="text-xl text-slate-300 leading-relaxed mb-8">
+              <p className="text-xl text-slate-300 leading-relaxed mb-6 mt-0">
                 If you're a founder, solopreneur or small business owner trying
                 to keep your finances organised, you need a P&L template that
                 works in real life: simple, clean, easy to update and made for
