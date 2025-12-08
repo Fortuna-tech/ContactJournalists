@@ -88,6 +88,12 @@ const PLTemplateBlogPost = () => {
             </header>
 
             <div className="mb-12">
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                📥 Download Your Free P&L Template
+              </h2>
+              <p className="text-slate-300 mb-6">
+                ✔ Google Sheets & Excel versions ✔ Works with any currency ✔ Founder-friendly layout ✔ Clear structure with no clutter. Enter your email to get instant access.
+              </p>
               <iframe 
                 width="540" 
                 height="305" 
@@ -362,6 +368,12 @@ const PLTemplateBlogPost = () => {
               </p>
 
               <div className="mt-12">
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                  Get Your Free P&L Template Now
+                </h2>
+                <p className="text-slate-300 mb-6">
+                  Perfect for first-time founders, solopreneurs, SaaS founders, and bootstrapped startups. Download both Google Sheets and Excel versions instantly.
+                </p>
                 <iframe 
                   width="540" 
                   height="305" 
@@ -518,6 +530,12 @@ const PLTemplateBlogPost = () => {
               </p>
 
               <div className="mt-12">
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                  Claim Your Free P&L Template
+                </h2>
+                <p className="text-slate-300 mb-6">
+                  Join hundreds of founders who've downloaded this template. Get both Google Sheets and Excel versions sent to your inbox instantly. Track revenue, expenses, and profit with ease.
+                </p>
                 <iframe 
                   width="540" 
                   height="305" 
