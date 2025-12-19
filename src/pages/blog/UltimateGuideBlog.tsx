@@ -514,6 +514,171 @@ const UltimateGuideBlog = () => {
             tracking, and live alerts&mdash;and you pay an affordable price&mdash;you&apos;ll be set up to do PR outreach in a far
             smarter way. That&apos;s exactly what I&apos;m building with <strong>ContactJournalists.com</strong>.
           </p>
+
+          <h2>How To Write a Press Release That Actually Gets Read</h2>
+          <p>
+            Here&apos;s the truth&mdash;most press releases get ignored. They&apos;re too long, they sound like corporate boilerplate,
+            and they don&apos;t give journalists anything they can actually use. But when you do it right, a press release can open
+            doors, land features, and get your brand into the magazines, blogs, and news sites you dream of.
+          </p>
+          <p>
+            Everything here is based on what founders using <strong>ContactJournalists.com</strong> are doing right now&mdash;connecting directly
+            with journalists and submitting story ideas that get noticed.
+          </p>
+
+          <h3>1. Start With a Headline That Reads Like a Story</h3>
+          <p>
+            Journalists get hundreds of subject lines. If yours sounds like &quot;Company X Announces...&quot; they&apos;ve probably moved
+            on already. What works are headlines that look like news stories, use emotion or intrigue, and sound like real
+            language&mdash;not &quot;we are pleased to announce...&quot;.
+          </p>
+
+          <h3>2. Nail the Opening Line</h3>
+          <p>
+            Your first line should answer: What&apos;s the story? Who does it affect? Why now? Skip &quot;We are excited to announce...&quot;
+            and go straight to the heart of the story in one clean sentence.
+          </p>
+
+          <h3>3. Keep It Under About 400 Words</h3>
+          <p>
+            A press release is not a blog post. Include who you are, what&apos;s new, why it matters, and where to find you. Leave
+            out the 1,000-word mission statement.
+          </p>
+
+          <h3>4. Add a Real Quote</h3>
+          <p>
+            Quotes show your brand&apos;s voice and give journalists something tangible to lift. Avoid generic soundbites and share
+            something honest and specific about why you built what you built or what problem you&apos;re solving.
+          </p>
+
+          <h3>5. Make It Easy to Copy-Paste</h3>
+          <p>
+            The easier you make a journalist&apos;s job, the better your odds. Keep formatting clean, add links inline, include a
+            clear contact at the bottom, and end with a short 2&ndash;3 line boilerplate about your company.
+          </p>
+
+          <h3>6. Personalise Before You Send</h3>
+          <p>
+            Don&apos;t send a mass blast. Check what the journalist last wrote, reference it in one line, and show that you&apos;ve done
+            your homework. That 30 seconds of personalising makes you memorable.
+          </p>
+
+          <h3>7. Stand Out From the Crowd (Thoughtfully)</h3>
+          <p>
+            Everyone sends emails. Few create a moment. Think in terms of small, thoughtful gestures: a relevant sample, a
+            handwritten note, or a detail that proves you read their work. When I ran my supplements brand, this alone got
+            replies.
+          </p>
+
+          <h3>8. Time It Right</h3>
+          <p>
+            Timing matters. Avoid sending on Friday afternoon or first thing Monday. Aim for midweek, mid-morning, and pitch
+            seasonal stories weeks in advance.
+          </p>
+
+          <h3>9. Follow Up (But Don&apos;t Be Pushy)</h3>
+          <p>
+            Most coverage fails because there&apos;s no follow-up. Wait 4&ndash;5 days, reply to the same thread with one short line,
+            and then move on if you don&apos;t hear back. Your next pitch could be the one that lands.
+          </p>
+
+          <h3>10. A Simple Press Release Template You Can Adapt</h3>
+          <p>
+            Headline: &quot;The platform helping small businesses get press coverage&mdash;without PR agencies&quot;
+          </p>
+          <p>
+            Opening line: <em>
+              ContactJournalists.com launches a new platform giving founders direct access to live journalist alerts and
+              verified media contacts, making press affordable and accessible.
+            </em>
+          </p>
+          <p>
+            Quote: <em>
+              &quot;We built this after seeing founders pay thousands with no guarantees,&quot; says Fortuna, founder of
+              ContactJournalists.com.
+            </em>
+          </p>
+          <p>
+            Boilerplate: <em>
+              ContactJournalists.com is a UK-based media outreach platform built for founders, solopreneurs and small brands.
+              It offers live journalist alerts, verified contacts and AI pitch writing to help anyone land press coverage
+              faster and more affordably.
+            </em>
+          </p>
+
+          <div className="bg-base-800/60 border border-accent-blue/40 rounded-xl p-6 my-10">
+            <h3 className="text-xl font-semibold text-white mb-3">Want help turning this into action?</h3>
+            <p className="text-slate-200 mb-3">
+              Use <strong>ContactJournalists.com</strong> to find journalists, then plug in this structure to send pitches that actually
+              get read.
+            </p>
+            <a
+              href="/waitlist-signup"
+              className="inline-flex items-center gap-2 rounded-lg bg-white text-base-900 px-6 py-3 font-semibold hover:opacity-95 transition-opacity"
+            >
+              Start Free for Founders
+            </a>
+          </div>
+
+          <h2>How to Get Your Brand Featured in the Press (Without a PR Agency)</h2>
+          <p>
+            Running a small business means you wear every hat. You&apos;re the marketing department, customer service lead, social
+            media manager, accountant, operations person&mdash;sometimes all before lunch. And somewhere in between all that,
+            you&apos;re also meant to find time to get your brand in the press.
+          </p>
+          <p>
+            Whether you&apos;re building a beauty brand, a SaaS, a supplement company or a fitness label, press coverage can
+            completely change your trajectory. It gives you credibility, trust, and the kind of exposure no paid ad can buy.
+            But PR agencies are expensive, and most of them can&apos;t even promise results.
+          </p>
+          <p>
+            That&apos;s exactly why I built <strong>ContactJournalists.com</strong>. I know how it feels to be quoted a £1,000-a-month
+            retainer by a big agency that &quot;can&apos;t guarantee&quot; you&apos;ll get featured. I know what it&apos;s like to be working
+            flat-out trying to keep customers happy, only to realise press outreach is yet another job on your endless list.
+          </p>
+          <p>
+            So I created something simple:
+          </p>
+          <ul>
+            <li>Get live journalist alerts when reporters are looking for quotes or stories like yours</li>
+            <li>Find verified journalist contacts instantly&mdash;no digging through old LinkedIn profiles</li>
+            <li>Use built-in AI pitch writing to sound natural, confident and clear</li>
+            <li>Reach out directly, without the agency middleman or the four-figure invoice</li>
+          </ul>
+          <p>
+            If you&apos;re a solopreneur, solo dev, or small brand owner, this platform was built for you. It&apos;s the tool I wish I&apos;d
+            had when I was running my supplement brand and trying to do everything at once.
+          </p>
+
+          <h3>Next Steps: Turning This Guide Into Results</h3>
+          <ul>
+            <li>
+              Read this guide and shortlist the 1&ndash;2 platforms that genuinely fit your budget and goals (start with
+              <strong>ContactJournalists.com</strong> if you&apos;re a founder)
+            </li>
+            <li>
+              Use the{" "}
+              <a
+                href="/blog/press-pitch-examples-that-get-replies"
+                className="text-accent-blue hover:text-accent-violet font-semibold"
+              >
+                press pitch examples
+              </a>{" "}
+              to write your first 3 outreach emails
+            </li>
+            <li>
+              Track every pitch in a simple sheet or in the tools you&apos;re using so you can learn what&apos;s working over time
+            </li>
+          </ul>
+          <p>
+            Getting featured doesn&apos;t have to feel out of reach. When you find journalists who already write about brands like
+            yours, keep your pitch short and human, and stay consistent with your outreach, the opportunities start to build
+            up.
+          </p>
+          <p>
+            Your story deserves to be told&mdash;and with a little persistence, it will be. From one founder to another: keep
+            showing up, keep telling your story, and let <strong>ContactJournalists.com</strong> make that part just a little bit easier.
+          </p>
         </section>
 
         {/* CTA */}
