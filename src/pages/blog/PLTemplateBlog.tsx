@@ -184,11 +184,11 @@ const PLTemplateBlogPost = () => {
               <p className="text-slate-300 mb-6">
                 👉{" "}
                 <a
-                  href="/blog/ultimate-guide-best-platforms-contacting-journalists-2025"
+                  href="/blog/ultimate-guide-best-platforms-contacting-journalists-2026"
                   className="text-accent-blue hover:underline font-semibold"
                 >
                   Ultimate Guide: Best Platforms for Contacting Journalists in
-                  2025
+                  2026
                 </a>
               </p>
 
@@ -510,11 +510,11 @@ const PLTemplateBlogPost = () => {
               <p className="text-slate-300 mb-6">
                 👉{" "}
                 <a
-                  href="/blog/ultimate-guide-best-platforms-contacting-journalists-2025"
+                  href="/blog/ultimate-guide-best-platforms-contacting-journalists-2026"
                   className="text-accent-blue hover:underline font-semibold"
                 >
                   Ultimate Guide: Best Platforms for Contacting Journalists in
-                  2025
+                  2026
                 </a>
               </p>
 

@@ -4,13 +4,13 @@ const UltimateGuideBlog = () => {
   return (
     <div className="min-h-screen bg-base-900 text-slate-200">
       <Helmet>
-        <title>The Ultimate Guide to the Best Platforms for Contacting Journalists in 2025</title>
+        <title>The Ultimate Guide to the Best Platforms for Contacting Journalists in 2026</title>
         <meta
           name="description"
-          content="Complete guide to the best platforms for contacting journalists in 2025. Compare PR tools, media databases, and outreach platforms to get press coverage for your brand."
+          content="Complete guide to the best platforms for contacting journalists in 2026. Compare PR tools, media databases, and outreach platforms to get press coverage for your brand."
         />
-        <meta property="og:title" content="The Ultimate Guide to the Best Platforms for Contacting Journalists in 2025" />
-        <meta property="og:description" content="Complete guide to the best platforms for contacting journalists in 2025. Compare PR tools, media databases, and outreach platforms." />
+        <meta property="og:title" content="The Ultimate Guide to the Best Platforms for Contacting Journalists in 2026" />
+        <meta property="og:description" content="Complete guide to the best platforms for contacting journalists in 2026. Compare PR tools, media databases, and outreach platforms." />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="The Ultimate Guide to the Best Platforms for Contacting Journalists in 2025" />
@@ -25,19 +25,25 @@ const UltimateGuideBlog = () => {
               Featured Guide
             </span>
             <span className="text-slate-500">•</span>
-            <span className="text-sm text-slate-400">2025 Edition</span>
+            <span className="text-sm text-slate-400">2026 Edition</span>
           </div>
 
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            The Ultimate Guide to the Best Platforms for Contacting Journalists in 2025
+            The Ultimate Guide to the Best Platforms for Contacting Journalists in 2026
           </h1>
 
-          <div className="flex items-center gap-4 text-sm text-slate-400 border-b border-white/10 pb-6">
-            <time>December 1, 2025</time>
-            <span>•</span>
-            <span>15 min read</span>
-            <span>•</span>
-            <span>By ContactJournalists Team</span>
+          <div className="flex flex-col md:flex-row md:items-center md:gap-4 text-sm text-slate-400 border-b border-white/10 pb-6 space-y-2 md:space-y-0">
+            <div className="flex items-center gap-4">
+              <time>December 1, 2025</time>
+              <span>•</span>
+              <span>15 min read</span>
+              <span>•</span>
+              <span>By ContactJournalists Team</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs md:text-sm text-emerald-300">
+              <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+              <span>Updated for 2026 on December 19, 2025</span>
+            </div>
           </div>
         </div>
 
@@ -54,7 +60,7 @@ const UltimateGuideBlog = () => {
           </p>
 
           <p className="text-slate-300 mb-8">
-            In this comprehensive guide, we'll break down the best platforms for contacting journalists in 2025—what they do,
+            In this comprehensive guide, we'll break down the best platforms for contacting journalists in 2026—what they do,
             who they're for, and how they stack up. We'll cover everything from enterprise PR tools to affordable
             solutions for startups and solo founders.
           </p>
@@ -342,7 +348,10 @@ const UltimateGuideBlog = () => {
 
         {/* Footer */}
         <div className="mt-16 pt-8 border-t border-white/10 text-center text-sm text-slate-400">
-          <p>This guide was last updated on December 1, 2025. Media landscapes change quickly, so verify the latest pricing and features directly with providers.</p>
+          <p>
+            This guide was originally published on December 1, 2025 and last updated on December 19, 2025 for the 2026 edition.
+            Media landscapes change quickly, so verify the latest pricing and features directly with providers.
+          </p>
         </div>
       </div>
     </div>
@@ -350,6 +359,7 @@ const UltimateGuideBlog = () => {
 };
 
 export default UltimateGuideBlog;
+
 
 
 

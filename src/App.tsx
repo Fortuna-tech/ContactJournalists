@@ -55,7 +55,7 @@ const App = () => (
               element={<PLTemplateBlogPost />}
             />
             <Route
-              path="/blog/ultimate-guide-best-platforms-contacting-journalists-2025"
+              path="/blog/ultimate-guide-best-platforms-contacting-journalists-2026"
               element={<UltimateGuideBlog />}
             />
             <Route path="/affiliates" element={<Affiliate />} />

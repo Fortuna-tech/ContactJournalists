@@ -677,11 +677,11 @@ const PressPitchExamplesBlog = () => {
                 <ul className="space-y-3">
                   <li>
                     <a
-                      href="/blog/ultimate-guide-best-platforms-contacting-journalists-2025"
+                      href="/blog/ultimate-guide-best-platforms-contacting-journalists-2026"
                       className="text-accent-blue hover:underline font-medium"
                     >
                       → Ultimate Guide: Best Platforms for Contacting
-                      Journalists in 2025
+                      Journalists in 2026
                     </a>
                   </li>
                   <li>
