@@ -425,7 +425,7 @@ const UltimateGuideBlog = () => {
             </p>
             <a
               href="/waitlist-signup"
-              className="inline-flex items-center gap-2 rounded-lg bg-white text-base-900 px-6 py-3 font-semibold hover:opacity-95 transition-opacity"
+              className="inline-flex items-center gap-2 rounded-lg bg-white text-black px-6 py-3 font-semibold hover:opacity-95 transition-opacity"
             >
               Start Free on ContactJournalists.com
             </a>
@@ -614,7 +614,7 @@ const UltimateGuideBlog = () => {
             </p>
             <a
               href="/waitlist-signup"
-              className="inline-flex items-center gap-2 rounded-lg bg-white text-base-900 px-6 py-3 font-semibold hover:opacity-95 transition-opacity"
+              className="inline-flex items-center gap-2 rounded-lg bg-white text-black px-6 py-3 font-semibold hover:opacity-95 transition-opacity"
             >
               Start Free for Founders
             </a>
@@ -1261,7 +1261,7 @@ const UltimateGuideBlog = () => {
           </p>
           <a
             href="/waitlist-signup"
-            className="inline-flex items-center gap-2 bg-white text-base-900 px-8 py-4 rounded-lg font-semibold hover:opacity-95 transition-opacity"
+            className="inline-flex items-center gap-2 bg-white text-black px-8 py-4 rounded-lg font-semibold hover:opacity-95 transition-opacity"
           >
             Start Your Free Trial
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
