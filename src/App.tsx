@@ -29,6 +29,12 @@ import PLTemplateBlogPost from "./pages/blog/PLTemplateBlog";
 import UltimateGuideBlog from "./pages/blog/UltimateGuideBlog";
 import WaitlisSignup from "./pages/WaitlisSignup";
 
+// Admin Pages
+import AdminLayout from "@/layouts/AdminLayout";
+import AdminDashboard from "@/pages/admin/Dashboard";
+import AdminJournalists from "@/pages/admin/Journalists";
+import AdminCsvImport from "@/pages/admin/CsvImport";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -81,6 +87,13 @@ const App = () => (
               />
               <Route path="settings" element={<JournalistSettings />} />
               <Route path="help" element={<JournalistHelp />} />
+            </Route>
+
+            {/* Admin Routes */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="journalists" element={<AdminJournalists />} />
+              <Route path="import" element={<AdminCsvImport />} />
             </Route>
 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
