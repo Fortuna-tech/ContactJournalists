@@ -168,7 +168,7 @@ export default function CsvImportPage() {
               <Image className="h-4 w-4" />
               <AlertDescription>
                 Email screenshots URLs will be stored in the profile metadata
-                for later processing. Google Drive links are supported.
+                for later processing. Only Google Drive links are supported.
               </AlertDescription>
             </Alert>
           )}

@@ -19,6 +19,8 @@ const supabaseAuth = createClient(
   Deno.env.get("SUPABASE_ANON_KEY") ?? ""
 );
 
+const STORAGE_BUCKET = "email_proof";
+
 interface JournalistData {
   full_name?: string;
   email?: string;
@@ -36,6 +38,159 @@ interface BulkImportResult {
   skipped: number;
   errors: { row: number; message: string }[];
   skippedRows: { row: number; email: string }[];
+}
+
+/**
+ * Check if URL is a Google Drive view/share link
+ */
+function isGoogleDriveLink(url: string): boolean {
+  if (!url) return false;
+  return (
+    url.includes("drive.google.com/file/d/") ||
+    url.includes("drive.google.com/open?id=")
+  );
+}
+
+/**
+ * Extract file ID from Google Drive link
+ */
+function extractGoogleDriveFileId(url: string): string | null {
+  // Format: https://drive.google.com/file/d/{FILE_ID}/view...
+  const fileMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (fileMatch) return fileMatch[1];
+
+  // Format: https://drive.google.com/open?id={FILE_ID}
+  const openMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (openMatch) return openMatch[1];
+
+  return null;
+}
+
+/**
+ * Convert Google Drive view link to direct download URL
+ */
+function getGoogleDriveDownloadUrl(fileId: string): string {
+  return `https://drive.google.com/uc?export=download&id=${fileId}`;
+}
+
+/**
+ * Detect content type from response headers or default to image/jpeg
+ */
+function getContentType(response: Response): string {
+  const contentType = response.headers.get("content-type");
+  if (contentType && contentType.startsWith("image/")) {
+    return contentType;
+  }
+  return "image/jpeg"; // Default assumption for screenshots
+}
+
+/**
+ * Get file extension from content type
+ */
+function getExtension(contentType: string): string {
+  const map: Record<string, string> = {
+    "image/jpeg": "jpg",
+    "image/jpg": "jpg",
+    "image/png": "png",
+    "image/gif": "gif",
+    "image/webp": "webp",
+  };
+  return map[contentType] || "jpg";
+}
+
+/**
+ * Download image from Google Drive and upload to Supabase Storage
+ * Returns the public URL of the uploaded file, or null if failed
+ */
+async function processGoogleDriveImage(
+  url: string,
+  profileIdOrEmail: string
+): Promise<string | null> {
+  try {
+    const fileId = extractGoogleDriveFileId(url);
+    if (!fileId) {
+      console.error("Could not extract file ID from Google Drive URL:", url);
+      return null;
+    }
+
+    const downloadUrl = getGoogleDriveDownloadUrl(fileId);
+
+    // Fetch the image from Google Drive
+    const response = await fetch(downloadUrl, {
+      headers: {
+        // Some user agent to avoid blocks
+        "User-Agent":
+          "Mozilla/5.0 (compatible; ContactJournalists/1.0; +https://contactjournalists.com)",
+      },
+    });
+
+    if (!response.ok) {
+      console.error(
+        `Failed to download from Google Drive: ${response.status} ${response.statusText}`
+      );
+      return null;
+    }
+
+    // Check if we got an HTML page (virus scan warning for large files)
+    const contentType = response.headers.get("content-type") || "";
+    if (contentType.includes("text/html")) {
+      console.error(
+        "Google Drive returned HTML (possibly virus scan warning or access denied)"
+      );
+      return null;
+    }
+
+    const imageData = await response.arrayBuffer();
+    const imageContentType = getContentType(response);
+    const extension = getExtension(imageContentType);
+
+    // Generate a unique filename
+    const timestamp = Date.now();
+    const sanitizedId = profileIdOrEmail
+      .replace(/[^a-zA-Z0-9]/g, "_")
+      .substring(0, 50);
+    const filename = `${sanitizedId}_${timestamp}.${extension}`;
+
+    // Upload to Supabase Storage
+    const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
+      .from(STORAGE_BUCKET)
+      .upload(filename, imageData, {
+        contentType: imageContentType,
+        upsert: true,
+      });
+
+    if (uploadError) {
+      console.error("Failed to upload to storage:", uploadError);
+      return null;
+    }
+
+    // Get the public URL
+    const {
+      data: { publicUrl },
+    } = supabaseAdmin.storage.from(STORAGE_BUCKET).getPublicUrl(filename);
+
+    return publicUrl;
+  } catch (error) {
+    console.error("Error processing Google Drive image:", error);
+    return null;
+  }
+}
+
+/**
+ * Check if URL is already a valid image URL (not a Google Drive link)
+ */
+function isDirectImageUrl(url: string): boolean {
+  if (!url) return false;
+  // Check for common image extensions or storage URLs
+  const lowerUrl = url.toLowerCase();
+  return (
+    lowerUrl.includes(".jpg") ||
+    lowerUrl.includes(".jpeg") ||
+    lowerUrl.includes(".png") ||
+    lowerUrl.includes(".gif") ||
+    lowerUrl.includes(".webp") ||
+    lowerUrl.includes("/storage/v1/object/") // Supabase storage
+  );
 }
 
 // Verify the caller is a staff member
@@ -131,57 +286,85 @@ serve(async (req: Request) => {
           skippedRows: [],
         };
 
-        // Process in batches of 100 (within timeout limits)
-        const batchSize = 100;
-        for (let i = 0; i < rows.length; i += batchSize) {
-          const batch = rows.slice(i, i + batchSize).map((row) => {
-            const { email_screenshot, ...profileData } = row;
-            return {
-              role: "journalist",
-              onboarding_complete: true,
-              ...profileData,
-              categories: profileData.categories || [],
-              // Store email_screenshot URL in meta for later processing
-              meta: email_screenshot
-                ? { email_screenshot_url: email_screenshot }
-                : {},
-              _originalEmail: row.email, // Keep for error tracking
-            };
-          });
+        // Track successfully inserted profiles that need image processing
+        const profilesNeedingImages: {
+          id: string;
+          email: string;
+          email_screenshot: string;
+        }[] = [];
 
-          const { data: inserted, error } = await supabaseAdmin
+        // STEP 1: Insert all profiles first (without processing images)
+        for (let i = 0; i < rows.length; i++) {
+          const row = rows[i];
+          const { email_screenshot, ...profileData } = row;
+
+          const insertData = {
+            role: "journalist",
+            onboarding_complete: true,
+            ...profileData,
+            categories: profileData.categories || [],
+            // Store original URL initially, will be updated after image processing
+            meta: email_screenshot
+              ? { email_screenshot_url: email_screenshot }
+              : {},
+          };
+
+          const { data: inserted, error: insertError } = await supabaseAdmin
             .from("profiles")
-            .insert(batch.map(({ _originalEmail, ...rest }) => rest))
-            .select();
+            .insert(insertData)
+            .select("id")
+            .single();
 
-          if (error) {
-            // If batch fails, try individual inserts
-            for (let j = 0; j < batch.length; j++) {
-              const { _originalEmail, ...profileData } = batch[j];
-              const { error: singleError } = await supabaseAdmin
-                .from("profiles")
-                .insert(profileData);
-
-              if (singleError) {
-                // Check if it's a unique constraint violation (duplicate)
-                if (singleError.code === "23505") {
-                  results.skipped++;
-                  results.skippedRows.push({
-                    row: i + j + 1,
-                    email: _originalEmail || "unknown",
-                  });
-                } else {
-                  results.errors.push({
-                    row: i + j + 1,
-                    message: singleError.message,
-                  });
-                }
-              } else {
-                results.recordsInserted++;
-              }
+          if (insertError) {
+            // Check if it's a unique constraint violation (duplicate)
+            if (insertError.code === "23505") {
+              results.skipped++;
+              results.skippedRows.push({
+                row: i + 1,
+                email: row.email || "unknown",
+              });
+            } else {
+              results.errors.push({
+                row: i + 1,
+                message: insertError.message,
+              });
             }
           } else {
-            results.recordsInserted += inserted?.length || batch.length;
+            results.recordsInserted++;
+            // Track this profile for image processing if it has a Google Drive link
+            if (email_screenshot && isGoogleDriveLink(email_screenshot)) {
+              profilesNeedingImages.push({
+                id: inserted.id,
+                email: row.email || `profile_${inserted.id}`,
+                email_screenshot,
+              });
+            }
+          }
+        }
+
+        // STEP 2: Process images for successfully inserted profiles (async, non-blocking)
+        // This happens after all profiles are inserted
+        for (const profile of profilesNeedingImages) {
+          try {
+            const uploadedUrl = await processGoogleDriveImage(
+              profile.email_screenshot,
+              profile.email
+            );
+
+            if (uploadedUrl) {
+              // Update the profile with the storage URL
+              await supabaseAdmin
+                .from("profiles")
+                .update({ meta: { email_screenshot_url: uploadedUrl } })
+                .eq("id", profile.id);
+            }
+            // If upload failed, the original URL is already stored
+          } catch (imageError) {
+            // Log but don't affect results - original URL is already stored
+            console.error(
+              `Image processing error for ${profile.email}:`,
+              imageError
+            );
           }
         }
 
