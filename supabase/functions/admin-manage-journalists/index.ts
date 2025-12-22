@@ -278,93 +278,154 @@ serve(async (req: Request) => {
       }
 
       case "bulk_import": {
+        // Bulk import profiles - no image processing, just insert
         const rows = data as JournalistData[];
-        const results: BulkImportResult = {
+        const results: BulkImportResult & {
+          profilesWithImages: { profileId: string; url: string }[];
+        } = {
           recordsInserted: 0,
           skipped: 0,
           errors: [],
           skippedRows: [],
+          profilesWithImages: [],
         };
 
-        // Track successfully inserted profiles that need image processing
-        const profilesNeedingImages: {
-          id: string;
-          email: string;
-          email_screenshot: string;
-        }[] = [];
-
-        // STEP 1: Insert all profiles first (without processing images)
-        for (let i = 0; i < rows.length; i++) {
-          const row = rows[i];
+        // Prepare data for bulk insert
+        const insertRows = rows.map((row, index) => {
           const { email_screenshot, ...profileData } = row;
-
-          const insertData = {
-            role: "journalist",
-            onboarding_complete: true,
-            ...profileData,
-            categories: profileData.categories || [],
-            // Store original URL initially, will be updated after image processing
-            meta: email_screenshot
-              ? { email_screenshot_url: email_screenshot }
-              : {},
+          return {
+            _index: index,
+            _email: row.email,
+            _screenshot: email_screenshot,
+            data: {
+              role: "journalist",
+              onboarding_complete: true,
+              ...profileData,
+              categories: profileData.categories || [],
+              // Store original URL initially
+              meta: email_screenshot
+                ? { email_screenshot_url: email_screenshot }
+                : {},
+            },
           };
+        });
 
-          const { data: inserted, error: insertError } = await supabaseAdmin
-            .from("profiles")
-            .insert(insertData)
-            .select("id")
-            .single();
+        // Bulk insert all profiles at once
+        const { data: inserted, error: bulkError } = await supabaseAdmin
+          .from("profiles")
+          .insert(insertRows.map((r) => r.data))
+          .select("id, email");
 
-          if (insertError) {
-            // Check if it's a unique constraint violation (duplicate)
-            if (insertError.code === "23505") {
-              results.skipped++;
-              results.skippedRows.push({
-                row: i + 1,
-                email: row.email || "unknown",
-              });
-            } else {
-              results.errors.push({
-                row: i + 1,
-                message: insertError.message,
-              });
+        if (bulkError) {
+          // If bulk insert fails (e.g., some duplicates), try individual inserts
+          console.log(
+            "Bulk insert failed, trying individual inserts:",
+            bulkError
+          );
+
+          for (let i = 0; i < insertRows.length; i++) {
+            const row = insertRows[i];
+            const { data: singleInserted, error: singleError } =
+              await supabaseAdmin
+                .from("profiles")
+                .insert(row.data)
+                .select("id, email")
+                .single();
+
+            if (singleError) {
+              if (singleError.code === "23505") {
+                results.skipped++;
+                results.skippedRows.push({
+                  row: i + 1,
+                  email: row._email || "unknown",
+                });
+              } else {
+                results.errors.push({
+                  row: i + 1,
+                  message: singleError.message,
+                });
+              }
+            } else if (singleInserted) {
+              results.recordsInserted++;
+              // Track profiles with Google Drive images
+              if (row._screenshot && isGoogleDriveLink(row._screenshot)) {
+                results.profilesWithImages.push({
+                  profileId: singleInserted.id,
+                  url: row._screenshot,
+                });
+              }
             }
-          } else {
-            results.recordsInserted++;
-            // Track this profile for image processing if it has a Google Drive link
-            if (email_screenshot && isGoogleDriveLink(email_screenshot)) {
-              profilesNeedingImages.push({
-                id: inserted.id,
-                email: row.email || `profile_${inserted.id}`,
-                email_screenshot,
+          }
+        } else if (inserted) {
+          results.recordsInserted = inserted.length;
+          // Track profiles with Google Drive images
+          for (let i = 0; i < inserted.length && i < insertRows.length; i++) {
+            const row = insertRows[i];
+            if (row._screenshot && isGoogleDriveLink(row._screenshot)) {
+              results.profilesWithImages.push({
+                profileId: inserted[i].id,
+                url: row._screenshot,
               });
             }
           }
         }
 
-        // STEP 2: Process images for successfully inserted profiles (async, non-blocking)
-        // This happens after all profiles are inserted
-        for (const profile of profilesNeedingImages) {
+        return new Response(JSON.stringify(results), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        });
+      }
+
+      case "process_images": {
+        // Process a batch of images - download from Google Drive, upload to storage
+        const items = data as { profileId: string; url: string }[];
+        const results: {
+          successful: string[];
+          failed: { profileId: string; error: string }[];
+        } = {
+          successful: [],
+          failed: [],
+        };
+
+        for (const item of items) {
           try {
+            if (!isGoogleDriveLink(item.url)) {
+              // Not a Google Drive link, skip
+              results.successful.push(item.profileId);
+              continue;
+            }
+
             const uploadedUrl = await processGoogleDriveImage(
-              profile.email_screenshot,
-              profile.email
+              item.url,
+              item.profileId
             );
 
             if (uploadedUrl) {
               // Update the profile with the storage URL
-              await supabaseAdmin
+              const { error: updateError } = await supabaseAdmin
                 .from("profiles")
                 .update({ meta: { email_screenshot_url: uploadedUrl } })
-                .eq("id", profile.id);
+                .eq("id", item.profileId);
+
+              if (updateError) {
+                results.failed.push({
+                  profileId: item.profileId,
+                  error: updateError.message,
+                });
+              } else {
+                results.successful.push(item.profileId);
+              }
+            } else {
+              results.failed.push({
+                profileId: item.profileId,
+                error: "Failed to download/upload image",
+              });
             }
-            // If upload failed, the original URL is already stored
-          } catch (imageError) {
-            // Log but don't affect results - original URL is already stored
-            console.error(
-              `Image processing error for ${profile.email}:`,
-              imageError
-            );
+          } catch (err) {
+            results.failed.push({
+              profileId: item.profileId,
+              error: err instanceof Error ? err.message : "Unknown error",
+            });
           }
         }
 

@@ -1,7 +1,7 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { CsvUploader } from "@/components/admin/CsvUploader";
@@ -13,7 +13,11 @@ import {
   applyMapping,
   validateRow,
 } from "@/lib/csv-utils";
-import { bulkImportJournalists, BulkImportResult } from "@/lib/api";
+import {
+  bulkImportJournalists,
+  processImageBatch,
+  BulkImportResult,
+} from "@/lib/api";
 import { toast } from "sonner";
 import {
   Loader2,
@@ -24,9 +28,14 @@ import {
   SkipForward,
   XCircle,
   Image,
+  AlertTriangle,
 } from "lucide-react";
 
 type ImportState = "upload" | "mapping" | "importing" | "complete";
+type ImportPhase = "profiles" | "images";
+
+const PROFILE_BATCH_SIZE = 100;
+const IMAGE_BATCH_SIZE = 10;
 
 export default function CsvImportPage() {
   const [state, setState] = useState<ImportState>("upload");
@@ -36,7 +45,33 @@ export default function CsvImportPage() {
   const [importResult, setImportResult] = useState<BulkImportResult | null>(
     null
   );
-  const [progress, setProgress] = useState({ current: 0, total: 0 });
+
+  // Progress tracking
+  const [phase, setPhase] = useState<ImportPhase>("profiles");
+  const [profileProgress, setProfileProgress] = useState({
+    current: 0,
+    total: 0,
+  });
+  const [imageProgress, setImageProgress] = useState({
+    current: 0,
+    total: 0,
+    successful: 0,
+    failed: 0,
+  });
+
+  // Warn user about closing tab during import
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (state === "importing") {
+        e.preventDefault();
+        e.returnValue = "";
+        return "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [state]);
 
   const handleParsed = useCallback((data: ParsedCSV) => {
     setCsvData(data);
@@ -65,6 +100,8 @@ export default function CsvImportPage() {
     if (!csvData) return;
 
     setState("importing");
+    setPhase("profiles");
+    setError(null);
 
     try {
       const mappedData = applyMapping(csvData.rows, csvData.headers, mappings);
@@ -79,16 +116,99 @@ export default function CsvImportPage() {
         throw new Error("No valid rows to import");
       }
 
-      setProgress({ current: 0, total: validRows.length });
+      // ===== PHASE 1: Import profiles in batches of 200 =====
+      setProfileProgress({ current: 0, total: validRows.length });
 
-      const result = await bulkImportJournalists(validRows);
-      setImportResult(result);
-      setProgress({ current: validRows.length, total: validRows.length });
+      const aggregatedResult: BulkImportResult = {
+        recordsInserted: 0,
+        skipped: 0,
+        skippedRows: [],
+        errors: [],
+        profilesWithImages: [],
+      };
+
+      for (let i = 0; i < validRows.length; i += PROFILE_BATCH_SIZE) {
+        const batch = validRows.slice(i, i + PROFILE_BATCH_SIZE);
+        const batchResult = await bulkImportJournalists(batch);
+
+        // Aggregate results
+        aggregatedResult.recordsInserted += batchResult.recordsInserted;
+        aggregatedResult.skipped += batchResult.skipped;
+        aggregatedResult.skippedRows.push(...batchResult.skippedRows);
+        aggregatedResult.errors.push(...batchResult.errors);
+        aggregatedResult.profilesWithImages.push(
+          ...batchResult.profilesWithImages
+        );
+
+        // Update progress
+        setProfileProgress({
+          current: Math.min(i + PROFILE_BATCH_SIZE, validRows.length),
+          total: validRows.length,
+        });
+      }
+
+      // ===== PHASE 2: Process images in batches of 10 =====
+      // Always transition to Phase 2 (independent of Phase 1 results)
+      setPhase("images");
+
+      if (aggregatedResult.profilesWithImages.length > 0) {
+        let imageQueue = [...aggregatedResult.profilesWithImages];
+        const totalImages = imageQueue.length;
+
+        setImageProgress({
+          current: 0,
+          total: totalImages,
+          successful: 0,
+          failed: 0,
+        });
+
+        let successfulCount = 0;
+        let failedCount = 0;
+
+        while (imageQueue.length > 0) {
+          const batch = imageQueue.slice(0, IMAGE_BATCH_SIZE);
+          const result = await processImageBatch(batch);
+
+          // Remove successful items from queue
+          const successfulIds = new Set(result.successful);
+          imageQueue = imageQueue.filter(
+            (item) => !successfulIds.has(item.profileId)
+          );
+
+          // Also remove failed items (don't retry failed items in this run)
+          const failedIds = new Set(result.failed.map((f) => f.profileId));
+          imageQueue = imageQueue.filter(
+            (item) => !failedIds.has(item.profileId)
+          );
+
+          successfulCount += result.successful.length;
+          failedCount += result.failed.length;
+
+          setImageProgress({
+            current: successfulCount + failedCount,
+            total: totalImages,
+            successful: successfulCount,
+            failed: failedCount,
+          });
+        }
+      } else {
+        // No images to process, mark as complete immediately
+        setImageProgress({
+          current: 0,
+          total: 0,
+          successful: 0,
+          failed: 0,
+        });
+      }
+
+      setImportResult(aggregatedResult);
       setState("complete");
 
-      const successMsg = `Imported ${result.recordsInserted} journalists`;
+      const successMsg = `Imported ${aggregatedResult.recordsInserted} journalists`;
       const skipMsg =
-        result.skipped > 0 ? `, ${result.skipped} skipped (already exist)` : "";
+        aggregatedResult.skipped > 0
+          ? `, ${aggregatedResult.skipped} skipped`
+          : "";
       toast.success(successMsg + skipMsg);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Import failed");
@@ -102,7 +222,9 @@ export default function CsvImportPage() {
     setMappings([]);
     setImportResult(null);
     setError(null);
-    setProgress({ current: 0, total: 0 });
+    setProfileProgress({ current: 0, total: 0 });
+    setImageProgress({ current: 0, total: 0, successful: 0, failed: 0 });
+    setPhase("profiles");
     setState("upload");
   };
 
@@ -193,26 +315,94 @@ export default function CsvImportPage() {
         </div>
       )}
 
-      {/* Importing State with Progress */}
+      {/* Importing State with Two-Phase Progress */}
       {state === "importing" && (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
-            <p className="text-lg font-medium mb-2">Importing journalists...</p>
-            <p className="text-sm text-muted-foreground mb-4">
-              Processing {progress.total} records
-            </p>
-            <div className="w-64">
-              <Progress
-                value={
-                  progress.total > 0
-                    ? (progress.current / progress.total) * 100
-                    : 0
-                }
-              />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="space-y-6">
+          {/* Warning Alert */}
+          <Alert
+            variant="destructive"
+            className="border-yellow-500 bg-yellow-500/10"
+          >
+            <AlertTriangle className="h-4 w-4 text-yellow-500" />
+            <AlertTitle className="text-yellow-600">
+              Do not close this tab
+            </AlertTitle>
+            <AlertDescription className="text-yellow-600">
+              Import in progress. Closing or navigating away may interrupt the
+              process and cause incomplete data.
+            </AlertDescription>
+          </Alert>
+
+          <Card>
+            <CardContent className="py-8 space-y-8">
+              {/* Phase 1: Profiles */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    {phase === "profiles" ? (
+                      <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                    ) : (
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                    )}
+                    <span className="font-medium">
+                      Phase 1: Importing Profiles
+                    </span>
+                  </div>
+                  <span className="text-sm text-muted-foreground">
+                    {profileProgress.current} / {profileProgress.total}
+                  </span>
+                </div>
+                <Progress
+                  value={
+                    profileProgress.total > 0
+                      ? (profileProgress.current / profileProgress.total) * 100
+                      : 0
+                  }
+                />
+              </div>
+
+              {/* Phase 2: Images */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    {phase === "profiles" ? (
+                      <div className="h-5 w-5 rounded-full border-2 border-muted" />
+                    ) : imageProgress.current < imageProgress.total ? (
+                      <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                    ) : (
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                    )}
+                    <span
+                      className={`font-medium ${
+                        phase === "profiles" ? "text-muted-foreground" : ""
+                      }`}
+                    >
+                      Phase 2: Processing Images
+                    </span>
+                  </div>
+                  {phase === "images" && (
+                    <span className="text-sm text-muted-foreground">
+                      {imageProgress.current} / {imageProgress.total}
+                      {imageProgress.failed > 0 && (
+                        <span className="text-red-500 ml-2">
+                          ({imageProgress.failed} failed)
+                        </span>
+                      )}
+                    </span>
+                  )}
+                </div>
+                <Progress
+                  value={
+                    phase === "images" && imageProgress.total > 0
+                      ? (imageProgress.current / imageProgress.total) * 100
+                      : 0
+                  }
+                  className={phase === "profiles" ? "opacity-50" : ""}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       )}
 
       {/* Complete State - Operation Overview */}
@@ -270,6 +460,28 @@ export default function CsvImportPage() {
               </CardContent>
             </Card>
           </div>
+
+          {/* Image Processing Stats */}
+          {imageProgress.total > 0 && (
+            <Card>
+              <CardContent className="py-6">
+                <div className="flex items-center gap-4">
+                  <Image className="h-6 w-6 text-primary" />
+                  <div>
+                    <p className="font-medium">Image Processing</p>
+                    <p className="text-sm text-muted-foreground">
+                      {imageProgress.successful} uploaded successfully
+                      {imageProgress.failed > 0 && (
+                        <span className="text-red-500">
+                          , {imageProgress.failed} failed
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Success Message */}
           <Card>

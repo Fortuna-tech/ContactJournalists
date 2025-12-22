@@ -1174,6 +1174,12 @@ export interface BulkImportResult {
   skipped: number;
   skippedRows: { row: number; email: string }[];
   errors: { row: number; message: string }[];
+  profilesWithImages: { profileId: string; url: string }[];
+}
+
+export interface ImageProcessResult {
+  successful: string[];
+  failed: { profileId: string; error: string }[];
 }
 
 /**
@@ -1327,12 +1333,12 @@ export const bulkImportJournalists = async (
     email_screenshot?: string;
   }[]
 ): Promise<BulkImportResult> => {
-  // Edge function handles batching internally (100 per batch)
   const result = await callAdminEdgeFunction<{
     recordsInserted: number;
     skipped: number;
     skippedRows: { row: number; email: string }[];
     errors: { row: number; message: string }[];
+    profilesWithImages: { profileId: string; url: string }[];
   }>("bulk_import", rows);
 
   return {
@@ -1340,5 +1346,20 @@ export const bulkImportJournalists = async (
     skipped: result.skipped || 0,
     skippedRows: result.skippedRows || [],
     errors: result.errors || [],
+    profilesWithImages: result.profilesWithImages || [],
+  };
+};
+
+export const processImageBatch = async (
+  items: { profileId: string; url: string }[]
+): Promise<ImageProcessResult> => {
+  const result = await callAdminEdgeFunction<{
+    successful: string[];
+    failed: { profileId: string; error: string }[];
+  }>("process_images", items);
+
+  return {
+    successful: result.successful || [],
+    failed: result.failed || [],
   };
 };
