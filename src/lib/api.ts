@@ -1171,8 +1171,9 @@ export interface AdminJournalistProfile {
 
 export interface BulkImportResult {
   recordsInserted: number;
-  imagesUploaded: number;
-  errors: { row: number; type?: "record" | "image"; message: string }[];
+  skipped: number;
+  skippedRows: { row: number; email: string }[];
+  errors: { row: number; message: string }[];
 }
 
 /**
@@ -1329,12 +1330,15 @@ export const bulkImportJournalists = async (
   // Edge function handles batching internally (100 per batch)
   const result = await callAdminEdgeFunction<{
     recordsInserted: number;
+    skipped: number;
+    skippedRows: { row: number; email: string }[];
     errors: { row: number; message: string }[];
   }>("bulk_import", rows);
 
   return {
     recordsInserted: result.recordsInserted,
-    imagesUploaded: 0, // Images are stored in meta, processed later if needed
-    errors: result.errors.map((e) => ({ ...e, type: "record" as const })),
+    skipped: result.skipped || 0,
+    skippedRows: result.skippedRows || [],
+    errors: result.errors || [],
   };
 };

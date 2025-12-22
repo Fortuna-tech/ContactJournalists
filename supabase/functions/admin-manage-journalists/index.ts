@@ -33,7 +33,9 @@ interface JournalistData {
 
 interface BulkImportResult {
   recordsInserted: number;
+  skipped: number;
   errors: { row: number; message: string }[];
+  skippedRows: { row: number; email: string }[];
 }
 
 // Verify the caller is a staff member
@@ -59,7 +61,7 @@ async function verifyStaffAccess(authHeader: string): Promise<boolean> {
   }
 }
 
-serve(async (req) => {
+serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
@@ -124,13 +126,15 @@ serve(async (req) => {
         const rows = data as JournalistData[];
         const results: BulkImportResult = {
           recordsInserted: 0,
+          skipped: 0,
           errors: [],
+          skippedRows: [],
         };
 
         // Process in batches of 100 (within timeout limits)
         const batchSize = 100;
         for (let i = 0; i < rows.length; i += batchSize) {
-          const batch = rows.slice(i, i + batchSize).map((row, idx) => {
+          const batch = rows.slice(i, i + batchSize).map((row) => {
             const { email_screenshot, ...profileData } = row;
             return {
               role: "journalist",
@@ -141,26 +145,37 @@ serve(async (req) => {
               meta: email_screenshot
                 ? { email_screenshot_url: email_screenshot }
                 : {},
+              _originalEmail: row.email, // Keep for error tracking
             };
           });
 
           const { data: inserted, error } = await supabaseAdmin
             .from("profiles")
-            .insert(batch)
+            .insert(batch.map(({ _originalEmail, ...rest }) => rest))
             .select();
 
           if (error) {
             // If batch fails, try individual inserts
             for (let j = 0; j < batch.length; j++) {
+              const { _originalEmail, ...profileData } = batch[j];
               const { error: singleError } = await supabaseAdmin
                 .from("profiles")
-                .insert(batch[j]);
+                .insert(profileData);
 
               if (singleError) {
-                results.errors.push({
-                  row: i + j + 1,
-                  message: singleError.message,
-                });
+                // Check if it's a unique constraint violation (duplicate)
+                if (singleError.code === "23505") {
+                  results.skipped++;
+                  results.skippedRows.push({
+                    row: i + j + 1,
+                    email: _originalEmail || "unknown",
+                  });
+                } else {
+                  results.errors.push({
+                    row: i + j + 1,
+                    message: singleError.message,
+                  });
+                }
               } else {
                 results.recordsInserted++;
               }
