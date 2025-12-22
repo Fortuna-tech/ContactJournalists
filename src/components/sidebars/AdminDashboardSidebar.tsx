@@ -7,7 +7,14 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Users, Upload, LayoutDashboard, Shield } from "lucide-react";
+import {
+  Users,
+  Upload,
+  LayoutDashboard,
+  Shield,
+  Image,
+  Megaphone,
+} from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const items = [
@@ -26,6 +33,16 @@ const items = [
     title: "CSV Import",
     url: "/admin/import",
     icon: Upload,
+  },
+  {
+    title: "Banners",
+    url: "/admin/banners",
+    icon: Image,
+  },
+  {
+    title: "Story Requests",
+    url: "/admin/story-requests",
+    icon: Megaphone,
   },
 ];
 

@@ -37,6 +37,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { DashboardBanner } from "@/components/DashboardBanner";
 import { getQueries, getMyPitches, createPitch } from "@/lib/api";
 import { Query } from "@/types";
 import { useToast } from "@/hooks/use-toast";
@@ -106,6 +107,9 @@ const AgencyFounderFeed = () => {
   return (
     <div className="min-h-screen p-8">
       <div className="max-w-6xl mx-auto space-y-6">
+        {/* Dashboard Banners */}
+        <DashboardBanner />
+
         {authorId && (
           <div className="bg-muted/50 p-4 rounded-lg flex items-center justify-between mb-6">
             <p className="text-sm font-medium">
