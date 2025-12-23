@@ -60,8 +60,8 @@ const PressWithoutAgencyBlog = () => {
           </div>
 
           <img
-            src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=400&fit=crop"
-            alt="Founder working on press strategy at a desk with laptop and notebook"
+            src="/assets/fortuna-founder.jpg"
+            alt="Fortuna from ContactJournalists.com"
             className="w-full h-64 object-cover rounded-lg mb-8"
           />
 
@@ -76,13 +76,13 @@ const PressWithoutAgencyBlog = () => {
           </p>
 
           <img
-            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop"
-            alt="Fortuna working on her business with multiple screens and coffee"
+            src="/assets/fortuna-founder.jpg"
+            alt="Fortuna working on her business"
             className="float-right ml-6 mb-4 w-64 h-48 object-cover rounded-lg"
           />
 
           <p>
-            My name is Fortuna and I founded It Really Works Vitamins, and like most founders, I was building it from scratch and trying to grow it properly without burning out or burning through my savings.I was juggling suppliers, marketing, customer emails, admin, and all the invisible work that comes with running a business. There was no big marketing team, no luxury PR budget, and no spare time. Just a product I really believed in and the constant feeling that I needed to be everywhere at once!!
+            My name is Fortuna and I founded <a href="https://www.itreallyworksvitamins.com" className="text-accent-blue hover:text-accent-violet font-semibold" target="_blank" rel="noopener noreferrer">It Really Works Vitamins</a>, and like most founders, I was building it from scratch and trying to grow it properly without burning out or burning through my savings.I was juggling suppliers, marketing, customer emails, admin, and all the invisible work that comes with running a business. There was no big marketing team, no luxury PR budget, and no spare time. Just a product I really believed in and the constant feeling that I needed to be everywhere at once!!
           </p>
 
           <p>
@@ -138,7 +138,7 @@ const PressWithoutAgencyBlog = () => {
           </p>
 
           <div className="bg-base-800/50 border border-white/10 rounded-lg p-6 my-8">
-            <h3 className="text-lg font-semibold text-white mb-3">Quick Navigation</h3>
+            <h3 className="text-xl font-semibold text-white mb-3">Quick Navigation</h3>
             <div className="grid md:grid-cols-2 gap-3 text-sm">
               <a href="#why-press-works" className="text-accent-blue hover:text-accent-violet transition-colors">Why Press Coverage Still Works in 2025</a>
               <a href="#why-founders-fail" className="text-accent-blue hover:text-accent-violet transition-colors">Why Most Founders Never Get Press</a>
@@ -174,7 +174,7 @@ const PressWithoutAgencyBlog = () => {
 
         {/* Why Press Coverage Still Works in 2025 */}
         <section id="why-press-works" className="mb-16">
-          <h2 className="text-2xl font-bold text-white mb-6">Why Press Coverage Still Works in 2025</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Why Press Coverage Still Works in 2025</h2>
 
           <img
             src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&h=300&fit=crop"
@@ -217,7 +217,7 @@ const PressWithoutAgencyBlog = () => {
           </p>
 
           <p className="text-slate-300 mb-6">
-            I also saw this play out very clearly when I was running It Really Works Vitamins. After being featured in Forbes, Men's Health, and Men's Fitness, I started using their logos across our marketing, particularly on social media. The difference was noticeable. Posts and ads that included those publication logos consistently encouraged far more visits than content without them. People stopped scrolling, clicked through more confidently, and explored the brand properly. That visual signal of trust made a real, measurable difference.
+            I also saw this play out very clearly when I was running <a href="https://www.itreallyworksvitamins.com" className="text-accent-blue hover:text-accent-violet font-semibold" target="_blank" rel="noopener noreferrer">It Really Works Vitamins</a>. After being featured in Forbes, Men's Health, and Men's Fitness, I started using their logos across our marketing, particularly on social media. The difference was noticeable. Posts and ads that included those publication logos consistently encouraged far more visits than content without them. People stopped scrolling, clicked through more confidently, and explored the brand properly. That visual signal of trust made a real, measurable difference.
           </p>
 
           <img
@@ -325,7 +325,7 @@ const PressWithoutAgencyBlog = () => {
 
         {/* Why Most Founders Never Get Press */}
         <section id="why-founders-fail" className="mb-16">
-          <h2 className="text-2xl font-bold text-white mb-6">Why Most Founders Never Get Press (Even With a Great Product)</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Why Most Founders Never Get Press (Even With a Great Product)</h2>
 
           <img
             src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&h=300&fit=crop"
@@ -490,7 +490,7 @@ const PressWithoutAgencyBlog = () => {
 
         {/* Do You Really Need a PR Agency? */}
         <section id="need-agency" className="mb-16">
-          <h2 className="text-2xl font-bold text-white mb-6">Do You Really Need a PR Agency? The Honest Breakdown</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Do You Really Need a PR Agency? The Honest Breakdown</h2>
 
           <img
             src="https://images.unsplash.com/photo-1553484771-371a605b060b?w=600&h=300&fit=crop"
@@ -507,7 +507,7 @@ const PressWithoutAgencyBlog = () => {
 
         {/* The Fastest Ways to Get Press Coverage */}
         <section id="fastest-ways" className="mb-16">
-          <h2 className="text-2xl font-bold text-white mb-6">The Fastest Ways to Get Press Coverage Without an Agency</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">The Fastest Ways to Get Press Coverage Without an Agency</h2>
 
           <img
             src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=300&fit=crop"
@@ -696,7 +696,7 @@ const PressWithoutAgencyBlog = () => {
 
         {/* How Journalists Work */}
         <section id="how-journalists-work" className="mb-16">
-          <h2 className="text-2xl font-bold text-white mb-6">How Journalists Work (And How to Think Like One)</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">How Journalists Work (And How to Think Like One)</h2>
 
           <img
             src="https://images.unsplash.com/photo-1504711331083-9c895941bf81?w=600&h=300&fit=crop"
@@ -705,7 +705,7 @@ const PressWithoutAgencyBlog = () => {
           />
 
           <p className="text-slate-300 mb-6">
-            When I was building It Really Works Vitamins, I assumed press was about writing the perfect pitch, explaining the brand properly. Making sure everything sounded impressive enough: when actually this mindset slowed everything down and I became the bottleneck in my marketing
+            When I was building <a href="https://www.itreallyworksvitamins.com" className="text-accent-blue hover:text-accent-violet font-semibold" target="_blank" rel="noopener noreferrer">It Really Works Vitamins</a>, I assumed press was about writing the perfect pitch, explaining the brand properly. Making sure everything sounded impressive enough: when actually this mindset slowed everything down and I became the bottleneck in my marketing
           </p>
 
           <p className="text-slate-300 mb-6">
@@ -820,7 +820,7 @@ const PressWithoutAgencyBlog = () => {
 
         {/* How to Find the Right Journalists */}
         <section id="find-journalists" className="mb-16">
-          <h2 className="text-2xl font-bold text-white mb-6">How to Find the Right Journalists for Your Business</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">How to Find the Right Journalists for Your Business</h2>
 
           <img
             src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=300&fit=crop"
@@ -829,7 +829,7 @@ const PressWithoutAgencyBlog = () => {
           />
 
           <p className="text-slate-300 mb-6">
-            When I was building It Really Works Vitamins, one of the biggest time-wasters early on was not knowing who I should actually be talking to. I knew press mattered. I knew I had a story. What I didn't have was clarity on which journalists were relevant and which ones I was simply wasting time on.
+            When I was building <a href="https://www.itreallyworksvitamins.com" className="text-accent-blue hover:text-accent-violet font-semibold" target="_blank" rel="noopener noreferrer">It Really Works Vitamins</a>, one of the biggest time-wasters early on was not knowing who I should actually be talking to. I knew press mattered. I knew I had a story. What I didn't have was clarity on which journalists were relevant and which ones I was simply wasting time on.
           </p>
 
           <p className="text-slate-300 mb-6">
@@ -1011,7 +1011,7 @@ const PressWithoutAgencyBlog = () => {
 
         {/* How to Pitch Journalists */}
         <section id="pitch-journalists" className="mb-16">
-          <h2 className="text-2xl font-bold text-white mb-6">How to Pitch Journalists So They Actually Reply</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">How to Pitch Journalists So They Actually Reply</h2>
 
           <img
             src="https://images.unsplash.com/photo-1456324504439-367cee3b3c32?w=600&h=300&fit=crop"
@@ -1024,7 +1024,7 @@ const PressWithoutAgencyBlog = () => {
           </p>
 
           <p className="text-slate-300 mb-6">
-            When I was building It Really Works Vitamins, I used to sit staring at a draft pitch, tweaking words, worrying about tone, wondering if it sounded "professional enough". I thought pitching press meant crafting something impressive.
+            When I was building <a href="https://www.itreallyworksvitamins.com" className="text-accent-blue hover:text-accent-violet font-semibold" target="_blank" rel="noopener noreferrer">It Really Works Vitamins</a>, I used to sit staring at a draft pitch, tweaking words, worrying about tone, wondering if it sounded "professional enough". I thought pitching press meant crafting something impressive.
           </p>
 
           <p className="text-slate-300 mb-6">
@@ -1231,7 +1231,7 @@ const PressWithoutAgencyBlog = () => {
 
         {/* HARO, Twitter/X, Newsjacking & Reactive PR */}
         <section id="reactive-pr" className="mb-16">
-          <h2 className="text-2xl font-bold text-white mb-6">HARO, Twitter/X, Newsjacking & Reactive PR Explained</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">HARO, Twitter/X, Newsjacking & Reactive PR Explained</h2>
 
           <img
             src="https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=600&h=300&fit=crop"
@@ -1248,7 +1248,7 @@ const PressWithoutAgencyBlog = () => {
           </p>
 
           <p className="text-slate-300 mb-6">
-            When I first came across this while building It Really Works Vitamins, it genuinely felt like a cheat code.
+            When I first came across this while building <a href="https://www.itreallyworksvitamins.com" className="text-accent-blue hover:text-accent-violet font-semibold" target="_blank" rel="noopener noreferrer">It Really Works Vitamins</a>, it genuinely felt like a cheat code.
           </p>
 
           <p className="text-slate-300 mb-6">
@@ -1453,7 +1453,7 @@ const PressWithoutAgencyBlog = () => {
 
         {/* SaaS vs Beauty vs Ecommerce */}
         <section id="industry-pitching" className="mb-16">
-          <h2 className="text-2xl font-bold text-white mb-6">SaaS vs Beauty vs Ecommerce: Pitching the Right Way</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">SaaS vs Beauty vs Ecommerce: Pitching the Right Way</h2>
 
           <img
             src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=300&fit=crop"
@@ -1470,7 +1470,7 @@ const PressWithoutAgencyBlog = () => {
           </p>
 
           <p className="text-slate-300 mb-6">
-            What gets a SaaS founder featured won't work for a beauty brand. What works for ecommerce won't land in tech press. I learned this first-hand while building It Really Works Vitamins. The business stayed the same, but the angles that worked changed depending on who I was pitching and what they cared about.
+            What gets a SaaS founder featured won't work for a beauty brand. What works for ecommerce won't land in tech press. I learned this first-hand while building <a href="https://www.itreallyworksvitamins.com" className="text-accent-blue hover:text-accent-violet font-semibold" target="_blank" rel="noopener noreferrer">It Really Works Vitamins</a>. The business stayed the same, but the angles that worked changed depending on who I was pitching and what they cared about.
           </p>
 
           <p className="text-slate-300 mb-6">
@@ -1700,7 +1700,7 @@ const PressWithoutAgencyBlog = () => {
 
         {/* Common PR Mistakes */}
         <section id="common-mistakes" className="mb-16">
-          <h2 className="text-2xl font-bold text-white mb-6">Common PR Mistakes That Quietly Kill Your Chances</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Common PR Mistakes That Quietly Kill Your Chances</h2>
 
           <img
             src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&h=300&fit=crop"
@@ -1832,7 +1832,7 @@ const PressWithoutAgencyBlog = () => {
 
         {/* Final Thoughts */}
         <section className="mb-16">
-          <h2 className="text-2xl font-bold text-white mb-6">Final Thoughts: You Don't Need a PR Agency, You Need a Process</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Final Thoughts: You Don't Need a PR Agency, You Need a Process</h2>
 
           <img
             src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=300&fit=crop"
@@ -1860,7 +1860,7 @@ const PressWithoutAgencyBlog = () => {
           </ul>
 
           <p className="text-slate-300 mb-6">
-            I didn't build It Really Works Vitamins with a PR agency. I built it by learning how press works, showing up with something useful to say, and being consistent even when things felt quiet.
+            I didn't build <a href="https://www.itreallyworksvitamins.com" className="text-accent-blue hover:text-accent-violet font-semibold" target="_blank" rel="noopener noreferrer">It Really Works Vitamins</a> with a PR agency. I built it by learning how press works, showing up with something useful to say, and being consistent even when things felt quiet.
           </p>
 
           <p className="text-slate-300 mb-6">
@@ -1885,7 +1885,7 @@ const PressWithoutAgencyBlog = () => {
           </p>
 
           <div className="bg-gradient-to-r from-accent-blue to-accent-violet rounded-lg p-8 text-center">
-            <h3 className="text-2xl font-bold text-white mb-4">Ready to start getting press without a PR agency?</h3>
+            <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to start getting press without a PR agency?</h3>
             <p className="text-slate-200 mb-6 max-w-2xl mx-auto">
               👉 Start your 7-day free trial of ContactJournalists.com and get in front of journalists who are actively writing right now.
             </p>
@@ -1915,3 +1915,4 @@ const PressWithoutAgencyBlog = () => {
 };
 
 export default PressWithoutAgencyBlog;
+
