@@ -59,12 +59,6 @@ const PressWithoutAgencyBlog = () => {
             </a>
           </div>
 
-          <img
-            src="/assets/fortuna-founder.jpg"
-            alt="Fortuna from ContactJournalists.com"
-            className="w-full h-64 object-cover object-top rounded-lg mb-8"
-          />
-
           <h2>How Do I Get Press Coverage Without a PR Agency?</h2>
 
           <p>
@@ -75,15 +69,15 @@ const PressWithoutAgencyBlog = () => {
             I know exactly where you are, because a few years ago, I was you!
           </p>
 
-          <img
-            src="/assets/fortuna-founder.jpg"
-            alt="Fortuna working on her business"
-            className="float-right ml-6 mb-4 w-64 h-48 object-cover rounded-lg"
-          />
-
           <p>
             My name is Fortuna and I founded <a href="https://www.itreallyworksvitamins.com" className="text-accent-blue hover:text-accent-violet font-semibold" target="_blank" rel="noopener noreferrer">It Really Works Vitamins</a>, and like most founders, I was building it from scratch and trying to grow it properly without burning out or burning through my savings.I was juggling suppliers, marketing, customer emails, admin, and all the invisible work that comes with running a business. There was no big marketing team, no luxury PR budget, and no spare time. Just a product I really believed in and the constant feeling that I needed to be everywhere at once!!
           </p>
+
+          <img
+            src="/assets/fortuna-founder.jpg"
+            alt="Fortuna, founder of ContactJournalists.com"
+            className="w-full h-48 object-cover rounded-lg mb-6"
+          />
 
           <p>
             Without an agency, we managed to get featured in Forbes, Shortlist, Coach Mag and many others. Seeing something I'd created getting featured in the press was so exciting, but what mattered more was what happened afterwards: Sales growth reflected all the new people who'd suddenly heard about me, and the business really started to have momentum behind it!
@@ -124,12 +118,6 @@ const PressWithoutAgencyBlog = () => {
           <p>
             That's what this guide is here to explain.
           </p>
-
-          <img
-            src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop"
-            alt="Multiple open browser tabs showing press coverage research and business dashboards"
-            className="w-full h-64 object-cover rounded-lg mb-8"
-          />
 
           <h2>What This Article Will Cover</h2>
 
@@ -176,12 +164,6 @@ const PressWithoutAgencyBlog = () => {
         <section id="why-press-works" className="mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Why Press Coverage Still Works in 2025</h2>
 
-          <img
-            src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&h=300&fit=crop"
-            alt="Trust and credibility concept with newspaper and digital media icons"
-            className="w-full h-48 object-cover rounded-lg mb-6"
-          />
-
           <p className="text-slate-300 mb-6">
             In a world of noisy influencers being paid to feature things and ads that interrupt your reading, scrolling, and videos, it's easy to assume press doesn't matter anymore.
           </p>
@@ -226,7 +208,7 @@ const PressWithoutAgencyBlog = () => {
             className="w-full h-48 object-cover rounded-lg mb-6"
           />
 
-          <h3>Press Reaches the Right People, Not Just More People</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Press Reaches the Right People, Not Just More People</h3>
 
           <p className="text-slate-300 mb-6">
             One of the most overlooked benefits of press coverage is relevance.
@@ -265,7 +247,7 @@ const PressWithoutAgencyBlog = () => {
             </a>
           </div>
 
-          <h3>Press Strengthens SEO in a Way Ads Never Will</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Press Strengthens SEO in a Way Ads Never Will</h3>
 
           <p className="text-slate-300 mb-6">
             Press coverage doesn't disappear when the budget runs out.
@@ -286,7 +268,7 @@ const PressWithoutAgencyBlog = () => {
             These signals tell search engines that your business is credible and worth surfacing. Over time, that compounds quietly in the background while you focus on running the business.
           </p>
 
-          <h3>Press Supports Sales Without Feeling Salesy</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Press Supports Sales Without Feeling Salesy</h3>
 
           <p className="text-slate-300 mb-6">
             Press doesn't push people to buy, it reassures them.
@@ -365,7 +347,7 @@ const PressWithoutAgencyBlog = () => {
             </a>
           </div>
 
-          <h3>Most Founders Pitch Their Brand, Not a Story</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Most Founders Pitch Their Brand, Not a Story</h3>
 
           <p className="text-slate-300 mb-6">
             This is probably the biggest mistake I see. Founders reach out to journalists talking about their product, their launch, their mission, their features, their funding plans. All of that might be important to you, but it isn't automatically interesting to a journalist or their readers. Journalists aren't looking to promote your business. They're looking to create content their audience will actually care about. That means a timely angle, a wider trend, a problem people recognise, a clear point of view or insight, and something that fits what they're already covering. This is why you'll often see relatively small brands featured in trend-led articles, while much bigger brands get ignored. Forbes has written openly about this too, pointing out that early-stage startups can earn coverage by focusing on story and relevance, not scale: <a href="https://www.forbes.com/sites/theyec/2015/05/20/the-digs-approach-how-any-early-stage-startup-can-get-media-coverage/" className="text-accent-blue hover:text-accent-violet">https://www.forbes.com/sites/theyec/2015/05/20/the-digs-approach-how-any-early-stage-startup-can-get-media-coverage/</a>
@@ -387,7 +369,7 @@ const PressWithoutAgencyBlog = () => {
             </a>
           </div>
 
-          <h3>Founders Overestimate How Much Journalists Know About Them</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Founders Overestimate How Much Journalists Know About Them</h3>
 
           <p className="text-slate-300 mb-6">
             This one is subtle, but important. When you live and breathe your business every day, it's easy to assume people know who you are, or at least understand the context. Journalists don't. They scan emails quickly, often between meetings or on tight deadlines, and they don't have time to piece together why your brand matters. If your pitch requires effort to understand, it's already lost. Clear beats clever every time.
@@ -405,7 +387,7 @@ const PressWithoutAgencyBlog = () => {
             </a>
           </div>
 
-          <h3>Most Pitches Are Sent to the Wrong People</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Most Pitches Are Sent to the Wrong People</h3>
 
           <p className="text-slate-300 mb-6">
             Another common issue is relevance. A SaaS founder pitches a lifestyle journalist. A beauty brand emails a tech reporter. An ecommerce founder sends the same pitch to everyone. It's not malicious, it's usually just rushed. Journalists are protective of their inboxes. If you repeatedly send irrelevant pitches, they stop opening your emails entirely. That why finding the right journalist matters far more than sending lots of emails. This is where founders often get stuck, because researching journalists manually takes time, and time is the one thing most founders don't have.
@@ -423,7 +405,7 @@ const PressWithoutAgencyBlog = () => {
             </a>
           </div>
 
-          <h3>Fear of "Bothering" Journalists Holds People Back</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Fear of "Bothering" Journalists Holds People Back</h3>
 
           <p className="text-slate-300 mb-6">
             A lot of founders are also quietly worried about being annoying. They don't want to spam. They don't want to come across as desperate. They don't want to burn bridges. So they hesitate, overthink, or never hit send all. The irony is that journalists actively look for expert input and relevant stories. Platforms like HARO (Help a Reporter Out) were created specifically to connect journalists with founders and experts who can help them: <a href="https://www.helpareporter.com/" className="text-accent-blue hover:text-accent-violet">https://www.helpareporter.com/</a>
@@ -445,7 +427,7 @@ const PressWithoutAgencyBlog = () => {
             </a>
           </div>
 
-          <h3>Founders Assume Press Takes Too Long</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Founders Assume Press Takes Too Long</h3>
 
           <p className="text-slate-300 mb-6">
             Another common myth is that press is slow. Yes, some features take time. But many opportunities are reactive. Journalists are often working on pieces that need expert input now. Miss that window and it's gone. This is why you see the same founders quoted repeatedly across different outlets. They’re visible, responsive, and easy to work with. Founders who win at press tend to be the ones who can move quickly, spot opportunities, and respond without friction.
@@ -463,7 +445,7 @@ const PressWithoutAgencyBlog = () => {
             </a>
           </div>
 
-          <h3>Organisation Is Where Most People Fall Apart</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Organisation Is Where Most People Fall Apart</h3>
 
           <p className="text-slate-300 mb-6">
             Even founders who start strong often lose momentum. They pitch a few journalists, forget who they contacted, can't remember who replied, and end up with half-finished spreadsheets and notes scattered everywhere. Press outreach becomes messy, inconsistent, and easy to abandon when things get busy. This is usually the point where people think, "I need an agency," when what they really need is a better system. That's one of the reasons ContactJournalists.com exists. Not to replace strategy or storytelling, but to remove the chaos. When outreach is organised, simple, and manageable, founders are far more likely to stick with it long enough to see results.
@@ -481,7 +463,7 @@ const PressWithoutAgencyBlog = () => {
             </a>
           </div>
 
-          <h3>The Truth Most Founders Don't Realise</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">The Truth Most Founders Don't Realise</h3>
 
           <p className="text-slate-300 mb-6">
             Press isn't about confidence, connections, or being loud. It's about relevance, clarity, and timing. Once you understand that, getting press stops feeling intimidating and starts feeling doable!
@@ -528,7 +510,7 @@ const PressWithoutAgencyBlog = () => {
             The fastest ways to get press without an agency all have one thing in common. They work with how journalists already operate, not against it.
           </p>
 
-          <h3>1. Tie Your Story to Something That's Already Happening</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">1. Tie Your Story to Something That's Already Happening</h3>
 
           <p className="text-slate-300 mb-6">
             Journalists rarely wake up thinking, "I wonder what new brand I can feature today."
@@ -565,7 +547,7 @@ const PressWithoutAgencyBlog = () => {
             </a>
           </div>
 
-          <h3>2. Use Reactive PR to Your Advantage</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">2. Use Reactive PR to Your Advantage</h3>
 
           <p className="text-slate-300 mb-6">
             Reactive press is one of the most underused opportunities for founders.
@@ -596,7 +578,7 @@ const PressWithoutAgencyBlog = () => {
             </a>
           </div>
 
-          <h3>3. Lead With Insight, Not Promotion</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">3. Lead With Insight, Not Promotion</h3>
 
           <p className="text-slate-300 mb-6">
             One of the fastest ways to get ignored is to sound like marketing.
@@ -631,7 +613,7 @@ const PressWithoutAgencyBlog = () => {
             When you lead with insight, your brand becomes context, not the headline.
           </p>
 
-          <h3>4. Be Specific, Not Broad</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">4. Be Specific, Not Broad</h3>
 
           <p className="text-slate-300 mb-6">
             Specific stories travel faster.
@@ -655,7 +637,7 @@ const PressWithoutAgencyBlog = () => {
             Specificity makes your pitch easier to understand, easier to place, and easier to turn into a quote or feature.
           </p>
 
-          <h3>5. Make Yourself Easy to Work With</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">5. Make Yourself Easy to Work With</h3>
 
           <p className="text-slate-300 mb-6">
             This sounds obvious, but it's huge.
@@ -712,7 +694,7 @@ const PressWithoutAgencyBlog = () => {
             What I learned very quickly is that journalists aren't browsing brands, they're building stories under pressure.
           </p>
 
-          <h3>Journalists Aren't Looking for Brands, They're Looking for Help</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Journalists Aren't Looking for Brands, They're Looking for Help</h3>
 
           <p className="text-slate-300 mb-6">
             When you're deep inside your own business, it's easy to forget that journalists don't wake up thinking, "Which startup should I feature today?" They're usually thinking, "I need a quote, an example, or insight for something I'm already writing."
@@ -730,7 +712,7 @@ const PressWithoutAgencyBlog = () => {
             That's when things started to click.
           </p>
 
-          <h3>Speed Beats Polish Every Time</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Speed Beats Polish Every Time</h3>
 
           <p className="text-slate-300 mb-6">
             This was another big lesson.
@@ -752,7 +734,7 @@ const PressWithoutAgencyBlog = () => {
             If you arrive after the deadline, even the best story won't get used.
           </p>
 
-          <h3>Why Being There In the Moment Matters So Much</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Why Being There In the Moment Matters So Much</h3>
 
           <p className="text-slate-300 mb-6">
             This is where live press opportunities make such a difference.
@@ -770,7 +752,7 @@ const PressWithoutAgencyBlog = () => {
             That dynamic is completely different, and it's one I wish I'd understood earlier.
           </p>
 
-          <h3>Journalists Remember Founders Who Make Their Lives Easier</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Journalists Remember Founders Who Make Their Lives Easier</h3>
 
           <p className="text-slate-300 mb-6">
             Another thing I noticed as my business grew is that journalists remember people who are easy to work with.
@@ -787,7 +769,7 @@ const PressWithoutAgencyBlog = () => {
             That's how momentum builds. Quietly, over time.
           </p>
 
-          <h3>Some founders seem to be "everywhere" in the press. It's rarely luck. It's because they've learned how to work in a way that fits journalists' reality.</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Some founders seem to be "everywhere" in the press. It's rarely luck. It's because they've learned how to work in a way that fits journalists' reality.</h3>
 
           <p className="text-slate-300 mb-6">
             This Isn't About Confidence or Being Loud
@@ -844,7 +826,7 @@ const PressWithoutAgencyBlog = () => {
             Here's the shift that made the biggest difference for me.
           </p>
 
-          <h3>Stop Thinking in Terms of Publications, Start Thinking in Terms of Journalists</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Stop Thinking in Terms of Publications, Start Thinking in Terms of Journalists</h3>
 
           <p className="text-slate-300 mb-6">
             It's easy to say, "I want to be in Forbes" or "I want to be in TechCrunch". That normal. But publications don't write articles, journalists do.
@@ -872,7 +854,7 @@ const PressWithoutAgencyBlog = () => {
             Those are the people you want to be speaking to.
           </p>
 
-          <h3>Match Your Business to the Journalist's World</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Match Your Business to the Journalist's World</h3>
 
           <p className="text-slate-300 mb-6">
             One of the simplest questions to ask yourself is this:
@@ -900,7 +882,7 @@ const PressWithoutAgencyBlog = () => {
             That's the difference between a pitch that gets ignored and one that gets read.
           </p>
 
-          <h3>Why Manual Research Breaks Down for Most Founders</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Why Manual Research Breaks Down for Most Founders</h3>
 
           <p className="text-slate-300 mb-6">
             In theory, you can find journalists manually.
@@ -953,7 +935,7 @@ const PressWithoutAgencyBlog = () => {
             That's exactly what ContactJournalists.com is designed to do. Instead of guessing or relying on messy spreadsheets, you can approach outreach with intention and clarity, even if you only have a small amount of time each week.
           </p>
 
-          <h3>Quality Beats Quantity Every Time</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Quality Beats Quantity Every Time</h3>
 
           <p className="text-slate-300 mb-6">
             This is important.
@@ -971,7 +953,7 @@ const PressWithoutAgencyBlog = () => {
             Press works best when it feels considered, not desperate.
           </p>
 
-          <h3>Start Small and Build Momentum</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Start Small and Build Momentum</h3>
 
           <p className="text-slate-300 mb-6">
             If you're new to press, you don't need to do everything at once.
@@ -1036,7 +1018,7 @@ const PressWithoutAgencyBlog = () => {
             Once I stopped writing pitches like marketing emails and started writing them like a human responding to another human, reply rates changed almost immediately.
           </p>
 
-          <h3>The Biggest Mindset Shift: You're Not Pitching, You're Helping</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">The Biggest Mindset Shift: You're Not Pitching, You're Helping</h3>
 
           <p className="text-slate-300 mb-6">
             The best way to think about a press pitch is this:
@@ -1059,7 +1041,7 @@ const PressWithoutAgencyBlog = () => {
             If your pitch answers a question they're already working through, it doesn't feel like a pitch at all.
           </p>
 
-          <h3>Keep It Short (Shorter Than You Think)</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Keep It Short (Shorter Than You Think)</h3>
 
           <p className="text-slate-300 mb-6">
             This is where most people go wrong.
@@ -1094,7 +1076,7 @@ const PressWithoutAgencyBlog = () => {
             You can always give more later if they're interested.
           </p>
 
-          <h3>Lead With the Angle, Not the Brand</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Lead With the Angle, Not the Brand</h3>
 
           <p className="text-slate-300 mb-6">
             Founders naturally want to explain what they do first. Journalists don't care yet.
@@ -1124,7 +1106,7 @@ const PressWithoutAgencyBlog = () => {
             Your brand becomes context, not the headline.
           </p>
 
-          <h3>Make It Easy to Say Yes</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Make It Easy to Say Yes</h3>
 
           <p className="text-slate-300 mb-6">
             One thing I didn't appreciate early on is how much journalists value ease.
@@ -1153,7 +1135,7 @@ const PressWithoutAgencyBlog = () => {
             If you can give them something they can almost copy and paste, you're doing it right.
           </p>
 
-          <h3>Don't Be Afraid of Follow-Ups (But Be Human)</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Don't Be Afraid of Follow-Ups (But Be Human)</h3>
 
           <p className="text-slate-300 mb-6">
             Another common fear is follow-ups.
@@ -1177,7 +1159,7 @@ const PressWithoutAgencyBlog = () => {
             A simple "just wanted to check this didn't get buried" is enough.
           </p>
 
-          <h3>Why Live Opportunities Make Pitching Easier</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Why Live Opportunities Make Pitching Easier</h3>
 
           <p className="text-slate-300 mb-6">
             One of the reasons pitching feels so hard for founders is that they're pitching blind. They don't know if a journalist is even interested in that topic right now.
@@ -1203,7 +1185,7 @@ const PressWithoutAgencyBlog = () => {
             </a>
           </div>
 
-          <h3>One Final Thing Most Founders Miss</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">One Final Thing Most Founders Miss</h3>
 
           <p className="text-slate-300 mb-6">
             Silence doesn't always mean rejection.
@@ -1255,7 +1237,7 @@ const PressWithoutAgencyBlog = () => {
             Instead of trying to convince someone to write about my brand, I was stepping into conversations that were already happening.
           </p>
 
-          <h3>What Reactive PR Actually Is</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">What Reactive PR Actually Is</h3>
 
           <p className="text-slate-300 mb-6">
             Reactive PR is simple in principle.
@@ -1288,7 +1270,7 @@ const PressWithoutAgencyBlog = () => {
             That why this works so well.
           </p>
 
-          <h3>HARO: The Classic Example</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">HARO: The Classic Example</h3>
 
           <p className="text-slate-300 mb-6">
             HARO (Help a Reporter Out) is one of the most well-known reactive PR platforms, and it's a good example of how this side of press works. Journalists submit requests looking for expert insight, and founders respond with relevant commentary.
@@ -1324,7 +1306,7 @@ const PressWithoutAgencyBlog = () => {
             This is where a lot of founders fall off. They see opportunities, but by the time they've drafted a response, the journalist has already moved on.
           </p>
 
-          <h3>Twitter/X: Journalists Asking in Public</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Twitter/X: Journalists Asking in Public</h3>
 
           <p className="text-slate-300 mb-6">
             A surprising number of journalists now use Twitter/X to ask for sources in real time.
@@ -1354,7 +1336,7 @@ const PressWithoutAgencyBlog = () => {
             </p>
           </div>
 
-          <h3>Newsjacking: When Timing Is Everything</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Newsjacking: When Timing Is Everything</h3>
 
           <p className="text-slate-300 mb-6">
             Newsjacking is about reacting to wider news, trends, or cultural moments and offering a relevant perspective while the conversation is still forming.
@@ -1375,7 +1357,7 @@ const PressWithoutAgencyBlog = () => {
             If you can offer a grounded, relevant take while journalists are shaping their articles, you can be pulled into coverage very quickly. This kind of reactive commentary is often what leads to quotes in articles across tech, business, and lifestyle publications.
           </p>
 
-          <h3>Why Speed Changes the Entire Dynamic</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Why Speed Changes the Entire Dynamic</h3>
 
           <p className="text-slate-300 mb-6">
             This is the most important part.
@@ -1393,7 +1375,7 @@ const PressWithoutAgencyBlog = () => {
             That dynamic is completely different, and it's one I wish I'd understood earlier.
           </p>
 
-          <h3>Making Reactive PR Work Without Taking Over Your Life</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Making Reactive PR Work Without Taking Over Your Life</h3>
 
           <p className="text-slate-300 mb-6">
             The challenge with reactive PR is volume and timing.
@@ -1430,7 +1412,7 @@ const PressWithoutAgencyBlog = () => {
             </a>
           </div>
 
-          <h3>A Final Reality Check</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">A Final Reality Check</h3>
 
           <p className="text-slate-300 mb-6">
             You won't land coverage from every request you respond to. That's normal.
@@ -1477,7 +1459,7 @@ const PressWithoutAgencyBlog = () => {
             Once you understand this, press stops feeling random.
           </p>
 
-          <h3>Beauty & Wellness: Why Some Brands Get Covered Everywhere</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Beauty & Wellness: Why Some Brands Get Covered Everywhere</h3>
 
           <p className="text-slate-300 mb-6">
             A great real-world example of this is Ami Colé.
@@ -1516,7 +1498,7 @@ const PressWithoutAgencyBlog = () => {
             Again, the story wasn't about how good the product was. It was about how consumer values were changing, and how beauty brands were responding to that shift.
           </p>
 
-          <h3>What This Means for Beauty Founders</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">What This Means for Beauty Founders</h3>
 
           <p className="text-slate-300 mb-6">
             If you're building a beauty or wellness brand, journalists are far more interested in:
@@ -1538,7 +1520,7 @@ const PressWithoutAgencyBlog = () => {
             Trust is everything in this space!!
           </p>
 
-          <h3>SaaS: Pitches That Work Because They Lead With Insight</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">SaaS: Pitches That Work Because They Lead With Insight</h3>
 
           <p className="text-slate-300 mb-6">
             SaaS press works best when founders stop talking about features and start talking about what they're seeing before everyone else notices it.
@@ -1602,7 +1584,7 @@ const PressWithoutAgencyBlog = () => {
             Your product becomes context, not the story.
           </p>
 
-          <h3>Ecommerce: Real Experience Beats Polished Stories Every Time</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">Ecommerce: Real Experience Beats Polished Stories Every Time</h3>
 
           <p className="text-slate-300 mb-6">
             Ecommerce press is one of the most forgiving categories if you're honest.
@@ -1657,7 +1639,7 @@ const PressWithoutAgencyBlog = () => {
             You don't need to sound successful. You need to sound real.
           </p>
 
-          <h3>The One Rule That Applies to Every Industry</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">The One Rule That Applies to Every Industry</h3>
 
           <p className="text-slate-300 mb-6">
             No matter what you sell, one rule always applies:
@@ -1716,7 +1698,7 @@ const PressWithoutAgencyBlog = () => {
             These are the most common things I see that quietly stop good founders from getting coverage.
           </p>
 
-          <h3>1. Leading With the Brand Instead of the Angle</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">1. Leading With the Brand Instead of the Angle</h3>
 
           <p className="text-slate-300 mb-6">
             This is the big one.
@@ -1730,13 +1712,13 @@ const PressWithoutAgencyBlog = () => {
             If the first thing they read is your brand name and product description, there's a good chance they won't read the rest.
           </p>
 
-          <h4>Fix:</h4>
+          <h4 className="text-lg font-semibold text-white mb-4">Fix:</h4>
 
           <p className="text-slate-300 mb-6">
             Lead with the idea, the insight, or the problem. Let your brand appear naturally as context.
           </p>
 
-          <h3>2. Pitching Too Broadly</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">2. Pitching Too Broadly</h3>
 
           <p className="text-slate-300 mb-6">
             Pitches like "we help businesses grow" or "our product solves many problems" don't give journalists anything to work with.
@@ -1746,13 +1728,13 @@ const PressWithoutAgencyBlog = () => {
             Vague stories are hard to place.
           </p>
 
-          <h4>Fix:</h4>
+          <h4 className="text-lg font-semibold text-white mb-4">Fix:</h4>
 
           <p className="text-slate-300 mb-6">
             Be specific. One clear insight, one clear angle, one clear reason it matters now.
           </p>
 
-          <h3>3. Chasing Logos Instead of Relevance</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">3. Chasing Logos Instead of Relevance</h3>
 
           <p className="text-slate-300 mb-6">
             Wanting to be featured in big publications is normal. Chasing them without relevance is where things fall apart.
@@ -1762,13 +1744,13 @@ const PressWithoutAgencyBlog = () => {
             A perfect story in the wrong publication still won't run.
           </p>
 
-          <h4>Fix:</h4>
+          <h4 className="text-lg font-semibold text-white mb-4">Fix:</h4>
 
           <p className="text-slate-300 mb-6">
             Focus on journalists already writing about your topic, not just the publication name at the top of the page.
           </p>
 
-          <h3>4. Sounding Like Marketing Copy</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">4. Sounding Like Marketing Copy</h3>
 
           <p className="text-slate-300 mb-6">
             Journalists can spot marketing language instantly.
@@ -1778,13 +1760,13 @@ const PressWithoutAgencyBlog = () => {
             Phrases like "disrupting the industry," "game-changing," or "innovative solution" usually switch people off.
           </p>
 
-          <h4>Fix:</h4>
+          <h4 className="text-lg font-semibold text-white mb-4">Fix:</h4>
 
           <p className="text-slate-300 mb-6">
             Write like a human explaining something clearly. If it sounds like a landing page, rewrite it.
           </p>
 
-          <h3>5. Overthinking and Missing the Moment</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">5. Overthinking and Missing the Moment</h3>
 
           <p className="text-slate-300 mb-6">
             This one hurts because it's so common.
@@ -1794,13 +1776,13 @@ const PressWithoutAgencyBlog = () => {
             Founders spend too long polishing pitches and miss deadlines, especially with reactive press opportunities.
           </p>
 
-          <h4>Fix:</h4>
+          <h4 className="text-lg font-semibold text-white mb-4">Fix:</h4>
 
           <p className="text-slate-300 mb-6">
             Prioritise clarity and speed over perfection. A helpful response on time beats a perfect one too late.
           </p>
 
-          <h3>6. Giving Up Too Quickly</h3>
+          <h3 className="text-xl font-semibold text-white mb-6">6. Giving Up Too Quickly</h3>
 
           <p className="text-slate-300 mb-6">
             Press rarely works on the first attempt.
@@ -1810,7 +1792,7 @@ const PressWithoutAgencyBlog = () => {
             Silence doesn't always mean no. It often means "not right now".
           </p>
 
-          <h4>Fix:</h4>
+          <h4 className="text-lg font-semibold text-white mb-4">Fix:</h4>
 
           <p className="text-slate-300 mb-6">
             Be consistent, not intense. A handful of thoughtful pitches over time beats a burst of rushed outreach.
