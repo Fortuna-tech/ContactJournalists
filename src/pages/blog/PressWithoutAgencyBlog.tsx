@@ -44,7 +44,7 @@ const PressWithoutAgencyBlog = () => {
         {/* Introduction */}
         <div className="prose prose-invert prose-lg max-w-none">
           <img
-            src="/assets/fortuna-founder.jpg"
+            src="/assets/fortuna-founder-balloons.jpg"
             alt="Fortuna, founder of ContactJournalists.com"
             className="w-full h-48 object-cover rounded-lg mb-8"
           />
@@ -77,7 +77,7 @@ const PressWithoutAgencyBlog = () => {
 
           <div className="flex flex-col md:flex-row gap-6 mb-6 items-start">
             <img
-              src="/assets/fortuna-founder.jpg"
+              src="/assets/fortuna-founder-balloons.jpg"
               alt="Fortuna, founder of ContactJournalists.com"
               className="w-full md:w-64 md:flex-shrink-0 h-48 object-cover rounded-lg"
             />
