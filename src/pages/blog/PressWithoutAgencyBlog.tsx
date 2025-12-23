@@ -62,7 +62,7 @@ const PressWithoutAgencyBlog = () => {
           <img
             src="/assets/fortuna-founder.jpg"
             alt="Fortuna from ContactJournalists.com"
-            className="w-full h-64 object-cover rounded-lg mb-8"
+            className="w-full h-64 object-cover object-top rounded-lg mb-8"
           />
 
           <h2>How Do I Get Press Coverage Without a PR Agency?</h2>
