@@ -84,6 +84,11 @@ const PressPitchExamplesBlog = () => {
             </header>
 
             <div className="prose prose-invert prose-lg max-w-none">
+              <img
+                src="/assets/fortuna-founder-balloons.jpg"
+                alt="Fortuna, founder of ContactJournalists.com"
+                className="w-full md:w-2/3 lg:w-1/2 rounded-2xl mb-6"
+              />
               <p className="text-xl text-slate-300 leading-relaxed mb-8">
                 Hi, I'm Fortuna — the founder of{" "}
                 <a

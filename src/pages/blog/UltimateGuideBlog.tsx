@@ -331,6 +331,11 @@ const UltimateGuideBlog = () => {
         {/* Founder Story + Deep Dive */}
         <section className="prose prose-invert prose-lg max-w-none mt-16">
           <h2>My Story: Why I Built ContactJournalists.com</h2>
+          <img
+            src="/assets/fortuna-founder-balloons.jpg"
+            alt="Fortuna, founder of ContactJournalists.com"
+            className="w-full md:w-2/3 lg:w-1/2 rounded-2xl mb-6"
+          />
           <p>
             Hi, I&apos;m Fortuna, the founder of <strong>ContactJournalists.com</strong>.
             I started this platform because I&apos;ve lived the pain of trying to get press without a PR budget.
