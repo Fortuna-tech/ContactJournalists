@@ -749,51 +749,33 @@ const Index = () => {
                     Featured Guide
                   </span>
                   <span className="text-xs text-slate-500">•</span>
-                  <span className="text-xs text-slate-400">2025 Edition</span>
+                  <span className="text-xs text-slate-400">2026 Edition</span>
                 </div>
 
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
-                  The Ultimate Guide to the Best Platforms for Contacting
-                  Journalists
+                  The Fastest Ways to Get Press Coverage Without an Agency
                 </h3>
 
                 <div className="prose prose-invert max-w-none">
                   <p className="text-slate-300 mb-4">
-                    Getting your startup, product, or brand featured in the
-                    media can be a game-changer. But finding the right
-                    journalists and pitching effectively? That's where most
-                    founders and marketers hit a wall.
+                    A founder-led playbook on landing press fast—without
+                    retainers, guesswork, or noisy outreach. Learn how to respond
+                    to live journalist requests, pitch with context, and turn
+                    momentum into coverage.
                   </p>
 
                   <p className="text-slate-300 mb-4">
-                    Whether you're trying to land coverage in{" "}
-                    <em>TechCrunch</em>, reach niche bloggers, or build
-                    relationships with local reporters, the platform you use
-                    matters. A lot.
+                    Built from real experience (Forbes, Men&apos;s Health, Coach)
+                    plus practical CTA-ready steps, templates, and the exact
+                    workflow solo founders use to get featured.
                   </p>
 
-                  <p className="text-slate-300 mb-4">
-                    In this guide, we'll break down the best platforms for
-                    contacting journalists in 2025—what they do, who they're
-                    for, and how they stack up. Spoiler: one of them might just
-                    be exactly what you need.
-                  </p>
-
-                  <blockquote className="border-l-4 border-accent-blue/50 pl-4 my-6 italic text-slate-200">
-                    ContactJournalists.com
-                  </blockquote>
-
-                  <p className="text-slate-300 mb-6">
-                    Let's dive in and find the platform that'll help you get the
-                    press coverage you deserve. You can read the full guide and
-                    explore all the platforms in detail below.
-                  </p>
                   <a
-                    href="/blog/ultimate-guide-best-platforms-contacting-journalists-2026"
+                    href="/blog/the-fastest-ways-to-get-press-coverage-without-an-agency"
                     onClick={(e) => {
                       e.preventDefault();
                       window.location.href =
-                        "/blog/ultimate-guide-best-platforms-contacting-journalists-2026";
+                        "/blog/the-fastest-ways-to-get-press-coverage-without-an-agency";
                     }}
                     className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity"
                   >
