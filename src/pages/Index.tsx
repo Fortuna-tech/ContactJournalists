@@ -742,7 +742,7 @@ const Index = () => {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {/* Featured Blog Post */}
+              {/* Featured Blog Post – Latest Guide */}
               <article className="md:col-span-2 lg:col-span-3 rounded-2xl border border-white/10 bg-base-800/50 p-6 md:p-8 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
@@ -795,6 +795,59 @@ const Index = () => {
                     </svg>
                   </a>
                 </div>
+              </article>
+
+              {/* Featured Blog Post – Ultimate Guide */}
+              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 md:p-8 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
+                    Featured Guide
+                  </span>
+                  <span className="text-xs text-slate-500">•</span>
+                  <span className="text-xs text-slate-400">Ultimate Guide</span>
+                </div>
+
+                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
+                  The Ultimate Guide to the Best Platforms for Contacting
+                  Journalists in 2026
+                </h3>
+
+                <p className="text-sm text-slate-300 mb-4">
+                  Deep dive into PR tools, media databases, and outreach
+                  platforms so you can choose the right way to reach journalists
+                  (without wasting budget or energy).
+                </p>
+
+                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
+                  <time>December 1, 2025</time>
+                  <span>•</span>
+                  <span>15 min read</span>
+                </div>
+
+                <a
+                  href="/blog/ultimate-guide-best-platforms-contacting-journalists-2026"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href =
+                      "/blog/ultimate-guide-best-platforms-contacting-journalists-2026";
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
+                >
+                  Read Ultimate Guide
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
               </article>
 
               {/* P&L Template Blog Post */}
