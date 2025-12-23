@@ -1143,3 +1143,223 @@ export const getSuggestedSources = async () => {
     categories: p.categories || [],
   })) as AgencyFounderProfile[];
 };
+
+// =========================================
+// Admin API Functions (via Edge Function)
+// =========================================
+
+export interface AdminJournalistProfile {
+  id: string;
+  email: string;
+  full_name: string | null;
+  role: string;
+  press: string | null;
+  company: string | null;
+  website: string | null;
+  linkedin: string | null;
+  x_handle: string | null;
+  categories: string[];
+  created_at: string;
+  meta?: Record<string, unknown>;
+  billing_account?: {
+    status: string;
+    plan_id: string | null;
+    current_period_end: string | null;
+    cancel_at_period_end: boolean;
+  } | null;
+}
+
+export interface BulkImportResult {
+  recordsInserted: number;
+  skipped: number;
+  skippedRows: { row: number; email: string }[];
+  errors: { row: number; message: string }[];
+  profilesWithImages: { profileId: string; url: string }[];
+}
+
+export interface ImageProcessResult {
+  successful: string[];
+  failed: { profileId: string; error: string }[];
+}
+
+/**
+ * Helper to call admin edge function
+ */
+async function callAdminEdgeFunction<T>(
+  action: string,
+  data?: unknown,
+  id?: string
+): Promise<T> {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    throw new Error("Not authenticated");
+  }
+
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const response = await fetch(
+    `${supabaseUrl}/functions/v1/admin-manage-journalists`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ action, data, id }),
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(result.error || "Admin operation failed");
+  }
+
+  return result;
+}
+
+export const getJournalistsAdmin = async ({
+  page = 1,
+  pageSize = 20,
+  search = "",
+}: {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+}): Promise<{ data: AdminJournalistProfile[]; count: number }> => {
+  const result = await callAdminEdgeFunction<{
+    data: Record<string, unknown>[];
+    count: number;
+  }>("get_all", { page, pageSize, search });
+
+  return {
+    data: (result.data || []).map((p) => ({
+      id: p.id as string,
+      email: p.email as string,
+      full_name: p.full_name as string | null,
+      role: p.role as string,
+      press: p.press as string | null,
+      company: p.company as string | null,
+      website: p.website as string | null,
+      linkedin: p.linkedin as string | null,
+      x_handle: p.x_handle as string | null,
+      categories: (p.categories as string[]) || [],
+      created_at: p.created_at as string,
+      meta: p.meta as Record<string, unknown> | undefined,
+      billing_account: Array.isArray(p.billing_accounts)
+        ? (p.billing_accounts[0] as AdminJournalistProfile["billing_account"])
+        : (p.billing_accounts as AdminJournalistProfile["billing_account"]),
+    })),
+    count: result.count || 0,
+  };
+};
+
+export const updateJournalistAdmin = async (
+  id: string,
+  updates: {
+    full_name?: string;
+    email?: string;
+    press?: string;
+    company?: string;
+    website?: string;
+    linkedin?: string;
+    x_handle?: string;
+    categories?: string[];
+  }
+): Promise<AdminJournalistProfile> => {
+  const data = await callAdminEdgeFunction<Record<string, unknown>>(
+    "update",
+    updates,
+    id
+  );
+
+  return {
+    id: data.id as string,
+    email: data.email as string,
+    full_name: data.full_name as string | null,
+    role: data.role as string,
+    press: data.press as string | null,
+    company: data.company as string | null,
+    website: data.website as string | null,
+    linkedin: data.linkedin as string | null,
+    x_handle: data.x_handle as string | null,
+    categories: (data.categories as string[]) || [],
+    created_at: data.created_at as string,
+  };
+};
+
+export const createJournalistAdmin = async (profile: {
+  full_name?: string;
+  email?: string;
+  press?: string;
+  company?: string;
+  website?: string;
+  linkedin?: string;
+  x_handle?: string;
+  categories?: string[];
+}): Promise<AdminJournalistProfile> => {
+  const data = await callAdminEdgeFunction<Record<string, unknown>>(
+    "create",
+    profile
+  );
+
+  return {
+    id: data.id as string,
+    email: data.email as string,
+    full_name: data.full_name as string | null,
+    role: data.role as string,
+    press: data.press as string | null,
+    company: data.company as string | null,
+    website: data.website as string | null,
+    linkedin: data.linkedin as string | null,
+    x_handle: data.x_handle as string | null,
+    categories: (data.categories as string[]) || [],
+    created_at: data.created_at as string,
+  };
+};
+
+export const bulkImportJournalists = async (
+  rows: {
+    full_name?: string;
+    email?: string;
+    press?: string;
+    company?: string;
+    website?: string;
+    linkedin?: string;
+    x_handle?: string;
+    categories?: string[];
+    email_screenshot?: string;
+  }[]
+): Promise<BulkImportResult> => {
+  const result = await callAdminEdgeFunction<{
+    recordsInserted: number;
+    skipped: number;
+    skippedRows: { row: number; email: string }[];
+    errors: { row: number; message: string }[];
+    profilesWithImages: { profileId: string; url: string }[];
+  }>("bulk_import", rows);
+
+  return {
+    recordsInserted: result.recordsInserted,
+    skipped: result.skipped || 0,
+    skippedRows: result.skippedRows || [],
+    errors: result.errors || [],
+    profilesWithImages: result.profilesWithImages || [],
+  };
+};
+
+export const processImageBatch = async (
+  items: { profileId: string; url: string }[]
+): Promise<ImageProcessResult> => {
+  const result = await callAdminEdgeFunction<{
+    successful: string[];
+    failed: { profileId: string; error: string }[];
+  }>("process_images", items);
+
+  return {
+    successful: result.successful || [],
+    failed: result.failed || [],
+  };
+};

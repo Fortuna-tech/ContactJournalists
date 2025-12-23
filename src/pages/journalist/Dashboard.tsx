@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { RequestCard } from "@/components/journalist/RequestCard";
 import { SourceCard } from "@/components/journalist/SourceCard";
+import { DashboardBanner } from "@/components/DashboardBanner";
 import {
   getMyQueries,
   getSuggestedSources,
@@ -84,6 +85,9 @@ export default function Dashboard() {
 
   return (
     <div className="container mx-auto py-8 space-y-8">
+      {/* Dashboard Banners */}
+      <DashboardBanner />
+
       <div className="space-y-2">
         <h1 className="text-3xl font-bold tracking-tight">
           Journalist Dashboard
