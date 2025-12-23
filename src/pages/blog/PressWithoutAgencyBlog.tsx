@@ -75,9 +75,16 @@ const PressWithoutAgencyBlog = () => {
             I know exactly where you are, because a few years ago, I was you!
           </p>
 
-          <p>
-            My name is Fortuna and I founded <a href="https://www.itreallyworksvitamins.com" className="text-accent-blue hover:text-accent-violet font-semibold" target="_blank" rel="noopener noreferrer">It Really Works Vitamins</a>, and like most founders, I was building it from scratch and trying to grow it properly without burning out or burning through my savings.I was juggling suppliers, marketing, customer emails, admin, and all the invisible work that comes with running a business. There was no big marketing team, no luxury PR budget, and no spare time. Just a product I really believed in and the constant feeling that I needed to be everywhere at once!!
-          </p>
+          <div className="flex flex-col md:flex-row gap-6 mb-6 items-start">
+            <img
+              src="/assets/fortuna-founder.jpg"
+              alt="Fortuna, founder of ContactJournalists.com"
+              className="w-full md:w-64 md:flex-shrink-0 h-48 object-cover rounded-lg"
+            />
+            <p className="flex-1">
+              My name is Fortuna and I founded <a href="https://www.itreallyworksvitamins.com" className="text-accent-blue hover:text-accent-violet font-semibold" target="_blank" rel="noopener noreferrer">It Really Works Vitamins</a>, and like most founders, I was building it from scratch and trying to grow it properly without burning out or burning through my savings.I was juggling suppliers, marketing, customer emails, admin, and all the invisible work that comes with running a business. There was no big marketing team, no luxury PR budget, and no spare time. Just a product I really believed in and the constant feeling that I needed to be everywhere at once!!
+            </p>
+          </div>
 
           <p>
             Without an agency, we managed to get featured in Forbes, Shortlist, Coach Mag and many others. Seeing something I'd created getting featured in the press was so exciting, but what mattered more was what happened afterwards: Sales growth reflected all the new people who'd suddenly heard about me, and the business really started to have momentum behind it!
