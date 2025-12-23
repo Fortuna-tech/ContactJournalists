@@ -27,6 +27,7 @@ import PressPitchExamplesBlog from "./pages/blog/PressPitchExamplesBlog";
 import { HelmetProvider } from "react-helmet-async";
 import PLTemplateBlogPost from "./pages/blog/PLTemplateBlog";
 import UltimateGuideBlog from "./pages/blog/UltimateGuideBlog";
+import PressWithoutAgencyBlog from "./pages/blog/PressWithoutAgencyBlog";
 import WaitlisSignup from "./pages/WaitlisSignup";
 
 const queryClient = new QueryClient();
@@ -57,6 +58,10 @@ const App = () => (
             <Route
               path="/blog/ultimate-guide-best-platforms-contacting-journalists-2026"
               element={<UltimateGuideBlog />}
+            />
+            <Route
+              path="/blog/the-fastest-ways-to-get-press-coverage-without-an-agency"
+              element={<PressWithoutAgencyBlog />}
             />
             <Route path="/affiliates" element={<Affiliate />} />
             <Route path="/profile/:id" element={<Profile />} />

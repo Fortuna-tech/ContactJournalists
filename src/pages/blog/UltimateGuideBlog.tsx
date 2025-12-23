@@ -389,6 +389,14 @@ const UltimateGuideBlog = () => {
                   Press Pitch Examples That Get Replies
                 </a>
               </li>
+              <li>
+                <a
+                  href="/blog/the-fastest-ways-to-get-press-coverage-without-an-agency"
+                  className="text-accent-blue hover:text-accent-violet font-semibold"
+                >
+                  The Fastest Ways to Get Press Coverage Without an Agency
+                </a>
+              </li>
             </ul>
           </div>
 

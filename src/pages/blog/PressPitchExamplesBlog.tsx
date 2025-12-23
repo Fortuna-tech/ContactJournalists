@@ -686,6 +686,14 @@ const PressPitchExamplesBlog = () => {
                   </li>
                   <li>
                     <a
+                      href="/blog/the-fastest-ways-to-get-press-coverage-without-an-agency"
+                      className="text-accent-blue hover:underline font-medium"
+                    >
+                      → The Fastest Ways to Get Press Coverage Without an Agency
+                    </a>
+                  </li>
+                  <li>
+                    <a
                       href="/blog/free-small-business-pl-template-google-sheets-excel"
                       className="text-accent-blue hover:underline font-medium"
                     >
