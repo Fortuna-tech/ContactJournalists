@@ -84,23 +84,25 @@ const PressPitchExamplesBlog = () => {
             </header>
 
             <div className="prose prose-invert prose-lg max-w-none">
-              <img
-                src="/assets/fortuna-founder-balloons.jpg"
-                alt="Fortuna, founder of ContactJournalists.com"
-                className="w-full md:w-2/3 lg:w-1/2 rounded-2xl mb-6"
-              />
-              <p className="text-xl text-slate-300 leading-relaxed mb-8">
-                Hi, I'm Fortuna — the founder of{" "}
-                <a
-                  href="https://contactjournalists.com"
-                  className="text-accent-blue hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  ContactJournalists.com
-                </a>
-                .
-              </p>
+              <div className="flex flex-col md:flex-row gap-6 mb-8 items-start">
+                <img
+                  src="/assets/fortuna-founder-balloons.jpg"
+                  alt="Fortuna, founder of ContactJournalists.com"
+                  className="w-full md:w-64 md:flex-shrink-0 rounded-2xl"
+                />
+                <p className="text-xl text-slate-300 leading-relaxed flex-1">
+                  Hi, I'm Fortuna — the founder of{" "}
+                  <a
+                    href="https://contactjournalists.com"
+                    className="text-accent-blue hover:underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    ContactJournalists.com
+                  </a>
+                  .
+                </p>
+              </div>
 
               <p className="text-slate-300 mb-6">
                 I built ContactJournalists.com after my own stressful, scattered
