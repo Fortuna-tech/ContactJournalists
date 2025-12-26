@@ -43,12 +43,6 @@ const PressWithoutAgencyBlog = () => {
 
         {/* Introduction */}
         <div className="prose prose-invert prose-lg max-w-none">
-          <img
-            src="/assets/fortuna-founder-balloons.jpg"
-            alt="Fortuna, founder of ContactJournalists.com"
-            className="w-full h-48 object-cover rounded-lg mb-8"
-          />
-
           <p className="text-xl text-slate-300 mb-8 leading-relaxed">
             TL;DR – Want Press Coverage Without an Agency?
           </p>
