@@ -90,37 +90,39 @@ const PressPitchExamplesBlog = () => {
                   alt="Fortuna, founder of ContactJournalists.com"
                   className="w-full md:w-64 md:flex-shrink-0 rounded-2xl"
                 />
-                <p className="text-xl text-slate-300 leading-relaxed flex-1">
-                  Hi, I'm Fortuna — the founder of{" "}
-                  <a
-                    href="https://contactjournalists.com"
-                    className="text-accent-blue hover:underline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    ContactJournalists.com
-                  </a>
-                  .
-                </p>
+                <div className="flex-1">
+                  <p className="text-xl text-slate-300 leading-relaxed mb-6">
+                    Hi, I'm Fortuna — the founder of{" "}
+                    <a
+                      href="https://contactjournalists.com"
+                      className="text-accent-blue hover:underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      ContactJournalists.com
+                    </a>
+                    .
+                  </p>
+
+                  <p className="text-slate-300 mb-6">
+                    I built ContactJournalists.com after my own stressful, scattered
+                    attempts at getting publicity for my brand. If you've ever tried
+                    to do your own PR as a small founder, you'll know exactly what I
+                    mean.
+                  </p>
+
+                  <p className="text-slate-300 mb-6">
+                    Refreshing Twitter, scrolling endlessly, jumping between tools,
+                    hunting for journalist email addresses, and still missing
+                    brilliant opportunities because you heard about them too late.
+                  </p>
+
+                  <p className="text-slate-300 mb-6">
+                    It's chaotic and awful and you already have enough to do as a
+                    founder!
+                  </p>
+                </div>
               </div>
-
-              <p className="text-slate-300 mb-6">
-                I built ContactJournalists.com after my own stressful, scattered
-                attempts at getting publicity for my brand. If you've ever tried
-                to do your own PR as a small founder, you'll know exactly what I
-                mean.
-              </p>
-
-              <p className="text-slate-300 mb-6">
-                Refreshing Twitter, scrolling endlessly, jumping between tools,
-                hunting for journalist email addresses, and still missing
-                brilliant opportunities because you heard about them too late.
-              </p>
-
-              <p className="text-slate-300 mb-6">
-                It's chaotic and awful and you already have enough to do as a
-                founder!
-              </p>
 
               <h2 className="text-2xl md:text-3xl font-bold text-white mt-12 mb-6">
                 That's Why Timing Is Everything in PR
