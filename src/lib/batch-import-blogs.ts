@@ -240,7 +240,7 @@ async function importBlogViaEdgeFunction(url: string, password: string): Promise
 export async function batchImportBlogs() {
   console.log("Starting batch import of blog posts...");
   const results: Array<{ url: string; success: boolean; error?: string }> = [];
-  
+
   // Get admin password from env or use default
   const adminPassword = import.meta.env.VITE_BLOG_ADMIN_PASSWORD || "admin123";
 
@@ -248,57 +248,115 @@ export async function batchImportBlogs() {
     try {
       console.log(`\nProcessing: ${blogUrl.url}`);
 
-      // Use edge function to import (handles CORS and server-side fetching)
-      const imported = await importBlogViaEdgeFunction(blogUrl.url, adminPassword);
-      
-      console.log(`✓ Imported via edge function: ${imported.title}`);
-
-      // Now update with expected publish date and recalculate SEO if needed
-      const { data: blog } = await supabase
+      // First, check if blog already exists
+      const slug = blogUrl.slug;
+      const { data: existing } = await supabase
         .from("blogs")
-        .select("*")
-        .eq("id", imported.id)
+        .select("id, content")
+        .eq("slug", slug)
         .single();
 
-      if (blog) {
-        // Update publish date if we have an expected one
-        const updates: any = {};
-        
+      if (existing) {
+        console.log(`Blog ${slug} already exists, updating...`);
+
+        // Update existing blog with publish date and status
+        const updates: any = {
+          status: "published",
+          last_updated: new Date().toISOString(),
+        };
+
         if (blogUrl.expectedPublishDate) {
           updates.publish_date = blogUrl.expectedPublishDate;
         }
 
-        // Recalculate SEO if we have content
-        if (blog.content && blog.content.trim().length > 0) {
-          const seoData = calculateSEOScore({
-            title: blog.title,
-            metaDescription: blog.meta_description || undefined,
-            content: blog.content,
-            slug: blog.slug,
-          });
-          
-          updates.seo_score = seoData.score;
-          updates.seo_breakdown = seoData.breakdown;
-          updates.seo_flags = seoData.flags;
-          updates.seo_last_scored_at = new Date().toISOString();
+        // Try to get fresh content from the URL
+        try {
+          const imported = await importBlogViaEdgeFunction(blogUrl.url, adminPassword);
+          if (imported) {
+            // If we got new content, update it
+            const { data: freshBlog } = await supabase
+              .from("blogs")
+              .select("*")
+              .eq("id", imported.id)
+              .single();
+
+            if (freshBlog && freshBlog.content && freshBlog.content.length > existing.content?.length) {
+              updates.content = freshBlog.content;
+              updates.word_count = freshBlog.word_count || 0;
+            }
+          }
+        } catch (importError) {
+          console.warn(`Could not get fresh content for ${slug}, keeping existing`);
         }
 
-        if (Object.keys(updates).length > 0) {
-          updates.last_updated = new Date().toISOString();
-          const { error: updateError } = await supabase
-            .from("blogs")
-            .update(updates)
-            .eq("id", imported.id);
+        // Recalculate SEO if we have content
+        if (updates.content || existing.content) {
+          const content = updates.content || existing.content;
+          if (content && content.trim().length > 0) {
+            const seoData = calculateSEOScore({
+              title: existing.title || "Blog Post",
+              metaDescription: undefined,
+              content: content,
+              slug: slug,
+            });
 
-          if (updateError) {
-            console.warn(`Warning: Could not update blog ${imported.id}:`, updateError);
+            updates.seo_score = seoData.score;
+            updates.seo_breakdown = seoData.breakdown;
+            updates.seo_flags = seoData.flags;
+            updates.seo_last_scored_at = new Date().toISOString();
           }
         }
-      }
 
-      results.push({ url: blogUrl.url, success: true });
+        const { error: updateError } = await supabase
+          .from("blogs")
+          .update(updates)
+          .eq("id", existing.id);
+
+        if (updateError) {
+          console.error(`Failed to update ${slug}:`, updateError);
+          results.push({
+            url: blogUrl.url,
+            success: false,
+            error: updateError.message,
+          });
+        } else {
+          console.log(`✓ Updated existing blog: ${slug}`);
+          results.push({ url: blogUrl.url, success: true });
+        }
+      } else {
+        // Blog doesn't exist, try to import it
+        try {
+          const imported = await importBlogViaEdgeFunction(blogUrl.url, adminPassword);
+          console.log(`✓ Imported new blog: ${imported.title}`);
+
+          // Update with expected publish date
+          if (blogUrl.expectedPublishDate) {
+            const { error: updateError } = await supabase
+              .from("blogs")
+              .update({
+                publish_date: blogUrl.expectedPublishDate,
+                status: "published",
+                last_updated: new Date().toISOString(),
+              })
+              .eq("id", imported.id);
+
+            if (updateError) {
+              console.warn(`Warning: Could not update publish date for ${imported.id}:`, updateError);
+            }
+          }
+
+          results.push({ url: blogUrl.url, success: true });
+        } catch (importError: any) {
+          console.error(`✗ Failed to import ${blogUrl.url}:`, importError);
+          results.push({
+            url: blogUrl.url,
+            success: false,
+            error: importError.message || String(importError),
+          });
+        }
+      }
     } catch (error: any) {
-      console.error(`✗ Failed to import ${blogUrl.url}:`, error);
+      console.error(`✗ Failed to process ${blogUrl.url}:`, error);
       results.push({
         url: blogUrl.url,
         success: false,

@@ -96,29 +96,39 @@ function parseHTML(html: string): {
     }
   }
 
-  // Extract content - try multiple selectors for React-rendered pages
+  // Extract content - specifically look for the blog prose content
   let content = "";
-  
-  // Try to find main article content using common selectors
-  // For React-rendered pages, look for common class patterns
-  const contentSelectors = [
-    /<div[^>]*class=["'][^"']*max-w-4xl[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
-    /<div[^>]*class=["'][^"']*prose[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
-    /<div[^>]*class=["'][^"']*mx-auto[^"']*max-w[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
-    /<article[^>]*>([\s\S]*?)<\/article>/i,
-    /<main[^>]*>([\s\S]*?)<\/main>/i,
-    /<div[^>]*class=["'][^"']*content[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
-  ];
 
-  for (const selector of contentSelectors) {
-    const match = html.match(selector);
-    if (match && match[1]) {
-      const candidate = match[1].trim();
-      // Look for substantial content (has paragraphs, headings, etc.)
-      if (candidate.length > 500 && 
-          (candidate.includes('<p') || candidate.includes('<h') || candidate.includes('text-'))) {
-        content = candidate;
-        break;
+  // First, try the most specific selector for ContactJournalists.com blogs
+  // Look for: <div class="prose prose-invert prose-lg max-w-none">
+  const proseSelector = /<div[^>]*class=["'][^"']*prose[^"']*prose-invert[^"']*prose-lg[^"']*max-w-none[^"']*["'][^>]*>([\s\S]*?)<\/div>/i;
+  const proseMatch = html.match(proseSelector);
+  if (proseMatch && proseMatch[1]) {
+    const candidate = proseMatch[1].trim();
+    if (candidate.length > 1000) { // Blogs should be much longer than 1000 chars
+      content = candidate;
+    }
+  }
+
+  // If that didn't work, try alternative selectors
+  if (!content) {
+    const contentSelectors = [
+      /<div[^>]*class=["'][^"']*prose[^"']*max-w-none[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
+      /<div[^>]*class=["'][^"']*max-w-4xl[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
+      /<article[^>]*>([\s\S]*?)<\/article>/i,
+      /<main[^>]*>([\s\S]*?)<\/main>/i,
+    ];
+
+    for (const selector of contentSelectors) {
+      const match = html.match(selector);
+      if (match && match[1]) {
+        const candidate = match[1].trim();
+        // Look for substantial content (has paragraphs, headings, etc.)
+        if (candidate.length > 1000 &&
+            (candidate.includes('<p') || candidate.includes('<h') || candidate.includes('text-'))) {
+          content = candidate;
+          break;
+        }
       }
     }
   }
@@ -443,6 +453,12 @@ serve(async (req) => {
       );
     }
 
+    // Calculate word count
+    const wordCount = content.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(w => w.length > 0).length;
+
+    // Determine status - published if we have substantial content
+    const status = (content && content.length > 1000) ? "published" : "draft";
+
     // Insert into database
     const now = new Date().toISOString();
     const { data: blog, error: insertError } = await supabaseAdmin
@@ -450,14 +466,14 @@ serve(async (req) => {
       .insert({
         title,
         slug,
-        status: "draft",
+        status,
         publish_date: now,
         meta_description: metaDescription || null,
         content,
         created_at: now,
         last_updated: now,
         created_by: userId !== "blog-admin" ? userId : null,
-        word_count: 0,
+        word_count: wordCount,
         seo_score: 0,
       })
       .select("id, title, slug")
