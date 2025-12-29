@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -77,10 +78,14 @@ export default function BlogDashboard() {
       if (storedAuth === "true") {
         setIsAuthenticated(true);
         loadBlogs();
+      } else {
+        // Ensure we show the login form if not authenticated
+        setIsAuthenticated(false);
       }
     } catch (error) {
       console.error("Error in useEffect:", error);
       setError("Failed to initialize dashboard");
+      setIsAuthenticated(false);
     }
   }, []);
 
@@ -467,8 +472,8 @@ export default function BlogDashboard() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-base-900 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md bg-base-800 border-white/10">
+      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#0f172a' }}>
+        <Card className="w-full max-w-md border-white/10" style={{ backgroundColor: '#1e293b', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
           <CardHeader>
             <div className="flex items-center gap-2 mb-2">
               <Lock className="h-5 w-5" style={{ color: '#ffffff' }} />
@@ -510,9 +515,9 @@ export default function BlogDashboard() {
   // Add error boundary for rendering issues
   if (error && !loading) {
     return (
-      <div className="min-h-screen bg-base-900 text-slate-200 p-8">
+      <div className="min-h-screen p-8" style={{ backgroundColor: '#0f172a', color: '#e2e8f0' }}>
         <div className="max-w-7xl mx-auto">
-          <Card className="bg-base-800 border-white/10">
+          <Card className="border-white/10" style={{ backgroundColor: '#1e293b', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
             <CardContent className="p-6">
               <div className="text-center py-8">
                 <p className="text-red-400 mb-4 text-lg font-semibold">{error}</p>
@@ -543,7 +548,7 @@ export default function BlogDashboard() {
 
   return (
     <>
-      <div className="min-h-screen bg-base-900 p-8" style={{ color: '#e2e8f0' }}>
+      <div className="min-h-screen p-8" style={{ backgroundColor: '#0f172a', color: '#e2e8f0' }}>
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <div>
@@ -604,7 +609,7 @@ export default function BlogDashboard() {
           </div>
 
           {/* Import from URL Section */}
-          <Card className="bg-base-800 border-white/10 mb-6">
+          <Card className="border-white/10 mb-6" style={{ backgroundColor: '#1e293b', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
             <CardContent className="p-6">
               <div className="flex items-end gap-4">
                 <div className="flex-1">
@@ -660,7 +665,7 @@ export default function BlogDashboard() {
               </CardContent>
             </Card>
           ) : (
-            <Card className="bg-base-800 border-white/10">
+            <Card className="border-white/10" style={{ backgroundColor: '#1e293b', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
               <CardContent className="p-0">
                 <Table>
                   <TableHeader>
