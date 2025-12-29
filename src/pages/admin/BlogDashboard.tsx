@@ -36,6 +36,7 @@ import {
   Download,
 } from "lucide-react";
 import { migrateBlogs } from "@/lib/migrate-blogs";
+import { batchImportBlogs } from "@/lib/batch-import-blogs";
 import { useToast } from "@/components/ui/use-toast";
 
 interface BlogPost {
@@ -48,6 +49,7 @@ interface BlogPost {
   word_count: number;
   seo_score: number;
   seo_breakdown: SEOBreakdown | null;
+  seo_last_scored_at: string | null;
   seo_flags: string[] | null;
   seo_last_scored_at: string | null;
   meta_description: string | null;
@@ -823,6 +825,34 @@ export default function BlogDashboard() {
               >
                 <Database className="h-4 w-4 mr-2" />
                 Run Migration
+              </Button>
+              <Button
+                variant="outline"
+                onClick={async () => {
+                  toast({
+                    title: "Batch import started",
+                    description: "Importing all blog posts from URLs. Check console for progress.",
+                  });
+                  try {
+                    const results = await batchImportBlogs();
+                    const successCount = results.filter((r) => r.success).length;
+                    const failCount = results.filter((r) => !r.success).length;
+                    toast({
+                      title: "Batch import complete",
+                      description: `Successfully imported ${successCount} posts. ${failCount > 0 ? `${failCount} failed.` : ""}`,
+                    });
+                    setTimeout(() => loadBlogs(), 2000);
+                  } catch (error: any) {
+                    toast({
+                      title: "Batch import failed",
+                      description: error?.message || "Check console for details",
+                      variant: "destructive",
+                    });
+                  }
+                }}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Import All Blogs from URLs
               </Button>
               <Button
                 onClick={() => {
