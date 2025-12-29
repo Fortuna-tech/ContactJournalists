@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import { migrateBlogs } from "@/lib/migrate-blogs";
 import { batchImportBlogs } from "@/lib/batch-import-blogs";
+import { createPRForFoundersBlog } from "@/lib/create-pr-for-founders-blog";
 import { useToast } from "@/components/ui/use-toast";
 
 interface BlogPost {
