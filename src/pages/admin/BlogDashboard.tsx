@@ -323,21 +323,20 @@ export default function BlogDashboard() {
         throw new Error("VITE_SUPABASE_URL is not configured. Please check your environment variables.");
       }
 
-      // Get anon key - try both the new publishable format and JWT format
+      // Get anon key - Supabase Edge Functions require JWT format, not publishable key
       let anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
       
-      // If using publishable key format, we need to get the actual JWT anon key
-      // For now, try to use what's configured, but log a warning
       if (!anonKey) {
         throw new Error("VITE_SUPABASE_ANON_KEY is not configured. Please check your environment variables.");
       }
       
-      // If it's a publishable key format, we might need the JWT format instead
-      // Supabase Edge Functions require JWT format anon key in the apikey header
+      // Check if it's publishable key format (won't work with Edge Functions)
       if (anonKey.startsWith("sb_publishable_")) {
-        console.warn("Using publishable key format - Edge Functions may require JWT format anon key");
-        // Try to get the actual JWT anon key from Supabase client
-        // For now, we'll use what we have and see if it works
+        const errorMsg = "Publishable key format detected. Supabase Edge Functions require a JWT-format anon key. " +
+          "Please get your JWT anon key from: https://supabase.com/dashboard/project/nwxrukvgsanuougehruq/settings/api " +
+          "and update VITE_SUPABASE_ANON_KEY in vite.config.ts";
+        console.error(errorMsg);
+        throw new Error(errorMsg);
       }
 
       const blogAdminPassword = import.meta.env.VITE_BLOG_ADMIN_PASSWORD || "admin123";
