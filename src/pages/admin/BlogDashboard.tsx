@@ -403,7 +403,12 @@ export default function BlogDashboard() {
       });
       
       setImportUrl("");
-      await loadBlogs();
+      
+      // Reload blogs after a short delay to ensure DB transaction is committed
+      console.log("Reloading blogs after import...");
+      setTimeout(async () => {
+        await loadBlogs();
+      }, 1000);
     } catch (error: any) {
       console.error("Import error:", error);
       const errorMessage = error?.message || "Failed to import blog from URL";
@@ -476,12 +481,14 @@ export default function BlogDashboard() {
         console.error("Error syncing blogs:", syncError);
       }
 
+      console.log("Fetching blogs from database...");
       const { data, error: dbError } = await supabase
         .from("blogs")
         .select("*")
         .order("last_updated", { ascending: false });
 
       if (dbError) {
+        console.error("Database error:", dbError);
         if (dbError.code === "42P01" || dbError.message.includes("does not exist")) {
           setError("Blogs table not found. Please run the database migration first.");
           setBlogs([]);
@@ -489,6 +496,8 @@ export default function BlogDashboard() {
         }
         throw dbError;
       }
+
+      console.log(`Loaded ${data?.length || 0} blogs from database`);
 
       // Recalculate SEO for blogs without scores or with outdated scores
       const blogsWithSEO = await Promise.all(
@@ -528,6 +537,7 @@ export default function BlogDashboard() {
         })
       );
 
+      console.log(`Setting ${blogsWithSEO.length} blogs in state`);
       setBlogs(blogsWithSEO);
     } catch (error: any) {
       console.error("Error loading blogs:", error);
