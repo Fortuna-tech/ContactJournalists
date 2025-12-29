@@ -74,20 +74,28 @@ export default function BlogDashboard() {
   const [importing, setImporting] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
     try {
       const storedAuth = sessionStorage.getItem("blog_admin_authenticated");
       if (storedAuth === "true") {
         setIsAuthenticated(true);
-        loadBlogs();
+        if (mounted) {
+          loadBlogs();
+        }
       } else {
         // Ensure we show the login form if not authenticated
         setIsAuthenticated(false);
       }
     } catch (error) {
       console.error("Error in useEffect:", error);
-      setError("Failed to initialize dashboard");
-      setIsAuthenticated(false);
+      if (mounted) {
+        setError("Failed to initialize dashboard");
+        setIsAuthenticated(false);
+      }
     }
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
@@ -473,6 +481,12 @@ export default function BlogDashboard() {
   };
 
   const loadBlogs = async () => {
+    // Prevent multiple simultaneous calls
+    if (loading) {
+      console.log("loadBlogs already in progress, skipping...");
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -494,10 +508,23 @@ export default function BlogDashboard() {
       if (testError) {
         console.error("Test query error:", testError);
         // If it's a permission error, it might be RLS
-        if (testError.code === "42501" || testError.message.includes("permission denied")) {
-          throw new Error("RLS policy blocking access. Please run: CREATE POLICY \"Allow reading all blogs for admin\" ON public.blogs FOR SELECT USING (true);");
+        if (testError.code === "42501" || testError.message.includes("permission denied") || testError.message.includes("row-level security")) {
+          setError("RLS policy blocking access. Please run this SQL in Supabase: CREATE POLICY \"Allow reading all blogs for admin\" ON public.blogs FOR SELECT USING (true);");
+          setBlogs([]);
+          setLoading(false);
+          return;
         }
-        throw testError;
+        // If table doesn't exist
+        if (testError.code === "42P01" || testError.message.includes("does not exist")) {
+          setError("Blogs table not found. Please run the database migration first.");
+          setBlogs([]);
+          setLoading(false);
+          return;
+        }
+        setError(`Database error: ${testError.message}`);
+        setBlogs([]);
+        setLoading(false);
+        return;
       }
       
       console.log("Table access confirmed, fetching all blogs...");
@@ -513,9 +540,19 @@ export default function BlogDashboard() {
         if (dbError.code === "42P01" || dbError.message.includes("does not exist")) {
           setError("Blogs table not found. Please run the database migration first.");
           setBlogs([]);
+          setLoading(false);
           return;
         }
-        throw dbError;
+        if (dbError.code === "42501" || dbError.message.includes("permission denied") || dbError.message.includes("row-level security")) {
+          setError("RLS policy blocking access. Please run this SQL in Supabase: CREATE POLICY \"Allow reading all blogs for admin\" ON public.blogs FOR SELECT USING (true);");
+          setBlogs([]);
+          setLoading(false);
+          return;
+        }
+        setError(`Database error: ${dbError.message}`);
+        setBlogs([]);
+        setLoading(false);
+        return;
       }
 
       console.log(`Loaded ${data?.length || 0} blogs from database`);
