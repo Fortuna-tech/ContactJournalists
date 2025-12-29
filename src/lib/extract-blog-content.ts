@@ -106,7 +106,7 @@ const blogContent = {
     How To Pitch Journalists on Twitter (Full Breakdown)
   </p>
 
-  <div className="bg-accent-blue/10 border border-accent-blue/30 rounded-lg p-6 my-8">
+  <div class="bg-accent-blue/10 border border-accent-blue/30 rounded-lg p-6 my-8">
     <p className="text-slate-200 mb-4">
       <strong>TL;DR – How ContactJournalists.com Helps Founders Win at PR</strong>
     </p>
@@ -250,26 +250,32 @@ export async function extractAndUpdateBlogContent() {
       });
 
       // Update database
-      const { error } = await supabase
+      console.log(`Updating ${slug} with content length: ${data.content.length}`);
+      const updateData = {
+        content: data.content,
+        meta_description: data.metaDescription,
+        word_count: wordCount,
+        seo_score: seoData.score,
+        seo_breakdown: seoData.breakdown,
+        seo_flags: seoData.flags,
+        seo_last_scored_at: new Date().toISOString(),
+        publish_date: data.publishDate,
+        last_updated: new Date().toISOString(),
+      };
+
+      console.log(`Update data keys:`, Object.keys(updateData));
+
+      const { data: updateResult, error } = await supabase
         .from('blogs')
-        .update({
-          content: data.content,
-          meta_description: data.metaDescription,
-          word_count: wordCount,
-          seo_score: seoData.score,
-          seo_breakdown: seoData.breakdown,
-          seo_flags: seoData.flags,
-          seo_last_scored_at: new Date().toISOString(),
-          publish_date: data.publishDate,
-          last_updated: new Date().toISOString(),
-        })
-        .eq('slug', slug);
+        .update(updateData)
+        .eq('slug', slug)
+        .select('id, slug, content');
 
       if (error) {
         console.error(`Database update failed for ${slug}:`, error);
         results.push({ slug, success: false, error: error.message });
       } else {
-        console.log(`✓ Updated ${slug}`);
+        console.log(`✓ Updated ${slug}, result:`, updateResult);
         results.push({ slug, success: true });
       }
 
