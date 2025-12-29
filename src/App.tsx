@@ -38,6 +38,7 @@ import AdminJournalists from "@/pages/admin/Journalists";
 import AdminCsvImport from "@/pages/admin/CsvImport";
 import AdminBannerManagement from "@/pages/admin/BannerManagement";
 import AdminStoryRequestBroadcasts from "@/pages/admin/StoryRequestBroadcasts";
+import BlogDashboard from "@/pages/admin/BlogDashboard";
 
 const queryClient = new QueryClient();
 
@@ -112,6 +113,12 @@ const App = () => (
                 element={<AdminStoryRequestBroadcasts />}
               />
             </Route>
+
+            {/* Private Blog Admin Dashboard - Secret URL */}
+            <Route
+              path="/admin/blog-dashboard-a7f3b9c2d1e4f5a6"
+              element={<BlogDashboard />}
+            />
 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
