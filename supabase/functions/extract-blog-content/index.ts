@@ -15,6 +15,14 @@ interface BlogFile {
   publishDate: string;
 }
 
+interface BlogUpdate {
+  slug: string;
+  title: string;
+  content: string;
+  publishDate: string;
+  metaDescription?: string;
+}
+
 function extractContentFromComponent(componentContent: string): string {
   try {
     // Find the prose div start - more flexible pattern
@@ -145,7 +153,7 @@ serve(async (req) => {
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
     const body = await req.json();
-    const { password, blogFiles } = body;
+    const { password, blogUpdates } = body;
 
     // Authenticate
     if (password !== blogAdminPassword) {
@@ -158,9 +166,9 @@ serve(async (req) => {
       );
     }
 
-    if (!blogFiles || !Array.isArray(blogFiles)) {
+    if (!blogUpdates || !Array.isArray(blogUpdates)) {
       return new Response(
-        JSON.stringify({ error: "blogFiles array required" }),
+        JSON.stringify({ error: "blogUpdates array required" }),
         {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -170,37 +178,19 @@ serve(async (req) => {
 
     const results = [];
 
-    for (const blogFile of blogFiles) {
+    for (const blogUpdate of blogUpdates) {
       try {
-        console.log(`Processing: ${blogFile.slug}`);
+        console.log(`Processing: ${blogUpdate.slug}`);
 
-        // Read the component file
-        const filePath = `./src/pages/blog/${blogFile.file.split('/').pop()}`;
-        const componentContent = await Deno.readTextFile(filePath);
-
-        // Extract content
-        const content = extractContentFromComponent(componentContent);
+        const content = blogUpdate.content;
 
         if (!content || content.length < 100) {
-          console.warn(`No content extracted for ${blogFile.slug}`);
-          results.push({ slug: blogFile.slug, success: false, error: 'No content extracted' });
+          console.warn(`No content provided for ${blogUpdate.slug}`);
+          results.push({ slug: blogUpdate.slug, success: false, error: 'No content provided' });
           continue;
         }
 
-        console.log(`Extracted ${content.length} characters for ${blogFile.slug}`);
-
-        // Calculate SEO
-        const seoData = calculateSEO(content, blogFile.slug, blogFile.slug);
-
-        // Get existing blog data
-        const { data: existing } = await supabaseAdmin
-          .from("blogs")
-          .select("title, meta_description")
-          .eq("slug", blogFile.slug)
-          .single();
-
-        const title = existing?.title || blogFile.slug;
-        const metaDescription = existing?.meta_description || "";
+        console.log(`Processing ${content.length} characters for ${blogUpdate.slug}`);
 
         // Calculate word count properly
         const cleanContent = content
@@ -211,29 +201,33 @@ serve(async (req) => {
           .trim();
         const wordCount = cleanContent.split(/\s+/).filter(w => w.length > 0).length;
 
+        // Calculate SEO
+        const seoData = calculateSEO(content, blogUpdate.title, blogUpdate.slug);
+
         // Update database
         const { error } = await supabaseAdmin
           .from("blogs")
           .update({
-            title: blogFile.title,
+            title: blogUpdate.title,
             content: content,
+            meta_description: blogUpdate.metaDescription || null,
             status: "published",
             word_count: wordCount,
             seo_score: seoData.score,
             seo_breakdown: seoData.breakdown,
             seo_flags: seoData.flags,
             seo_last_scored_at: new Date().toISOString(),
-            publish_date: blogFile.publishDate,
+            publish_date: blogUpdate.publishDate,
             last_updated: new Date().toISOString(),
           })
-          .eq("slug", blogFile.slug);
+          .eq("slug", blogUpdate.slug);
 
         if (error) {
-          console.error(`Database update failed for ${blogFile.slug}:`, error);
-          results.push({ slug: blogFile.slug, success: false, error: error.message });
+          console.error(`Database update failed for ${blogUpdate.slug}:`, error);
+          results.push({ slug: blogUpdate.slug, success: false, error: error.message });
         } else {
-          console.log(`✓ Updated ${blogFile.slug}`);
-          results.push({ slug: blogFile.slug, success: true });
+          console.log(`✓ Updated ${blogUpdate.slug} with ${wordCount} words`);
+          results.push({ slug: blogUpdate.slug, success: true });
         }
 
       } catch (error: any) {

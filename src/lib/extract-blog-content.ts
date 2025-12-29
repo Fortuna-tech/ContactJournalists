@@ -739,17 +739,17 @@ export async function extractAndUpdateBlogContent() {
 
   const results = [];
 
-  // First try the edge function approach
+  const adminPassword = import.meta.env.VITE_BLOG_ADMIN_PASSWORD || "admin123";
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+  // Use admin API endpoint approach
   try {
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-    const adminPassword = import.meta.env.VITE_BLOG_ADMIN_PASSWORD || "admin123";
+    const adminUrl = `${supabaseUrl}/functions/v1/admin-manage-blogs`;
 
-    const functionUrl = `${supabaseUrl}/functions/v1/extract-blog-content`;
+    console.log("Attempting to call admin-manage-blogs edge function...");
 
-    console.log("Attempting to call extract-blog-content edge function...");
-
-    const response = await fetch(functionUrl, {
+    const response = await fetch(adminUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -758,19 +758,25 @@ export async function extractAndUpdateBlogContent() {
       },
       body: JSON.stringify({
         password: adminPassword,
-        blogFiles: blogFiles,
+        blogUpdates: blogFiles.map(blog => ({
+          slug: blog.slug,
+          title: blog.title,
+          content: fullBlogContent[blog.slug as keyof typeof fullBlogContent],
+          publishDate: blog.publishDate,
+          metaDescription: blog.metaDescription,
+        })),
       }),
     });
 
     if (response.ok) {
-      const edgeResults = await response.json();
-      console.log('Edge function succeeded:', edgeResults);
-      return edgeResults;
+      const adminResults = await response.json();
+      console.log('Admin function succeeded:', adminResults);
+      return adminResults;
     } else {
-      console.log('Edge function not available, falling back to manual update...');
+      console.log('Admin function not available, falling back to manual update...');
     }
   } catch (error) {
-    console.log('Edge function failed, falling back to manual update:', error);
+    console.log('Admin function failed, falling back to manual update:', error);
   }
 
   // Fallback: Update with proper titles, status, and existing content
