@@ -161,18 +161,12 @@ export default function BlogDashboard() {
 
     setImporting(true);
     try {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
-      if (!session) {
-        throw new Error("Not authenticated");
-      }
-
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       if (!supabaseUrl) {
         throw new Error("Supabase URL not configured");
       }
+
+      const blogAdminPassword = import.meta.env.VITE_BLOG_ADMIN_PASSWORD || "admin123";
 
       const response = await fetch(
         `${supabaseUrl}/functions/v1/import-blog`,
@@ -180,10 +174,12 @@ export default function BlogDashboard() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
             apikey: import.meta.env.VITE_SUPABASE_ANON_KEY || "",
           },
-          body: JSON.stringify({ url: importUrl.trim() }),
+          body: JSON.stringify({
+            url: importUrl.trim(),
+            password: blogAdminPassword,
+          }),
         }
       );
 

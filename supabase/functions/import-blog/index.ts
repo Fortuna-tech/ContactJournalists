@@ -163,62 +163,64 @@ serve(async (req) => {
   }
 
   try {
-    // Check authentication
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
-        {
-          status: 401,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
-    }
-
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      global: {
-        headers: { Authorization: authHeader },
-      },
-    });
-
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
-        {
-          status: 401,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
-    }
-
-    // Check if user has admin privileges (staff_privileges table)
-    const { data: staffCheck } = await supabase
-      .from("staff_privileges")
-      .select("user_id")
-      .eq("user_id", user.id)
-      .single();
-
-    if (!staffCheck) {
-      return new Response(
-        JSON.stringify({ error: "Forbidden: Admin access required" }),
-        {
-          status: 403,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
-    }
+    const blogAdminPassword = Deno.env.get("BLOG_ADMIN_PASSWORD") || "admin123";
 
     // Parse request body
-    const { url } = await req.json();
+    const body = await req.json();
+    const { url, password } = body;
+
+    // Check authentication - either Supabase auth or password
+    let userId: string | null = null;
+    const authHeader = req.headers.get("Authorization");
+
+    if (authHeader) {
+      // Try Supabase auth first
+      try {
+        const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+        const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+          global: {
+            headers: { Authorization: authHeader },
+          },
+        });
+
+        const {
+          data: { user },
+          error: authError,
+        } = await supabase.auth.getUser();
+
+        if (!authError && user) {
+          // Check if user has admin privileges
+          const { data: staffCheck } = await supabase
+            .from("staff_privileges")
+            .select("user_id")
+            .eq("user_id", user.id)
+            .single();
+
+          if (staffCheck) {
+            userId = user.id;
+          }
+        }
+      } catch (error) {
+        // Supabase auth failed, try password
+      }
+    }
+
+    // Fallback to password auth (for blog admin dashboard)
+    if (!userId && password === blogAdminPassword) {
+      userId = "blog-admin"; // Placeholder ID for password auth
+    }
+
+    if (!userId) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized: Admin access required" }),
+        {
+          status: 401,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
 
     if (!url || typeof url !== "string") {
       return new Response(
@@ -373,7 +375,7 @@ serve(async (req) => {
         content,
         created_at: now,
         last_updated: now,
-        created_by: user.id,
+        created_by: userId !== "blog-admin" ? userId : null,
         word_count: 0,
         seo_score: 0,
       })
