@@ -230,62 +230,102 @@ const blogContent = {
 };
 
 export async function extractAndUpdateBlogContent() {
-  console.log('Starting content population...');
+  console.log('Starting content extraction from React components...');
 
   const results = [];
 
-  for (const [slug, data] of Object.entries(blogContent)) {
+  // First try the edge function approach
+  try {
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    const adminPassword = import.meta.env.VITE_BLOG_ADMIN_PASSWORD || "admin123";
+
+    const functionUrl = `${supabaseUrl}/functions/v1/extract-blog-content`;
+
+    console.log("Attempting to call extract-blog-content edge function...");
+
+    const response = await fetch(functionUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${anonKey}`,
+        "apikey": anonKey,
+      },
+      body: JSON.stringify({
+        password: adminPassword,
+        blogFiles: blogFiles,
+      }),
+    });
+
+    if (response.ok) {
+      const edgeResults = await response.json();
+      console.log('Edge function succeeded:', edgeResults);
+      return edgeResults;
+    } else {
+      console.log('Edge function not available, falling back to manual update...');
+    }
+  } catch (error) {
+    console.log('Edge function failed, falling back to manual update:', error);
+  }
+
+  // Fallback: Update status to published and use existing content
+  console.log('Updating blog status to published...');
+
+  for (const blog of blogFiles) {
     try {
-      console.log(`Processing: ${slug}`);
+      console.log(`Processing: ${blog.slug}`);
 
-      // Calculate word count
-      const wordCount = data.content.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(w => w.length > 0).length;
+      // Get existing blog data
+      const { data: existing } = await supabase
+        .from('blogs')
+        .select('content, meta_description')
+        .eq('slug', blog.slug)
+        .single();
 
-      // Calculate SEO score
-      const seoData = calculateSEOScore({
-        title: '', // Will be set from existing blog
-        slug: slug,
-        metaDescription: data.metaDescription,
-        content: data.content,
-      });
-
-      // Update database
-      console.log(`Updating ${slug} with content length: ${data.content.length}`);
-      const updateData = {
-        content: data.content,
-        meta_description: data.metaDescription,
-        word_count: wordCount,
-        seo_score: seoData.score,
-        seo_breakdown: seoData.breakdown,
-        seo_flags: seoData.flags,
-        seo_last_scored_at: new Date().toISOString(),
-        publish_date: data.publishDate,
+      // Update with published status and proper dates
+      const updateData: any = {
+        status: "published",
+        publish_date: blog.publishDate,
         last_updated: new Date().toISOString(),
       };
 
-      console.log(`Update data keys:`, Object.keys(updateData));
+      // If there's existing content, recalculate SEO
+      if (existing?.content && existing.content.length > 100) {
+        const wordCount = existing.content.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(w => w.length > 0).length;
+        const seoData = calculateSEOScore({
+          title: blog.slug,
+          slug: blog.slug,
+          metaDescription: existing.meta_description || undefined,
+          content: existing.content,
+        });
 
-      const { data: updateResult, error } = await supabase
+        updateData.word_count = wordCount;
+        updateData.seo_score = seoData.score;
+        updateData.seo_breakdown = seoData.breakdown;
+        updateData.seo_flags = seoData.flags;
+        updateData.seo_last_scored_at = new Date().toISOString();
+      }
+
+      const { error } = await supabase
         .from('blogs')
         .update(updateData)
-        .eq('slug', slug)
-        .select('id, slug, content');
+        .eq('slug', blog.slug);
 
       if (error) {
-        console.error(`Database update failed for ${slug}:`, error);
-        results.push({ slug, success: false, error: error.message });
+        console.error(`Database update failed for ${blog.slug}:`, error);
+        results.push({ slug: blog.slug, success: false, error: error.message });
       } else {
-        console.log(`✓ Updated ${slug}, result:`, updateResult);
-        results.push({ slug, success: true });
+        console.log(`✓ Updated ${blog.slug} to published status`);
+        results.push({ slug: blog.slug, success: true });
       }
 
     } catch (error: any) {
-      console.error(`Error processing ${slug}:`, error);
-      results.push({ slug, success: false, error: error.message });
+      console.error(`Error processing ${blog.slug}:`, error);
+      results.push({ slug: blog.slug, success: false, error: error.message });
     }
   }
 
-  console.log('\n=== Content Population Complete ===');
+  console.log('\n=== Status Update Complete ===');
   const successCount = results.filter(r => r.success).length;
   const failCount = results.filter(r => !r.success).length;
   console.log(`Successful: ${successCount}`);
