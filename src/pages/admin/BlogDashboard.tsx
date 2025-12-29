@@ -317,60 +317,90 @@ export default function BlogDashboard() {
         throw new Error("URL must be from /blog/* path");
       }
 
-      // Try edge function first, fallback to client-side
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      let useClientSide = false;
-
       // Always use edge function - no client-side fallback
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       if (!supabaseUrl) {
-        throw new Error("VITE_SUPABASE_URL is not configured");
+        throw new Error("VITE_SUPABASE_URL is not configured. Please check your environment variables.");
+      }
+
+      const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      if (!anonKey) {
+        throw new Error("VITE_SUPABASE_ANON_KEY is not configured. Please check your environment variables.");
       }
 
       const blogAdminPassword = import.meta.env.VITE_BLOG_ADMIN_PASSWORD || "admin123";
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/import-blog`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY || "",
-          },
-          body: JSON.stringify({
-            url: importUrl.trim(),
-            password: blogAdminPassword,
-          }),
-        }
-      );
+      const functionUrl = `${supabaseUrl}/functions/v1/import-blog`;
+      
+      console.log("Importing blog from URL:", importUrl.trim());
+      console.log("Function URL:", functionUrl);
+      console.log("Using password:", blogAdminPassword ? "***" : "not set");
+
+      const response = await fetch(functionUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: anonKey,
+        },
+        body: JSON.stringify({
+          url: importUrl.trim(),
+          password: blogAdminPassword,
+        }),
+      });
+
+      console.log("Response status:", response.status, response.statusText);
 
       if (!response.ok) {
         // Parse error response
         let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+        let errorDetails = "";
+        
         try {
           const errorData = await response.json();
+          console.error("Error response:", errorData);
           errorMessage = errorData.error || errorMessage;
           if (errorData.details) {
-            errorMessage += ` (${errorData.details})`;
+            errorDetails = errorData.details;
           }
-        } catch {
-          // If JSON parsing fails, use status text
+          if (errorData.hint) {
+            errorDetails += errorDetails ? ` (${errorData.hint})` : errorData.hint;
+          }
+        } catch (parseError) {
+          // If JSON parsing fails, try to get text
+          try {
+            const errorText = await response.text();
+            console.error("Error response text:", errorText);
+            if (errorText) {
+              errorMessage += ` - ${errorText}`;
+            }
+          } catch {
+            // If text parsing also fails, use status text
+          }
         }
-        throw new Error(errorMessage);
+        
+        const fullErrorMessage = errorDetails ? `${errorMessage} - ${errorDetails}` : errorMessage;
+        throw new Error(fullErrorMessage);
       }
 
       const data = await response.json();
+      console.log("Import successful:", data);
+      
       toast({
         title: "Blog imported successfully",
         description: `${data.title} has been imported as a draft`,
+        variant: "default",
       });
+      
       setImportUrl("");
-      loadBlogs();
+      await loadBlogs();
     } catch (error: any) {
       console.error("Import error:", error);
+      const errorMessage = error?.message || "Failed to import blog from URL";
+      
       toast({
         title: "Import failed",
-        description: error?.message || "Failed to import blog from URL",
+        description: errorMessage,
         variant: "destructive",
+        duration: 10000, // Show for 10 seconds
       });
     } finally {
       setImporting(false);
@@ -803,8 +833,14 @@ export default function BlogDashboard() {
                   </p>
                 </div>
                 <Button
-                  onClick={importBlogFromURL}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log("Import button clicked");
+                    importBlogFromURL();
+                  }}
                   disabled={importing || !importUrl.trim()}
+                  type="button"
                 >
                   <Download className={`h-4 w-4 mr-2 ${importing ? "animate-spin" : ""}`} />
                   {importing ? "Importing..." : "Import"}
