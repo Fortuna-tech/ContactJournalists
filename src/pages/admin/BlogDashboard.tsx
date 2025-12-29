@@ -482,6 +482,25 @@ export default function BlogDashboard() {
       }
 
       console.log("Fetching blogs from database...");
+      console.log("Supabase client URL:", import.meta.env.VITE_SUPABASE_URL);
+      
+      // First, test if we can access the table at all
+      const { data: testData, error: testError } = await supabase
+        .from("blogs")
+        .select("id")
+        .limit(1);
+      
+      if (testError) {
+        console.error("Test query error:", testError);
+        // If it's a permission error, it might be RLS
+        if (testError.code === "42501" || testError.message.includes("permission denied")) {
+          throw new Error("RLS policy blocking access. Please run: CREATE POLICY \"Allow reading all blogs for admin\" ON public.blogs FOR SELECT USING (true);");
+        }
+        throw testError;
+      }
+      
+      console.log("Table access confirmed, fetching all blogs...");
+      
       // Use select with explicit columns to ensure we get all data
       const { data, error: dbError } = await supabase
         .from("blogs")
