@@ -186,13 +186,28 @@ export default function BlogDashboard() {
             password: blogAdminPassword,
           }),
         }
-      );
-
-      const data = await response.json();
+      ).catch((fetchError) => {
+        // Network error - function might not be deployed
+        throw new Error(
+          `Network error: ${fetchError.message}. Make sure the edge function is deployed: supabase functions deploy import-blog`
+        );
+      });
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to import blog");
+        const errorText = await response.text();
+        let errorMessage = "Failed to import blog";
+        
+        try {
+          const errorData = JSON.parse(errorText);
+          errorMessage = errorData.error || errorMessage;
+        } catch {
+          errorMessage = errorText || `HTTP ${response.status}: ${response.statusText}`;
+        }
+        
+        throw new Error(errorMessage);
       }
+
+      const data = await response.json();
 
       toast({
         title: "Blog imported successfully",
