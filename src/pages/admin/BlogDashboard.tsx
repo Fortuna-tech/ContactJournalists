@@ -154,6 +154,109 @@ export default function BlogDashboard() {
     }
   };
 
+  const parseHTMLContent = (html: string) => {
+    // Extract title
+    let title = "";
+    const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+    if (titleMatch) {
+      title = titleMatch[1].replace(/\s*\|\s*ContactJournalists\.com\s*/i, "").trim();
+    }
+    
+    // Try og:title if no title
+    if (!title) {
+      const ogTitleMatch = html.match(/<meta[^>]*property=["']og:title["'][^>]*content=["']([^"']+)["']/i);
+      if (ogTitleMatch) {
+        title = ogTitleMatch[1].trim();
+      }
+    }
+
+    // Extract meta description
+    let metaDescription = "";
+    const descMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']+)["']/i);
+    if (descMatch) {
+      metaDescription = descMatch[1].trim();
+    }
+    
+    // Try og:description if no meta description
+    if (!metaDescription) {
+      const ogDescMatch = html.match(/<meta[^>]*property=["']og:description["'][^>]*content=["']([^"']+)["']/i);
+      if (ogDescMatch) {
+        metaDescription = ogDescMatch[1].trim();
+      }
+    }
+
+    // Extract content - try multiple selectors
+    let content = "";
+    
+    const contentSelectors = [
+      /<div[^>]*class=["'][^"']*prose[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
+      /<article[^>]*>([\s\S]*?)<\/article>/i,
+      /<main[^>]*>([\s\S]*?)<\/main>/i,
+      /<div[^>]*class=["'][^"']*content[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
+    ];
+
+    for (const selector of contentSelectors) {
+      const match = html.match(selector);
+      if (match && match[1]) {
+        content = match[1].trim();
+        if (content.length > 500) {
+          break;
+        }
+      }
+    }
+
+    // Fallback: extract body content, remove scripts, styles, nav, header, footer
+    if (!content || content.length < 500) {
+      const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+      if (bodyMatch) {
+        let bodyContent = bodyMatch[1];
+        
+        // Remove unwanted elements
+        bodyContent = bodyContent
+          .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
+          .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+          .replace(/<nav[^>]*>[\s\S]*?<\/nav>/gi, "")
+          .replace(/<header[^>]*>[\s\S]*?<\/header>/gi, "")
+          .replace(/<footer[^>]*>[\s\S]*?<\/footer>/gi, "")
+          .replace(/<aside[^>]*>[\s\S]*?<\/aside>/gi, "");
+        
+        content = bodyContent.trim();
+      }
+    }
+
+    // Clean up content
+    if (content) {
+      content = content
+        .replace(/\s+/g, " ")
+        .replace(/>\s+</g, "><")
+        .trim();
+    }
+
+    return { title, metaDescription, content };
+  };
+
+  const extractSlugFromURL = (url: string): string => {
+    try {
+      const urlObj = new URL(url);
+      const path = urlObj.pathname;
+      const match = path.match(/\/blog\/([^\/]+)/);
+      if (match && match[1]) {
+        return match[1];
+      }
+      return "";
+    } catch {
+      return "";
+    }
+  };
+
+  const generateSlugFromTitle = (title: string): string => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "")
+      .substring(0, 100);
+  };
+
   const importBlogFromURL = async () => {
     if (!importUrl.trim()) {
       toast({
@@ -166,56 +269,139 @@ export default function BlogDashboard() {
 
     setImporting(true);
     try {
+      // Validate URL
+      let urlObj: URL;
+      try {
+        urlObj = new URL(importUrl.trim());
+      } catch {
+        throw new Error("Invalid URL format");
+      }
+
+      const hostname = urlObj.hostname.replace(/^www\./, "");
+      if (!["contactjournalists.com", "www.contactjournalists.com"].includes(hostname)) {
+        throw new Error("Domain not whitelisted. Only contactjournalists.com/blog/* URLs are allowed.");
+      }
+
+      if (!urlObj.pathname.startsWith("/blog/")) {
+        throw new Error("URL must be from /blog/* path");
+      }
+
+      // Try edge function first, fallback to client-side
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      if (!supabaseUrl) {
-        throw new Error("Supabase URL not configured");
-      }
+      let useClientSide = false;
 
-      const blogAdminPassword = import.meta.env.VITE_BLOG_ADMIN_PASSWORD || "admin123";
-
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/import-blog`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY || "",
-          },
-          body: JSON.stringify({
-            url: importUrl.trim(),
-            password: blogAdminPassword,
-          }),
-        }
-      ).catch((fetchError) => {
-        // Network error - function might not be deployed
-        throw new Error(
-          `Network error: ${fetchError.message}. Make sure the edge function is deployed: supabase functions deploy import-blog`
-        );
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        let errorMessage = "Failed to import blog";
-        
+      if (supabaseUrl) {
         try {
-          const errorData = JSON.parse(errorText);
-          errorMessage = errorData.error || errorMessage;
-        } catch {
-          errorMessage = errorText || `HTTP ${response.status}: ${response.statusText}`;
+          const blogAdminPassword = import.meta.env.VITE_BLOG_ADMIN_PASSWORD || "admin123";
+          const response = await fetch(
+            `${supabaseUrl}/functions/v1/import-blog`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                apikey: import.meta.env.VITE_SUPABASE_ANON_KEY || "",
+              },
+              body: JSON.stringify({
+                url: importUrl.trim(),
+                password: blogAdminPassword,
+              }),
+            }
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            toast({
+              title: "Blog imported successfully",
+              description: `${data.title} has been imported as a draft`,
+            });
+            setImportUrl("");
+            loadBlogs();
+            return;
+          }
+        } catch (fetchError) {
+          // Edge function not available, use client-side
+          useClientSide = true;
         }
-        
-        throw new Error(errorMessage);
+      } else {
+        useClientSide = true;
       }
 
-      const data = await response.json();
+      // Client-side import (fallback)
+      if (useClientSide) {
+        // Fetch HTML
+        const response = await fetch(importUrl.trim(), {
+          mode: "cors",
+          credentials: "omit",
+        });
 
-      toast({
-        title: "Blog imported successfully",
-        description: `${data.title} has been imported as a draft`,
-      });
+        if (!response.ok) {
+          throw new Error(`Failed to fetch URL: ${response.status} ${response.statusText}`);
+        }
 
-      setImportUrl("");
-      loadBlogs();
+        const html = await response.text();
+        if (!html || html.length < 100) {
+          throw new Error("No content found on page");
+        }
+
+        // Parse HTML
+        const { title, metaDescription, content } = parseHTMLContent(html);
+
+        if (!title) {
+          throw new Error("Could not extract title from page");
+        }
+
+        if (!content || content.length < 100) {
+          throw new Error("Could not extract sufficient content from page");
+        }
+
+        // Generate slug
+        let slug = extractSlugFromURL(importUrl.trim());
+        if (!slug) {
+          slug = generateSlugFromTitle(title);
+        }
+
+        // Check if blog with this slug already exists
+        const { data: existing } = await supabase
+          .from("blogs")
+          .select("id")
+          .eq("slug", slug)
+          .single();
+
+        if (existing) {
+          throw new Error(`Blog with slug "${slug}" already exists`);
+        }
+
+        // Insert into database
+        const now = new Date().toISOString();
+        const { data: blog, error: insertError } = await supabase
+          .from("blogs")
+          .insert({
+            title,
+            slug,
+            status: "draft",
+            publish_date: now,
+            meta_description: metaDescription || null,
+            content,
+            created_at: now,
+            last_updated: now,
+            word_count: 0,
+            seo_score: 0,
+          })
+          .select("id, title, slug")
+          .single();
+
+        if (insertError) {
+          throw new Error(`Failed to save blog: ${insertError.message}`);
+        }
+
+        toast({
+          title: "Blog imported successfully",
+          description: `${blog.title} has been imported as a draft`,
+        });
+
+        setImportUrl("");
+        loadBlogs();
+      }
     } catch (error: any) {
       console.error("Import error:", error);
       toast({
