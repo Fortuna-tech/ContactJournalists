@@ -17,8 +17,8 @@ interface BlogFile {
 
 function extractContentFromComponent(componentContent: string): string {
   try {
-    // Find the prose div start
-    const proseStartPattern = /<div className="prose prose-invert prose-lg max-w-none">/;
+    // Find the prose div start - more flexible pattern
+    const proseStartPattern = /<div\s+className="[^"]*prose[^"]*prose-invert[^"]*prose-lg[^"]*max-w-none[^"]*"[^>]*>/;
     const proseStart = componentContent.search(proseStartPattern);
 
     if (proseStart === -1) {
@@ -26,19 +26,43 @@ function extractContentFromComponent(componentContent: string): string {
       return "";
     }
 
-    // Find the end - look for closing patterns
-    const endPatterns = [
-      /{\/\* Footer \*}/,
-      /<footer/,
-      /export default/,
-      /<\/div>\s*}\s*$/,
-    ];
+    // Count div tags to find the matching closing div
+    let divCount = 0;
+    let inJSXExpression = false;
+    let inString = false;
+    let stringChar = '';
+    let endPos = proseStart;
 
-    let endPos = componentContent.length;
-    for (const pattern of endPatterns) {
-      const match = componentContent.substring(proseStart).search(pattern);
-      if (match !== -1) {
-        endPos = Math.min(endPos, proseStart + match);
+    for (let i = proseStart; i < componentContent.length; i++) {
+      const char = componentContent[i];
+      const nextChar = componentContent[i + 1] || '';
+
+      // Handle strings
+      if (!inJSXExpression && !inString && (char === '"' || char === "'")) {
+        inString = true;
+        stringChar = char;
+      } else if (inString && char === stringChar && componentContent[i - 1] !== '\\') {
+        inString = false;
+      }
+
+      // Handle JSX expressions
+      if (!inString && char === '{') {
+        inJSXExpression = true;
+      } else if (!inString && char === '}') {
+        inJSXExpression = false;
+      }
+
+      // Count div tags (outside strings and JSX expressions)
+      if (!inString && !inJSXExpression) {
+        if (char === '<' && nextChar === '/' && componentContent.substr(i, 6) === '</div>') {
+          divCount--;
+          if (divCount === 0) {
+            endPos = i + 6; // Include the closing </div>
+            break;
+          }
+        } else if (char === '<' && componentContent.substr(i, 5) === '<div ') {
+          divCount++;
+        }
       }
     }
 
@@ -48,9 +72,13 @@ function extractContentFromComponent(componentContent: string): string {
     // Convert JSX to HTML
     extractedContent = extractedContent.replace(/className=/g, 'class=');
     extractedContent = extractedContent.replace(/\{\/\*.*?\*\/\}/g, ''); // Remove JSX comments
+    extractedContent = extractedContent.replace(/\{[^}]*\}/g, ''); // Remove JSX expressions
 
-    // Clean up extra whitespace
-    extractedContent = extractedContent.trim();
+    // Clean up multiple spaces and newlines
+    extractedContent = extractedContent
+      .replace(/\n\s*\n/g, '\n') // Remove empty lines
+      .replace(/\s+/g, ' ') // Normalize spaces
+      .trim();
 
     return extractedContent;
   } catch (error: any) {
