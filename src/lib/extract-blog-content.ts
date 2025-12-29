@@ -1,9 +1,48 @@
 /**
- * Extract blog content - hardcoded content for now
+ * Extract blog content from React components
  */
 
 import { supabase } from "./supabaseClient";
 import { calculateSEOScore } from "./blog-seo";
+
+const blogFiles = [
+  {
+    slug: 'press-pitch-examples-that-get-replies',
+    title: '7 Press Pitch Examples That Actually Get Replies',
+    file: 'src/pages/blog/PressPitchExamplesBlog.tsx',
+    publishDate: '2025-11-16T00:00:00Z',
+  },
+  {
+    slug: 'the-fastest-ways-to-get-press-coverage-without-an-agency',
+    title: 'The Fastest Ways to Get Press Coverage Without an Agency',
+    file: 'src/pages/blog/PressWithoutAgencyBlog.tsx',
+    publishDate: '2025-12-19T00:00:00Z',
+  },
+  {
+    slug: 'how-to-pitch-journalists-on-twitter',
+    title: 'How To Pitch Journalists on Twitter (Full Breakdown)',
+    file: 'src/pages/blog/HowToPitchJournalistsTwitter.tsx',
+    publishDate: '2025-12-27T00:00:00Z',
+  },
+  {
+    slug: 'ultimate-guide-best-platforms-contacting-journalists-2026',
+    title: 'The Ultimate Guide to the Best Platforms for Contacting Journalists in 2026',
+    file: 'src/pages/blog/UltimateGuideBlog.tsx',
+    publishDate: '2025-12-01T00:00:00Z',
+  },
+  {
+    slug: 'free-small-business-pl-template-google-sheets-excel',
+    title: 'Free Small Business P&L Template (Google Sheets + Excel)',
+    file: 'src/pages/blog/PLTemplateBlog.tsx',
+    publishDate: '2025-11-15T00:00:00Z',
+  },
+  {
+    slug: 'how-to-get-press-for-your-brand-without-a-pr-agency',
+    title: 'How to Get Press for Your Brand Without a PR Agency',
+    file: 'src/pages/blog/GetPress.tsx',
+    publishDate: '2025-01-01T00:00:00Z',
+  },
+];
 
 const blogContent = {
   'press-pitch-examples-that-get-replies': {
@@ -230,7 +269,7 @@ const blogContent = {
 };
 
 export async function extractAndUpdateBlogContent() {
-  console.log('Starting content extraction from React components...');
+  console.log('Starting content extraction and blog updates...');
 
   const results = [];
 
@@ -268,12 +307,12 @@ export async function extractAndUpdateBlogContent() {
     console.log('Edge function failed, falling back to manual update:', error);
   }
 
-  // Fallback: Update status to published and use existing content
-  console.log('Updating blog status to published...');
+  // Fallback: Update with proper titles, status, and existing content
+  console.log('Updating blogs with correct titles and status...');
 
   for (const blog of blogFiles) {
     try {
-      console.log(`Processing: ${blog.slug}`);
+      console.log(`Processing: ${blog.slug} -> "${blog.title}"`);
 
       // Get existing blog data
       const { data: existing } = await supabase
@@ -282,18 +321,28 @@ export async function extractAndUpdateBlogContent() {
         .eq('slug', blog.slug)
         .single();
 
-      // Update with published status and proper dates
+      // Update with correct title, published status, and proper dates
       const updateData: any = {
+        title: blog.title,
         status: "published",
         publish_date: blog.publishDate,
         last_updated: new Date().toISOString(),
       };
 
-      // If there's existing content, recalculate SEO
+      // Calculate word count and SEO from existing content
       if (existing?.content && existing.content.length > 100) {
-        const wordCount = existing.content.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(w => w.length > 0).length;
+        // Clean content for word count calculation
+        const cleanContent = existing.content
+          .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+          .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+          .replace(/<[^>]*>/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+
+        const wordCount = cleanContent.split(/\s+/).filter(w => w.length > 0).length;
+
         const seoData = calculateSEOScore({
-          title: blog.slug,
+          title: blog.title,
           slug: blog.slug,
           metaDescription: existing.meta_description || undefined,
           content: existing.content,
@@ -304,6 +353,13 @@ export async function extractAndUpdateBlogContent() {
         updateData.seo_breakdown = seoData.breakdown;
         updateData.seo_flags = seoData.flags;
         updateData.seo_last_scored_at = new Date().toISOString();
+
+        console.log(`  Word count: ${wordCount}, SEO score: ${seoData.score}`);
+      } else {
+        // If no content, set minimal defaults
+        updateData.word_count = 0;
+        updateData.seo_score = 0;
+        console.log(`  No content found, setting defaults`);
       }
 
       const { error } = await supabase
@@ -315,7 +371,7 @@ export async function extractAndUpdateBlogContent() {
         console.error(`Database update failed for ${blog.slug}:`, error);
         results.push({ slug: blog.slug, success: false, error: error.message });
       } else {
-        console.log(`✓ Updated ${blog.slug} to published status`);
+        console.log(`✓ Updated ${blog.slug} with title "${blog.title}"`);
         results.push({ slug: blog.slug, success: true });
       }
 
@@ -325,7 +381,7 @@ export async function extractAndUpdateBlogContent() {
     }
   }
 
-  console.log('\n=== Status Update Complete ===');
+  console.log('\n=== Blog Update Complete ===');
   const successCount = results.filter(r => r.success).length;
   const failCount = results.filter(r => !r.success).length;
   console.log(`Successful: ${successCount}`);

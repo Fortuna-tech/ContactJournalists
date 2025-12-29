@@ -10,6 +10,7 @@ const corsHeaders = {
 
 interface BlogFile {
   slug: string;
+  title: string;
   file: string;
   publishDate: string;
 }
@@ -173,13 +174,23 @@ serve(async (req) => {
         const title = existing?.title || blogFile.slug;
         const metaDescription = existing?.meta_description || "";
 
+        // Calculate word count properly
+        const cleanContent = content
+          .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+          .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+          .replace(/<[^>]*>/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+        const wordCount = cleanContent.split(/\s+/).filter(w => w.length > 0).length;
+
         // Update database
         const { error } = await supabaseAdmin
           .from("blogs")
           .update({
+            title: blogFile.title,
             content: content,
             status: "published",
-            word_count: content.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(w => w.length > 0).length,
+            word_count: wordCount,
             seo_score: seoData.score,
             seo_breakdown: seoData.breakdown,
             seo_flags: seoData.flags,
