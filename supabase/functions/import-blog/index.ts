@@ -96,23 +96,28 @@ function parseHTML(html: string): {
     }
   }
 
-  // Extract content - try multiple selectors
+  // Extract content - try multiple selectors for React-rendered pages
   let content = "";
   
   // Try to find main article content using common selectors
+  // For React-rendered pages, look for common class patterns
   const contentSelectors = [
+    /<div[^>]*class=["'][^"']*max-w-4xl[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
+    /<div[^>]*class=["'][^"']*prose[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
+    /<div[^>]*class=["'][^"']*mx-auto[^"']*max-w[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
     /<article[^>]*>([\s\S]*?)<\/article>/i,
     /<main[^>]*>([\s\S]*?)<\/main>/i,
-    /<div[^>]*class=["'][^"']*prose[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
     /<div[^>]*class=["'][^"']*content[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
   ];
 
   for (const selector of contentSelectors) {
     const match = html.match(selector);
     if (match && match[1]) {
-      content = match[1].trim();
-      if (content.length > 500) {
-        // Found substantial content
+      const candidate = match[1].trim();
+      // Look for substantial content (has paragraphs, headings, etc.)
+      if (candidate.length > 500 && 
+          (candidate.includes('<p') || candidate.includes('<h') || candidate.includes('text-'))) {
+        content = candidate;
         break;
       }
     }
@@ -131,9 +136,32 @@ function parseHTML(html: string): {
         .replace(/<nav[^>]*>[\s\S]*?<\/nav>/gi, "")
         .replace(/<header[^>]*>[\s\S]*?<\/header>/gi, "")
         .replace(/<footer[^>]*>[\s\S]*?<\/footer>/gi, "")
-        .replace(/<aside[^>]*>[\s\S]*?<\/aside>/gi, "");
+        .replace(/<aside[^>]*>[\s\S]*?<\/aside>/gi, "")
+        .replace(/<div[^>]*id=["']root["'][^>]*>([\s\S]*?)<\/div>/gi, "$1"); // Extract React root content
       
-      content = bodyContent.trim();
+      // Try to find the main content div within body
+      const mainContentMatch = bodyContent.match(/<div[^>]*class=["'][^"']*min-h-screen[^"']*["'][^>]*>([\s\S]*?)<\/div>/i);
+      if (mainContentMatch && mainContentMatch[1].length > 500) {
+        content = mainContentMatch[1].trim();
+      } else {
+        content = bodyContent.trim();
+      }
+    }
+  }
+  
+  // If still no content, try to extract from React hydration data or JSON
+  if (!content || content.length < 100) {
+    // Look for JSON data in script tags that might contain content
+    const jsonDataMatch = html.match(/<script[^>]*type=["']application\/json["'][^>]*>([\s\S]*?)<\/script>/i);
+    if (jsonDataMatch) {
+      try {
+        const jsonData = JSON.parse(jsonDataMatch[1]);
+        if (jsonData.content || jsonData.body) {
+          content = jsonData.content || jsonData.body;
+        }
+      } catch {
+        // Ignore JSON parse errors
+      }
     }
   }
 
