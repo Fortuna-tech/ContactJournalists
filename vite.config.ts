@@ -15,6 +15,9 @@ export default defineConfig(({ mode }) => ({
     "import.meta.env.VITE_SUPABASE_ANON_KEY": JSON.stringify(
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im53eHJ1a3Znc2FudW91Z2VocnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3NjcxMTUsImV4cCI6MjA3ODM0MzExNX0.Om06rD8f3dXpCf2D1m70Ekr6cVG7csF8OU-rwrBN660"
     ),
+    "import.meta.env.VITE_BLOG_ADMIN_PASSWORD": JSON.stringify(
+      "admin123"
+    ),
   },
   plugins: [react()].filter(Boolean),
   resolve: {

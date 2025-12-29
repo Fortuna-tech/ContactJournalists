@@ -38,6 +38,7 @@ import {
 import { migrateBlogs } from "@/lib/migrate-blogs";
 import { batchImportBlogs } from "@/lib/batch-import-blogs";
 import { createPRForFoundersBlog } from "@/lib/create-pr-for-founders-blog";
+import { extractAndUpdateBlogContent } from "@/lib/extract-blog-content";
 import { useToast } from "@/components/ui/use-toast";
 
 interface BlogPost {
@@ -882,7 +883,7 @@ export default function BlogDashboard() {
                     const results = await batchImportBlogs();
                     const successCount = results.filter((r) => r.success).length;
                     const failCount = results.filter((r) => !r.success).length;
-                    
+
                     if (failCount > 0) {
                       const failedUrls = results
                         .filter((r) => !r.success)
@@ -913,6 +914,71 @@ export default function BlogDashboard() {
               >
                 <Download className="h-4 w-4 mr-2" />
                 Import All Blogs from URLs
+              </Button>
+              <Button
+                variant="outline"
+                onClick={async () => {
+                  toast({
+                    title: "Extracting blog content",
+                    description: "Extracting content from React components and updating database...",
+                  });
+                  try {
+                    const results = await extractAndUpdateBlogContent();
+                    const successCount = results.filter((r: any) => r.success).length;
+                    const failCount = results.filter((r: any) => !r.success).length;
+
+                    if (failCount > 0) {
+                      toast({
+                        title: "Content extraction complete",
+                        description: `Successfully updated ${successCount} posts. ${failCount} failed. Check console for details.`,
+                        variant: failCount === results.length ? "destructive" : "default",
+                      });
+                    } else {
+                      toast({
+                        title: "Content extraction complete",
+                        description: `Successfully updated ${successCount} blog posts with content.`,
+                      });
+                    }
+                    setTimeout(() => loadBlogs(), 1000);
+                  } catch (error: any) {
+                    console.error("Content extraction error:", error);
+                    toast({
+                      title: "Content extraction failed",
+                      description: error?.message || "Check console for details",
+                      variant: "destructive",
+                    });
+                  }
+                }}
+              >
+                <Database className="h-4 w-4 mr-2" />
+                Extract Content from Components
+              </Button>
+              <Button
+                variant="outline"
+                onClick={async () => {
+                  toast({
+                    title: "Creating PR for Founders blog post",
+                    description: "This may take a moment...",
+                  });
+                  try {
+                    const result = await createPRForFoundersBlog();
+                    toast({
+                      title: "Blog post created successfully",
+                      description: `"${result.title}" has been ${result.status === 'published' ? 'published' : 'scheduled'}.`,
+                    });
+                    setTimeout(() => loadBlogs(), 1000);
+                  } catch (error: any) {
+                    console.error("Create PR for Founders blog error:", error);
+                    toast({
+                      title: "Failed to create blog post",
+                      description: error?.message || "Check console for details",
+                      variant: "destructive",
+                    });
+                  }
+                }}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Create 'PR for Founders' Blog Post
               </Button>
               <Button
                 onClick={() => {
