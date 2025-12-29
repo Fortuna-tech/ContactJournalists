@@ -731,6 +731,240 @@ const blogContent = {
 `,
     metaDescription: "Free small business Profit & Loss template for Google Sheets and Excel. Track revenue, expenses and profit easily. Built for founders, startups and solopreneurs.",
     publishDate: "2025-11-15T00:00:00Z"
+  },
+
+  'how-to-get-press-for-your-brand-without-a-pr-agency': {
+    content: `
+<div class="prose prose-invert prose-lg max-w-none">
+            <img
+              src="/assets/fortuna-founder-balloons.jpg"
+              alt="Fortuna, founder of ContactJournalists.com"
+              className="w-full md:w-2/3 lg:w-1/2 rounded-2xl mb-6"
+            />
+            <p className="text-xl text-slate-300 leading-relaxed mb-8">
+              Hi, I'm Fortuna, the founder of ContactJournalists.com. I started
+              this platform because I've lived the pain of trying to get press
+              without a PR budget.
+            </p>
+
+            <p className="text-slate-300 mb-6">
+              Back in 2015, I launched my own supplements brand. When I began
+              looking for PR support, one well-known agency quoted me a £1,000
+              per month retainer — and that was the low end of the market. They
+              couldn't even promise they'd get me featured anywhere. It felt
+              like a huge slap in the face.
+            </p>
+
+            <p className="text-slate-300 mb-6">
+              So, I did it myself. I spent hours finding journalists, reading
+              what they wrote, and reaching out one by one. It worked, but it
+              was so exhausting!
+            </p>
+
+            <p className="text-slate-300 mb-6">
+              Seven years later, after I sold that brand, I already knew what I
+              wanted to build next. I'd seen the gap in the market. I knew this
+              was a problem that needed solving and I was the woman to do it!
+            </p>
+
+            <p className="text-slate-300 mb-6">
+              Fast forward to now, and here we are: ContactJournalists.com
+            </p>
+
+            <p className="text-slate-300 mb-6">
+              I'm active on Reddit and I've been using it to collect real
+              feedback from our beta users. Every update, every feature, every
+              improvement comes from what solo devs, solopreneurs and small
+              brand owners tell me they actually need.
+            </p>
+
+            <p className="text-slate-300 mb-6">
+              ContactJournalists.com is built for anyone with a dream: whether
+              you're building a SaaS, running a beauty brand, launching an Etsy
+              shop, or trying to get your story into Vogue, Men's Health, The
+              Guardian, or the blogs you love!
+            </p>
+
+            <p className="text-slate-300 mb-6">
+              The idea is simple: we connect founders directly with journalists
+              who are actively looking for stories, expert quotes, and sources
+              for their articles.
+            </p>
+
+            <p className="text-slate-300 mb-6">
+              No more cold emails. No more guessing. No more wasting time on
+              journalists who aren't interested.
+            </p>
+
+            <p className="text-slate-300 mb-6">
+              Just real connections between people who have great stories to
+              tell and journalists who want to tell them.
+            </p>
+
+            <h2>How ContactJournalists.com Works</h2>
+
+            <p className="text-slate-300 mb-6">
+              Every day, journalists post requests for sources, quotes, and
+              expert opinions. These requests go out to thousands of people, but
+              most of them get ignored because they're buried in email inboxes
+              or lost on Twitter.
+            </p>
+
+            <p className="text-slate-300 mb-6">
+              ContactJournalists.com monitors these requests 24/7 and sends you
+              personalized alerts when journalists are looking for sources in
+              your industry or niche.
+            </p>
+
+            <p className="text-slate-300 mb-6">
+              You get notified instantly via email or in-app, with direct links
+              to the journalist's request and their contact information.
+            </p>
+
+            <div className="bg-accent-blue/10 border border-accent-blue/30 rounded-lg p-6 my-8">
+              <h3 className="text-xl font-bold text-white mb-4">Real-Time Journalist Alerts</h3>
+              <p className="text-slate-300 mb-4">
+                Get notified immediately when journalists post requests for sources in your industry.
+              </p>
+              <ul className="text-slate-300 space-y-2">
+                <li>• Email alerts for new requests</li>
+                <li>• In-app notifications</li>
+                <li>• Direct links to journalist contacts</li>
+                <li>• Filtered by your industry and interests</li>
+              </ul>
+            </div>
+
+            <h2>Why This Works Better Than Traditional PR</h2>
+
+            <p className="text-slate-300 mb-6">
+              Traditional PR is broken for small businesses and solo founders.
+              Here's why ContactJournalists.com is different:
+            </p>
+
+            <h3>1. Perfect Timing</h3>
+            <p className="text-slate-300 mb-6">
+              Instead of sending pitches when journalists aren't thinking about
+              your topic, you respond when they're actively researching and
+              writing about it.
+            </p>
+
+            <h3>2. Direct Access</h3>
+            <p className="text-slate-300 mb-6">
+              No gatekeepers, no PR agencies taking 30% cuts. You connect
+              directly with journalists who want to hear from you.
+            </p>
+
+            <h3>3. Relevance Guaranteed</h3>
+            <p className="text-slate-300 mb-6">
+              Every alert is from a journalist who has explicitly stated they're
+              looking for sources in your area. No more rejected pitches.
+            </p>
+
+            <h2>Who Uses ContactJournalists.com?</h2>
+
+            <p className="text-slate-300 mb-6">
+              Our beta users include:
+            </p>
+
+            <ul className="text-slate-300 space-y-2 mb-6">
+              <li>• SaaS founders building B2B tools</li>
+              <li>• E-commerce store owners</li>
+              <li>• Content creators and influencers</li>
+              <li>• Non-profit leaders</li>
+              <li>• Startup founders at any stage</li>
+              <li>• Consultants and service providers</li>
+            </ul>
+
+            <p className="text-slate-300 mb-6">
+              Whether you're pre-launch, just launched, or have been in business
+              for years, if you have a story worth telling, journalists want to
+              hear it.
+            </p>
+
+            <h2>Getting Started is Easy</h2>
+
+            <p className="text-slate-300 mb-6">
+              Sign up for our waitlist and you'll get early access to the beta.
+              We'll help you set up your profile with the right keywords and
+              industries so you get the most relevant alerts.
+            </p>
+
+            <p className="text-slate-300 mb-6">
+              From there, it's just a matter of responding to alerts that match
+              your expertise and experience.
+            </p>
+
+            <div className="bg-accent-violet/10 border border-accent-violet/30 rounded-lg p-6 my-8">
+              <h3 className="text-2xl font-bold text-white mb-4">Ready to Get Press Coverage?</h3>
+              <p className="text-slate-300 mb-6">
+                Join our waitlist and be among the first to try ContactJournalists.com.
+                No more wasted time on cold pitches. Just real opportunities
+                when journalists are actually looking for your story.
+              </p>
+              <a href="/waitlist-signup" className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
+                Join the Waitlist
+              </a>
+            </div>
+
+            <h2>Success Stories from Beta Users</h2>
+
+            <p className="text-slate-300 mb-6">
+              Here's what some of our beta users have achieved:
+            </p>
+
+            <div className="bg-base-800/50 border border-white/10 rounded-lg p-6 my-6">
+              <p className="text-slate-200 font-medium mb-2">"Got featured in TechCrunch within 2 weeks of signing up."</p>
+              <p className="text-slate-400 text-sm">- SaaS founder, beta user</p>
+            </div>
+
+            <div className="bg-base-800/50 border border-white/10 rounded-lg p-6 my-6">
+              <p className="text-slate-200 font-medium mb-2">"Three journalist requests in my first week. Already got one quote published."</p>
+              <p className="text-slate-400 text-sm">- E-commerce founder, beta user</p>
+            </div>
+
+            <div className="bg-base-800/50 border border-white/10 rounded-lg p-6 my-6">
+              <p className="text-slate-200 font-medium mb-2">"This is exactly what I needed. No more guessing which journalists to contact."</p>
+              <p className="text-slate-400 text-sm">- Content creator, beta user</p>
+            </div>
+
+            <h2>The Future of PR for Small Businesses</h2>
+
+            <p className="text-slate-300 mb-6">
+              ContactJournalists.com represents the future of PR for small
+              businesses and solo founders. It's PR that works for you, not
+              against you.
+            </p>
+
+            <p className="text-slate-300 mb-6">
+              No more paying thousands for agencies that might get you one
+              feature. No more spending hours crafting perfect pitches that get
+              ignored.
+            </p>
+
+            <p className="text-slate-300 mb-6">
+              Just real opportunities, perfect timing, and direct connections
+              with journalists who want to tell your story.
+            </p>
+
+            <p className="text-slate-300 mb-6">
+              If you're ready to stop wasting time on PR and start getting the
+              coverage your brand deserves, join our waitlist today.
+            </p>
+
+            <div className="mt-12 p-8 rounded-2xl border border-accent-blue/30 bg-gradient-to-r from-accent-blue/10 to-accent-violet/10">
+              <h3 className="text-2xl font-bold text-white mb-4">Don't Wait for Journalists to Find You</h3>
+              <p className="text-slate-300 mb-6">
+                Be there when they're actively looking for sources. Join the
+                ContactJournalists.com waitlist and get early access to the
+                platform that's changing how small businesses get press.
+              </p>
+              <a href="/waitlist-signup" className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
+                Get Early Access
+              </a>
+            </div>
+</div>`,
+    metaDescription: "Learn how to get press coverage for your brand without hiring expensive PR agencies. Real strategies from a founder who built ContactJournalists.com to solve this exact problem.",
+    publishDate: "2025-01-01T00:00:00Z"
   }
 };
 
