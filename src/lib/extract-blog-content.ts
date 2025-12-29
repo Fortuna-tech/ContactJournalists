@@ -758,13 +758,16 @@ export async function extractAndUpdateBlogContent() {
       },
       body: JSON.stringify({
         password: adminPassword,
-        blogUpdates: blogFiles.map(blog => ({
-          slug: blog.slug,
-          title: blog.title,
-          content: fullBlogContent[blog.slug as keyof typeof fullBlogContent],
-          publishDate: blog.publishDate,
-          metaDescription: blog.metaDescription,
-        })),
+        blogUpdates: blogFiles.map(blog => {
+          const blogData = blogContent[blog.slug as keyof typeof blogContent];
+          return {
+            slug: blog.slug,
+            title: blog.title,
+            content: blogData?.content || fullBlogContent[blog.slug as keyof typeof fullBlogContent] || '',
+            publishDate: blog.publishDate,
+            metaDescription: blogData?.metaDescription || blog.metaDescription,
+          };
+        }),
       }),
     });
 
@@ -787,7 +790,8 @@ export async function extractAndUpdateBlogContent() {
       console.log(`Processing: ${blog.slug} -> "${blog.title}"`);
 
       // Use the full content from our hardcoded data
-      const fullContent = fullBlogContent[blog.slug as keyof typeof fullBlogContent];
+      const blogData = blogContent[blog.slug as keyof typeof blogContent];
+      const fullContent = blogData?.content || fullBlogContent[blog.slug as keyof typeof fullBlogContent] || '';
 
       if (fullContent) {
         // Calculate word count from full content
@@ -811,6 +815,7 @@ export async function extractAndUpdateBlogContent() {
         const updateData: any = {
           title: blog.title,
           content: fullContent,
+          meta_description: blogData?.metaDescription || blog.metaDescription || null,
           status: "published",
           publish_date: blog.publishDate,
           last_updated: new Date().toISOString(),
