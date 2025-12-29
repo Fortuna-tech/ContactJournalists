@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => ({
       "https://nwxrukvgsanuougehruq.supabase.co"
     ),
     "import.meta.env.VITE_SUPABASE_ANON_KEY": JSON.stringify(
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im53eHJ1a3Znc2FudW91Z2VocnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3NjcxMTUsImV4cCI6MjA3ODM0MzExNX0.Om06rD8f3dXpCf2D1m70Ekr6cVG7csF8OU-rwrBN660"
+      "sb_publishable_BVEujbI3wiTXG43GTO6FIA__eEiln_d"
     ),
   },
   plugins: [react()].filter(Boolean),
