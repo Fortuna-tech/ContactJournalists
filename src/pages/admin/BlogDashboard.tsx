@@ -32,6 +32,7 @@ import {
   CheckCircle2,
   AlertCircle,
   XCircle,
+  Download,
 } from "lucide-react";
 import { migrateBlogs } from "@/lib/migrate-blogs";
 import { useToast } from "@/components/ui/use-toast";
@@ -67,6 +68,8 @@ export default function BlogDashboard() {
   const [showBreakdown, setShowBreakdown] = useState(false);
   const [recalculating, setRecalculating] = useState<string | null>(null);
   const [bulkRecalculating, setBulkRecalculating] = useState(false);
+  const [importUrl, setImportUrl] = useState("");
+  const [importing, setImporting] = useState(false);
 
   useEffect(() => {
     try {
@@ -143,6 +146,69 @@ export default function BlogDashboard() {
       });
     } finally {
       setRecalculating(null);
+    }
+  };
+
+  const importBlogFromURL = async () => {
+    if (!importUrl.trim()) {
+      toast({
+        title: "URL required",
+        description: "Please enter a blog URL to import",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setImporting(true);
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        throw new Error("Not authenticated");
+      }
+
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      if (!supabaseUrl) {
+        throw new Error("Supabase URL not configured");
+      }
+
+      const response = await fetch(
+        `${supabaseUrl}/functions/v1/import-blog`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY || "",
+          },
+          body: JSON.stringify({ url: importUrl.trim() }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to import blog");
+      }
+
+      toast({
+        title: "Blog imported successfully",
+        description: `${data.title} has been imported as a draft`,
+      });
+
+      setImportUrl("");
+      loadBlogs();
+    } catch (error: any) {
+      console.error("Import error:", error);
+      toast({
+        title: "Import failed",
+        description: error?.message || "Failed to import blog from URL",
+        variant: "destructive",
+      });
+    } finally {
+      setImporting(false);
     }
   };
 
@@ -540,6 +606,47 @@ export default function BlogDashboard() {
               </Button>
             </div>
           </div>
+
+          {/* Import from URL Section */}
+          <Card className="bg-base-800 border-white/10 mb-6">
+            <CardContent className="p-6">
+              <div className="flex items-end gap-4">
+                <div className="flex-1">
+                  <Label htmlFor="import-url" style={{ color: '#ffffff', marginBottom: '0.5rem', display: 'block' }}>
+                    Import from URL
+                  </Label>
+                  <Input
+                    id="import-url"
+                    type="url"
+                    placeholder="https://contactjournalists.com/blog/your-blog-post"
+                    value={importUrl}
+                    onChange={(e) => setImportUrl(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !importing) {
+                        importBlogFromURL();
+                      }
+                    }}
+                    disabled={importing}
+                    style={{
+                      backgroundColor: '#1e293b',
+                      color: '#ffffff',
+                      borderColor: 'rgba(255, 255, 255, 0.1)'
+                    }}
+                  />
+                  <p className="text-xs mt-2" style={{ color: '#94a3b8' }}>
+                    Only URLs from contactjournalists.com/blog/* are allowed
+                  </p>
+                </div>
+                <Button
+                  onClick={importBlogFromURL}
+                  disabled={importing || !importUrl.trim()}
+                >
+                  <Download className={`h-4 w-4 mr-2 ${importing ? "animate-spin" : ""}`} />
+                  {importing ? "Importing..." : "Import"}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
 
           {loading ? (
             <div className="text-center py-12">
