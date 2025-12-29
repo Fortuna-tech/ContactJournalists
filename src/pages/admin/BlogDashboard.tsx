@@ -482,9 +482,10 @@ export default function BlogDashboard() {
       }
 
       console.log("Fetching blogs from database...");
+      // Use select with explicit columns to ensure we get all data
       const { data, error: dbError } = await supabase
         .from("blogs")
-        .select("*")
+        .select("id, title, slug, status, publish_date, last_updated, word_count, seo_score, seo_breakdown, seo_flags, meta_description, content, created_at, created_by")
         .order("last_updated", { ascending: false });
 
       if (dbError) {
