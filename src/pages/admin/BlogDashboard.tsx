@@ -357,123 +357,13 @@ export default function BlogDashboard() {
         useClientSide = true;
       }
 
-      // Client-side import (fallback)
+      // Client-side fallback removed - all inserts must go through edge function
+      // If edge function fails, show error
       if (useClientSide) {
-        // Fetch HTML
-        const response = await fetch(importUrl.trim(), {
-          mode: "cors",
-          credentials: "omit",
-        });
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch URL: ${response.status} ${response.statusText}`);
-        }
-
-        const html = await response.text();
-        if (!html || html.length < 100) {
-          throw new Error("No content found on page");
-        }
-
-        // Parse HTML
-        let { title, metaDescription, content } = parseHTMLContent(html);
-
-        if (!title) {
-          throw new Error("Could not extract title from page");
-        }
-
-        // If content is still too short, try a more aggressive extraction
-        if (!content || content.length < 100) {
-          // Last resort: extract all text from body
-          const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-          if (bodyMatch) {
-            let textContent = bodyMatch[1]
-              .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
-              .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
-              .replace(/<[^>]+>/g, " ")
-              .replace(/\s+/g, " ")
-              .trim();
-            
-            if (textContent.length > 200) {
-              // Use the text content as HTML paragraphs
-              const paragraphs = textContent
-                .split(/\n\n+|\.\s+/)
-                .filter(p => p.trim().length > 20)
-                .slice(0, 20) // Limit to first 20 paragraphs
-                .map(p => `<p>${p.trim()}</p>`)
-                .join("\n");
-              content = paragraphs;
-            }
-          }
-        }
-
-        // If still no content, create a placeholder with instructions
-        if (!content || content.length < 100) {
-          // Create a minimal content entry that can be edited
-          content = `<div class="prose">
-            <p><strong>Note:</strong> Content could not be automatically extracted from this React-rendered page.</p>
-            <p>Please edit this blog post and add the content manually by:</p>
-            <ol>
-              <li>Opening the blog post URL in your browser</li>
-              <li>Copying the content</li>
-              <li>Pasting it into the content field</li>
-            </ol>
-            <p>Original URL: <a href="${importUrl.trim()}" target="_blank">${importUrl.trim()}</a></p>
-          </div>`;
-          
-          toast({
-            title: "Partial import",
-            description: "Title and metadata imported. Please add content manually by editing the post.",
-            variant: "default",
-          });
-        }
-
-        // Generate slug
-        let slug = extractSlugFromURL(importUrl.trim());
-        if (!slug) {
-          slug = generateSlugFromTitle(title);
-        }
-
-        // Check if blog with this slug already exists
-        const { data: existing } = await supabase
-          .from("blogs")
-          .select("id")
-          .eq("slug", slug)
-          .single();
-
-        if (existing) {
-          throw new Error(`Blog with slug "${slug}" already exists`);
-        }
-
-        // Insert into database
-        const now = new Date().toISOString();
-        const { data: blog, error: insertError } = await supabase
-          .from("blogs")
-          .insert({
-            title,
-            slug,
-            status: "draft",
-            publish_date: now,
-            meta_description: metaDescription || null,
-            content,
-            created_at: now,
-            last_updated: now,
-            word_count: 0,
-            seo_score: 0,
-          })
-          .select("id, title, slug")
-          .single();
-
-        if (insertError) {
-          throw new Error(`Failed to save blog: ${insertError.message}`);
-        }
-
-        toast({
-          title: "Blog imported successfully",
-          description: `${blog.title} has been imported as a draft`,
-        });
-
-        setImportUrl("");
-        loadBlogs();
+        throw new Error(
+          "Edge function not available. Please deploy the import-blog function: " +
+          "supabase functions deploy import-blog"
+        );
       }
     } catch (error: any) {
       console.error("Import error:", error);

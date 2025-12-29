@@ -167,6 +167,9 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const blogAdminPassword = Deno.env.get("BLOG_ADMIN_PASSWORD") || "admin123";
 
+    // Create admin client with service role key (bypasses RLS)
+    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+
     // Parse request body
     const body = await req.json();
     const { url, password } = body;
