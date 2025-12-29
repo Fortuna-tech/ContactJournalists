@@ -149,6 +149,7 @@ function parseHTML(html: string): {
 }
 
 serve(async (req) => {
+  // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
@@ -164,6 +165,11 @@ serve(async (req) => {
   }
 
   try {
+    // Log incoming request for debugging
+    console.log("Import blog request received");
+    console.log("Method:", req.method);
+    console.log("URL:", req.url);
+    console.log("Headers:", Object.fromEntries(req.headers.entries()));
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     const blogAdminPassword = Deno.env.get("BLOG_ADMIN_PASSWORD") || "admin123";

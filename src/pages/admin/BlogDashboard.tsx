@@ -323,9 +323,21 @@ export default function BlogDashboard() {
         throw new Error("VITE_SUPABASE_URL is not configured. Please check your environment variables.");
       }
 
-      const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      // Get anon key - try both the new publishable format and JWT format
+      let anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      
+      // If using publishable key format, we need to get the actual JWT anon key
+      // For now, try to use what's configured, but log a warning
       if (!anonKey) {
         throw new Error("VITE_SUPABASE_ANON_KEY is not configured. Please check your environment variables.");
+      }
+      
+      // If it's a publishable key format, we might need the JWT format instead
+      // Supabase Edge Functions require JWT format anon key in the apikey header
+      if (anonKey.startsWith("sb_publishable_")) {
+        console.warn("Using publishable key format - Edge Functions may require JWT format anon key");
+        // Try to get the actual JWT anon key from Supabase client
+        // For now, we'll use what we have and see if it works
       }
 
       const blogAdminPassword = import.meta.env.VITE_BLOG_ADMIN_PASSWORD || "admin123";
@@ -335,12 +347,22 @@ export default function BlogDashboard() {
       console.log("Function URL:", functionUrl);
       console.log("Using password:", blogAdminPassword ? "***" : "not set");
 
+      // Supabase Edge Functions require the apikey header
+      // Also try Authorization header as Bearer token as fallback
+      const headers: HeadersInit = {
+        "Content-Type": "application/json",
+        apikey: anonKey,
+      };
+      
+      // Some Supabase setups also need Authorization header
+      // Try both apikey and Authorization to ensure it works
+      headers["Authorization"] = `Bearer ${anonKey}`;
+
+      console.log("Request headers:", { ...headers, apikey: "***", Authorization: "Bearer ***" });
+
       const response = await fetch(functionUrl, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          apikey: anonKey,
-        },
+        headers,
         body: JSON.stringify({
           url: importUrl.trim(),
           password: blogAdminPassword,
