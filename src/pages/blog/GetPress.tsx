@@ -48,12 +48,18 @@ const BlogPost = () => {
             </div>
 
             {/* Hero Image */}
-            <div className="rounded-2xl overflow-hidden mb-8 border border-white/10">
+            <div className="relative rounded-2xl overflow-hidden mb-8 border border-white/10">
               <img
                 src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&h=600&fit=crop"
                 alt="Journalist working on laptop with coffee"
                 className="w-full h-auto object-cover"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+              <div className="absolute bottom-6 left-6 right-6">
+                <p className="text-2xl md:text-3xl font-bold text-white drop-shadow-2xl">
+                  ContactJournalists.com
+                </p>
+              </div>
             </div>
           </header>
 

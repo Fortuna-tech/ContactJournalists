@@ -78,12 +78,18 @@ const PLTemplateBlogPost = () => {
                 <span>8 min read</span>
               </div>
 
-              <div className="rounded-2xl overflow-hidden mb-8 border border-white/10">
+              <div className="relative rounded-2xl overflow-hidden mb-8 border border-white/10">
                 <img
                   src={calculatorImage}
                   alt="Solopreneur calculating business finances with ContactJournalists.com free P&L template to track startup revenue and expenses for small business growth"
                   className="w-full h-auto object-cover"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                <div className="absolute bottom-6 left-6 right-6">
+                  <p className="text-2xl md:text-3xl font-bold text-white drop-shadow-2xl">
+                    ContactJournalists.com
+                  </p>
+                </div>
               </div>
             </header>
 

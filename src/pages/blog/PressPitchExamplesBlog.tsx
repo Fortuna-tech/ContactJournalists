@@ -74,12 +74,18 @@ const PressPitchExamplesBlog = () => {
                 <span>12 min read</span>
               </div>
 
-              <div className="rounded-2xl overflow-hidden mb-8 border border-white/10">
+              <div className="relative rounded-2xl overflow-hidden mb-8 border border-white/10">
                 <img
                   src={founderLaptopImage}
                   alt="Founder working on press pitches using ContactJournalists.com templates to get journalist replies and media coverage"
                   className="w-full h-auto object-cover"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                <div className="absolute bottom-6 left-6 right-6">
+                  <p className="text-2xl md:text-3xl font-bold text-white drop-shadow-2xl">
+                    ContactJournalists.com
+                  </p>
+                </div>
               </div>
             </header>
 
