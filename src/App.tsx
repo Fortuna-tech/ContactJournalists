@@ -29,6 +29,7 @@ import PLTemplateBlogPost from "./pages/blog/PLTemplateBlog";
 import UltimateGuideBlog from "./pages/blog/UltimateGuideBlog";
 import PressWithoutAgencyBlog from "./pages/blog/PressWithoutAgencyBlog";
 import HowToPitchJournalistsTwitter from "./pages/blog/HowToPitchJournalistsTwitter";
+import BlogPost from "./pages/blog/BlogPost";
 import WaitlisSignup from "./pages/WaitlisSignup";
 
 // Admin Pages
@@ -39,6 +40,7 @@ import AdminCsvImport from "@/pages/admin/CsvImport";
 import AdminBannerManagement from "@/pages/admin/BannerManagement";
 import AdminStoryRequestBroadcasts from "@/pages/admin/StoryRequestBroadcasts";
 import BlogDashboard from "@/pages/admin/BlogDashboard";
+import BlogForm from "@/pages/admin/BlogForm";
 
 const queryClient = new QueryClient();
 
@@ -77,6 +79,8 @@ const App = () => (
               path="/blog/how-to-pitch-journalists-on-twitter"
               element={<HowToPitchJournalistsTwitter />}
             />
+            {/* Generic blog post route - reads from Supabase */}
+            <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/affiliates" element={<Affiliate />} />
             <Route path="/profile/:id" element={<Profile />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
@@ -118,6 +122,14 @@ const App = () => (
             <Route
               path="/admin/blog-dashboard-a7f3b9c2d1e4f5a6"
               element={<BlogDashboard />}
+            />
+            <Route
+              path="/admin/blog-dashboard-a7f3b9c2d1e4f5a6/new"
+              element={<BlogForm />}
+            />
+            <Route
+              path="/admin/blog-dashboard-a7f3b9c2d1e4f5a6/edit/:id"
+              element={<BlogForm />}
             />
 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

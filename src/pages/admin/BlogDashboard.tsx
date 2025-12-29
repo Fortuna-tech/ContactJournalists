@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
-import { calculateSEOScore, extractSEOData } from "@/lib/blog-seo";
+import { calculateSEOScore, SEOBreakdown } from "@/lib/blog-seo";
 import {
   Table,
   TableBody,
@@ -13,7 +14,26 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ExternalLink, Edit, Lock } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
+  ExternalLink,
+  Edit,
+  Lock,
+  Plus,
+  Database,
+  RefreshCw,
+  BarChart3,
+  CheckCircle2,
+  AlertCircle,
+  XCircle,
+} from "lucide-react";
+import { migrateBlogs } from "@/lib/migrate-blogs";
 import { useToast } from "@/components/ui/use-toast";
 
 interface BlogPost {
@@ -25,6 +45,9 @@ interface BlogPost {
   last_updated: string;
   word_count: number;
   seo_score: number;
+  seo_breakdown: SEOBreakdown | null;
+  seo_flags: string[] | null;
+  seo_last_scored_at: string | null;
   meta_description: string | null;
   content: string | null;
 }
@@ -32,6 +55,7 @@ interface BlogPost {
 const BLOG_ADMIN_PASSWORD = import.meta.env.VITE_BLOG_ADMIN_PASSWORD || "admin123";
 
 export default function BlogDashboard() {
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
@@ -39,13 +63,21 @@ export default function BlogDashboard() {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedBlog, setSelectedBlog] = useState<BlogPost | null>(null);
+  const [showBreakdown, setShowBreakdown] = useState(false);
+  const [recalculating, setRecalculating] = useState<string | null>(null);
+  const [bulkRecalculating, setBulkRecalculating] = useState(false);
 
-  // Check if password is already in session storage
   useEffect(() => {
-    const storedAuth = sessionStorage.getItem("blog_admin_authenticated");
-    if (storedAuth === "true") {
-      setIsAuthenticated(true);
-      loadBlogs();
+    try {
+      const storedAuth = sessionStorage.getItem("blog_admin_authenticated");
+      if (storedAuth === "true") {
+        setIsAuthenticated(true);
+        loadBlogs();
+      }
+    } catch (error) {
+      console.error("Error in useEffect:", error);
+      setError("Failed to initialize dashboard");
     }
   }, []);
 
@@ -62,26 +94,121 @@ export default function BlogDashboard() {
     }
   };
 
+  const recalculateSEO = async (blog: BlogPost) => {
+    if (!blog.content) {
+      toast({
+        title: "No content",
+        description: "Add content to calculate SEO score",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setRecalculating(blog.id);
+    try {
+      const seoResult = calculateSEOScore({
+        title: blog.title,
+        slug: blog.slug,
+        metaDescription: blog.meta_description || undefined,
+        content: blog.content,
+        publishDate: blog.publish_date,
+        lastUpdated: blog.last_updated,
+      });
+
+      const { error: updateError } = await supabase
+        .from("blogs")
+        .update({
+          seo_score: seoResult.score,
+          seo_breakdown: seoResult.breakdown,
+          seo_flags: seoResult.flags,
+          seo_last_scored_at: new Date().toISOString(),
+          last_updated: new Date().toISOString(),
+        })
+        .eq("id", blog.id);
+
+      if (updateError) throw updateError;
+
+      toast({
+        title: "SEO score updated",
+        description: `New score: ${seoResult.score}/100`,
+      });
+
+      loadBlogs();
+    } catch (error: any) {
+      console.error("Error recalculating SEO:", error);
+      toast({
+        title: "Error recalculating SEO",
+        description: error?.message,
+        variant: "destructive",
+      });
+    } finally {
+      setRecalculating(null);
+    }
+  };
+
+  const recalculateAllSEO = async () => {
+    setBulkRecalculating(true);
+    try {
+      const blogsWithContent = blogs.filter((b) => b.content && b.content.trim().length > 0);
+      
+      for (const blog of blogsWithContent) {
+        try {
+          const seoResult = calculateSEOScore({
+            title: blog.title,
+            slug: blog.slug,
+            metaDescription: blog.meta_description || undefined,
+            content: blog.content!,
+            publishDate: blog.publish_date,
+            lastUpdated: blog.last_updated,
+          });
+
+          await supabase
+            .from("blogs")
+            .update({
+              seo_score: seoResult.score,
+              seo_breakdown: seoResult.breakdown,
+              seo_flags: seoResult.flags,
+              seo_last_scored_at: new Date().toISOString(),
+            })
+            .eq("id", blog.id);
+        } catch (error) {
+          console.error(`Error recalculating ${blog.title}:`, error);
+        }
+      }
+
+      toast({
+        title: "Bulk recalculation complete",
+        description: `Updated ${blogsWithContent.length} blog posts`,
+      });
+
+      loadBlogs();
+    } catch (error: any) {
+      toast({
+        title: "Error in bulk recalculation",
+        description: error?.message,
+        variant: "destructive",
+      });
+    } finally {
+      setBulkRecalculating(false);
+    }
+  };
+
   const loadBlogs = async () => {
     setLoading(true);
     setError(null);
     try {
-      // First, sync existing blog posts from the codebase
       try {
         await syncBlogPosts();
       } catch (syncError) {
         console.error("Error syncing blogs:", syncError);
-        // Continue even if sync fails - table might not exist yet
       }
 
-      // Then load from database
       const { data, error: dbError } = await supabase
         .from("blogs")
         .select("*")
         .order("last_updated", { ascending: false });
 
       if (dbError) {
-        // If table doesn't exist, show helpful message
         if (dbError.code === "42P01" || dbError.message.includes("does not exist")) {
           setError("Blogs table not found. Please run the database migration first.");
           setBlogs([]);
@@ -90,30 +217,39 @@ export default function BlogDashboard() {
         throw dbError;
       }
 
-      // Calculate SEO scores for blogs that need it or have content updates
+      // Recalculate SEO for blogs without scores or with outdated scores
       const blogsWithSEO = await Promise.all(
         (data || []).map(async (blog) => {
           if (blog.content && blog.content.trim().length > 0) {
-            const seoData = extractSEOData(
-              blog.title,
-              blog.meta_description || undefined,
-              blog.content
-            );
-            const seoScore = calculateSEOScore(seoData);
+            // Recalculate if no score or score is old
+            if (!blog.seo_score || !blog.seo_last_scored_at) {
+              const seoResult = calculateSEOScore({
+                title: blog.title,
+                slug: blog.slug,
+                metaDescription: blog.meta_description || undefined,
+                content: blog.content,
+                publishDate: blog.publish_date,
+                lastUpdated: blog.last_updated,
+              });
 
-            // Update SEO score in database if it changed
-            if (blog.seo_score !== seoScore || blog.word_count !== seoData.wordCount) {
               await supabase
                 .from("blogs")
-                .update({ 
-                  seo_score: seoScore, 
-                  word_count: seoData.wordCount,
-                  last_updated: new Date().toISOString()
+                .update({
+                  seo_score: seoResult.score,
+                  seo_breakdown: seoResult.breakdown,
+                  seo_flags: seoResult.flags,
+                  seo_last_scored_at: new Date().toISOString(),
                 })
                 .eq("id", blog.id);
-            }
 
-            return { ...blog, seo_score: seoScore, word_count: seoData.wordCount };
+              return {
+                ...blog,
+                seo_score: seoResult.score,
+                seo_breakdown: seoResult.breakdown,
+                seo_flags: seoResult.flags,
+                seo_last_scored_at: new Date().toISOString(),
+              };
+            }
           }
           return blog;
         })
@@ -122,10 +258,10 @@ export default function BlogDashboard() {
       setBlogs(blogsWithSEO);
     } catch (error: any) {
       console.error("Error loading blogs:", error);
-      setError(error?.message || "Failed to load blogs. Please check the database connection.");
+      setError(error?.message || "Failed to load blogs.");
       toast({
         title: "Error loading blogs",
-        description: error?.message || "Please check the console for details.",
+        description: error?.message,
         variant: "destructive",
       });
     } finally {
@@ -134,7 +270,6 @@ export default function BlogDashboard() {
   };
 
   const syncBlogPosts = async () => {
-    // Define existing blog posts from the codebase
     const existingBlogs = [
       {
         title: "How To Pitch Journalists on Twitter (Full Breakdown)",
@@ -175,7 +310,6 @@ export default function BlogDashboard() {
       },
     ];
 
-    // Upsert blogs
     for (const blog of existingBlogs) {
       const { data: existing } = await supabase
         .from("blogs")
@@ -184,42 +318,14 @@ export default function BlogDashboard() {
         .single();
 
       if (!existing) {
-        // For new blogs, set default values - content can be added later via edit
-        const seoData = extractSEOData(blog.title, blog.meta_description, "");
-        const seoScore = calculateSEOScore(seoData);
-
         await supabase.from("blogs").insert({
           title: blog.title,
           slug: blog.slug,
           status: blog.status,
           publish_date: blog.publish_date,
-          word_count: 0, // Will be calculated when content is added
-          seo_score: seoScore,
           meta_description: blog.meta_description || null,
-          content: null, // Content can be added via edit functionality
+          content: null,
         });
-      } else {
-        // Update existing blogs with meta description if missing
-        if (blog.meta_description) {
-          const { data: existingBlog } = await supabase
-            .from("blogs")
-            .select("meta_description")
-            .eq("id", existing.id)
-            .single();
-
-          if (!existingBlog?.meta_description) {
-            const seoData = extractSEOData(blog.title, blog.meta_description, existingBlog?.content || "");
-            const seoScore = calculateSEOScore(seoData);
-
-            await supabase
-              .from("blogs")
-              .update({
-                meta_description: blog.meta_description,
-                seo_score: seoScore,
-              })
-              .eq("id", existing.id);
-          }
-        }
       }
     }
   };
@@ -237,6 +343,18 @@ export default function BlogDashboard() {
     );
   };
 
+  const getSEOScoreColor = (score: number) => {
+    if (score >= 80) return "text-green-400";
+    if (score >= 60) return "text-yellow-400";
+    return "text-red-400";
+  };
+
+  const getSEOScoreDot = (score: number) => {
+    if (score >= 80) return "bg-green-400";
+    if (score >= 60) return "bg-yellow-400";
+    return "bg-red-400";
+  };
+
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "—";
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -244,6 +362,45 @@ export default function BlogDashboard() {
       month: "short",
       day: "numeric",
     });
+  };
+
+  const renderSEOItem = (item: any, key: string) => {
+    if (!item) return null;
+
+    const Icon =
+      item.status === "green"
+        ? CheckCircle2
+        : item.status === "amber"
+        ? AlertCircle
+        : XCircle;
+
+    return (
+      <div key={key} className="flex items-start gap-3 py-2 border-b border-white/5">
+        <Icon
+          className={`h-5 w-5 mt-0.5 ${
+            item.status === "green"
+              ? "text-green-400"
+              : item.status === "amber"
+              ? "text-yellow-400"
+              : "text-red-400"
+          }`}
+        />
+        <div className="flex-1">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-white capitalize">
+              {key.replace(/_/g, " ")}
+            </span>
+            <span className="text-sm text-slate-400">
+              {item.score}
+              {item.max && ` / ${item.max}`}
+            </span>
+          </div>
+          {item.reason && (
+            <p className="text-xs text-slate-400 mt-1">{item.reason}</p>
+          )}
+        </div>
+      </div>
+    );
   };
 
   if (!isAuthenticated) {
@@ -267,7 +424,7 @@ export default function BlogDashboard() {
                     setPassword(e.target.value);
                     setPasswordError("");
                   }}
-                  className={passwordError ? "border-red-500" : ""}
+                  className={passwordError ? "border-red-500" : "bg-base-900 text-white"}
                 />
                 {passwordError && (
                   <p className="text-sm text-red-500 mt-1">{passwordError}</p>
@@ -283,149 +440,324 @@ export default function BlogDashboard() {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-base-900 text-slate-200 p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Blog Admin Dashboard</h1>
-            <p className="text-slate-400">Manage all blog posts and track SEO performance</p>
-          </div>
-          <Button
-            variant="outline"
-            onClick={() => {
-              sessionStorage.removeItem("blog_admin_authenticated");
-              setIsAuthenticated(false);
-            }}
-          >
-            Logout
-          </Button>
-        </div>
-
-        {loading ? (
-          <div className="text-center py-12">
-            <p className="text-slate-400">Loading blogs...</p>
-          </div>
-        ) : error ? (
+  // Add error boundary for rendering issues
+  if (error && !loading) {
+    return (
+      <div className="min-h-screen bg-base-900 text-slate-200 p-8">
+        <div className="max-w-7xl mx-auto">
           <Card className="bg-base-800 border-white/10">
             <CardContent className="p-6">
               <div className="text-center py-8">
-                <p className="text-red-400 mb-4">{error}</p>
+                <p className="text-red-400 mb-4 text-lg font-semibold">{error}</p>
                 <p className="text-slate-400 text-sm mb-4">
-                  Make sure you've run the database migration:
+                  This might be due to missing database migrations or connection issues.
                 </p>
-                <code className="block bg-base-900 p-3 rounded text-sm text-slate-300 mb-4">
-                  supabase/migrations/20251223000000_create_blogs_table.sql
-                </code>
-                <Button
-                  onClick={() => {
-                    setError(null);
-                    loadBlogs();
-                  }}
-                  variant="outline"
-                >
-                  Retry
-                </Button>
+                <div className="space-y-2 mb-4">
+                  <Button onClick={() => loadBlogs()} variant="outline">
+                    Retry
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setError(null);
+                      setIsAuthenticated(false);
+                    }}
+                    variant="outline"
+                  >
+                    Back to Login
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
-        ) : (
-          <Card className="bg-base-800 border-white/10">
-            <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-white/10">
-                    <TableHead className="text-slate-300">Title</TableHead>
-                    <TableHead className="text-slate-300">Status</TableHead>
-                    <TableHead className="text-slate-300">Publish Date</TableHead>
-                    <TableHead className="text-slate-300">Last Updated</TableHead>
-                    <TableHead className="text-slate-300">Word Count</TableHead>
-                    <TableHead className="text-slate-300">SEO Score</TableHead>
-                    <TableHead className="text-slate-300">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {blogs.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={7} className="text-center text-slate-400 py-8">
-                        No blog posts found
-                      </TableCell>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="min-h-screen bg-base-900 p-8" style={{ color: '#e2e8f0' }}>
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-3xl font-bold mb-2" style={{ color: '#ffffff' }}>Blog Admin Dashboard</h1>
+              <p style={{ color: '#94a3b8' }}>Manage all blog posts and track SEO performance</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <Button
+                variant="outline"
+                onClick={recalculateAllSEO}
+                disabled={bulkRecalculating}
+              >
+                <RefreshCw
+                  className={`h-4 w-4 mr-2 ${bulkRecalculating ? "animate-spin" : ""}`}
+                />
+                {bulkRecalculating ? "Recalculating..." : "Recalculate All SEO"}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={async () => {
+                  try {
+                    await migrateBlogs();
+                    toast({
+                      title: "Migration started",
+                      description: "Check console for progress.",
+                    });
+                    setTimeout(() => loadBlogs(), 2000);
+                  } catch (error: any) {
+                    toast({
+                      title: "Migration error",
+                      description: error?.message,
+                      variant: "destructive",
+                    });
+                  }
+                }}
+              >
+                <Database className="h-4 w-4 mr-2" />
+                Run Migration
+              </Button>
+              <Button
+                onClick={() => {
+                  navigate("/admin/blog-dashboard-a7f3b9c2d1e4f5a6/new");
+                }}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                New Post
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  sessionStorage.removeItem("blog_admin_authenticated");
+                  setIsAuthenticated(false);
+                }}
+              >
+                Logout
+              </Button>
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="text-center py-12">
+              <p style={{ color: '#94a3b8' }}>Loading blogs...</p>
+            </div>
+          ) : error ? (
+            <Card className="bg-base-800 border-white/10">
+              <CardContent className="p-6">
+                <div className="text-center py-8">
+                  <p className="text-red-400 mb-4">{error}</p>
+                  <Button onClick={() => loadBlogs()} variant="outline">
+                    Retry
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card className="bg-base-800 border-white/10">
+              <CardContent className="p-0">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-white/10">
+                      <TableHead style={{ color: '#cbd5e1' }}>Title</TableHead>
+                      <TableHead style={{ color: '#cbd5e1' }}>Status</TableHead>
+                      <TableHead style={{ color: '#cbd5e1' }}>Publish Date</TableHead>
+                      <TableHead style={{ color: '#cbd5e1' }}>Last Updated</TableHead>
+                      <TableHead style={{ color: '#cbd5e1' }}>Word Count</TableHead>
+                      <TableHead style={{ color: '#cbd5e1' }}>SEO Score</TableHead>
+                      <TableHead style={{ color: '#cbd5e1' }}>Actions</TableHead>
                     </TableRow>
-                  ) : (
-                    blogs.map((blog) => (
-                      <TableRow key={blog.id} className="border-white/10">
-                        <TableCell className="font-medium text-white">
-                          {blog.title}
+                  </TableHeader>
+                  <TableBody>
+                    {blogs.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={7} className="text-center py-8" style={{ color: '#94a3b8' }}>
+                          No blog posts found
                         </TableCell>
-                        <TableCell>{getStatusBadge(blog.status)}</TableCell>
-                        <TableCell className="text-slate-400">
+                      </TableRow>
+                    ) : (
+                      blogs.map((blog) => (
+                        <TableRow key={blog.id} className="border-white/10">
+                          <TableCell className="font-medium" style={{ color: '#ffffff' }}>
+                            {blog.title}
+                          </TableCell>
+                          <TableCell>{getStatusBadge(blog.status)}</TableCell>
+                        <TableCell style={{ color: '#94a3b8' }}>
                           {formatDate(blog.publish_date)}
                         </TableCell>
-                        <TableCell className="text-slate-400">
+                        <TableCell style={{ color: '#94a3b8' }}>
                           {formatDate(blog.last_updated)}
                         </TableCell>
-                        <TableCell className="text-slate-400">
+                        <TableCell style={{ color: '#94a3b8' }}>
                           {blog.word_count.toLocaleString()}
                         </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <span
-                              className={`font-semibold ${
-                                blog.seo_score >= 80
-                                  ? "text-green-400"
-                                  : blog.seo_score >= 60
-                                  ? "text-yellow-400"
-                                  : "text-red-400"
-                              }`}
-                            >
-                              {blog.seo_score}
-                            </span>
-                            <span className="text-slate-500">/ 100</span>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => {
-                                // Edit functionality - to be implemented
-                                toast({
-                                  title: "Edit functionality coming soon",
-                                });
-                              }}
-                            >
-                              <Edit className="h-4 w-4 mr-1" />
-                              Edit
-                            </Button>
-                            {blog.status === "published" && (
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <div
+                                className={`w-3 h-3 rounded-full ${getSEOScoreDot(
+                                  blog.seo_score || 0
+                                )}`}
+                              />
+                              <span
+                                className={`font-semibold ${getSEOScoreColor(
+                                  blog.seo_score || 0
+                                )}`}
+                              >
+                                {blog.seo_score || 0}
+                              </span>
+                              <span className="text-slate-500">/ 100</span>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                asChild
+                                onClick={() => {
+                                  setSelectedBlog(blog);
+                                  setShowBreakdown(true);
+                                }}
                               >
-                                <a
-                                  href={`/blog/${blog.slug}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  <ExternalLink className="h-4 w-4 mr-1" />
-                                  View
-                                </a>
+                                <BarChart3 className="h-4 w-4 mr-1" />
+                                SEO
                               </Button>
-                            )}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        )}
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => recalculateSEO(blog)}
+                                disabled={recalculating === blog.id}
+                              >
+                                <RefreshCw
+                                  className={`h-4 w-4 mr-1 ${
+                                    recalculating === blog.id ? "animate-spin" : ""
+                                  }`}
+                                />
+                                Recalc
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  navigate(
+                                    `/admin/blog-dashboard-a7f3b9c2d1e4f5a6/edit/${blog.id}`
+                                  );
+                                }}
+                              >
+                                <Edit className="h-4 w-4 mr-1" />
+                                Edit
+                              </Button>
+                              {blog.status === "published" && (
+                                <Button variant="ghost" size="sm" asChild>
+                                  <a
+                                    href={`/blog/${blog.slug}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <ExternalLink className="h-4 w-4 mr-1" />
+                                    View
+                                  </a>
+                                </Button>
+                              )}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          )}
+        </div>
       </div>
-    </div>
+
+      {/* SEO Breakdown Dialog */}
+      <Dialog open={showBreakdown} onOpenChange={setShowBreakdown}>
+        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto bg-base-800 border-white/10">
+          <DialogHeader>
+            <DialogTitle className="text-white text-2xl">
+              SEO Breakdown: {selectedBlog?.title}
+            </DialogTitle>
+            <DialogDescription className="text-slate-400">
+              Detailed analysis of SEO score and recommendations
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedBlog?.seo_breakdown && (
+            <div className="space-y-6 mt-4">
+              {/* Overall Score */}
+              <div className="bg-base-900 rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-lg font-semibold text-white">Overall Score</span>
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`w-4 h-4 rounded-full ${getSEOScoreDot(
+                        selectedBlog.seo_score || 0
+                      )}`}
+                    />
+                    <span
+                      className={`text-2xl font-bold ${getSEOScoreColor(
+                        selectedBlog.seo_score || 0
+                      )}`}
+                    >
+                      {selectedBlog.seo_score || 0}
+                    </span>
+                    <span className="text-slate-400">/ 100</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Category Breakdowns */}
+              {Object.entries(selectedBlog.seo_breakdown).map(([category, data]: [string, any]) => {
+                if (category === "penalties") return null;
+                return (
+                  <div key={category} className="bg-base-900 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-lg font-semibold text-white capitalize">
+                        {category.replace(/_/g, " ")}
+                      </h3>
+                      <span className="text-sm text-slate-400">
+                        {data.score} / {data.max}
+                      </span>
+                    </div>
+                    <div className="space-y-1">
+                      {data.items &&
+                        Object.entries(data.items).map(([key, item]: [string, any]) =>
+                          renderSEOItem(item, key)
+                        )}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Penalties */}
+              {selectedBlog.seo_breakdown.penalties &&
+                Object.keys(selectedBlog.seo_breakdown.penalties.items || {}).length > 0 && (
+                  <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4">
+                    <h3 className="text-lg font-semibold text-red-400 mb-3">Penalties</h3>
+                    <div className="space-y-1">
+                      {Object.entries(
+                        selectedBlog.seo_breakdown.penalties.items || {}
+                      ).map(([key, item]: [string, any]) => renderSEOItem(item, key))}
+                    </div>
+                  </div>
+                )}
+
+              {/* Flags */}
+              {selectedBlog.seo_flags && selectedBlog.seo_flags.length > 0 && (
+                <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-4">
+                  <h3 className="text-lg font-semibold text-yellow-400 mb-2">Issues Found</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedBlog.seo_flags.map((flag) => (
+                      <Badge key={flag} variant="outline" className="text-yellow-400">
+                        {flag.replace(/_/g, " ")}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
-
