@@ -188,20 +188,32 @@ export default function BlogDashboard() {
     // Extract content - try multiple selectors
     let content = "";
     
+    // For React-rendered pages, look for the main content div
+    // Try to find the main content area with max-w-4xl or similar
     const contentSelectors = [
+      /<div[^>]*class=["'][^"']*max-w-4xl[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
       /<div[^>]*class=["'][^"']*prose[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
+      /<div[^>]*class=["'][^"']*mx-auto[^"']*max-w[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
       /<article[^>]*>([\s\S]*?)<\/article>/i,
       /<main[^>]*>([\s\S]*?)<\/main>/i,
       /<div[^>]*class=["'][^"']*content[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
     ];
 
     for (const selector of contentSelectors) {
-      const match = html.match(selector);
-      if (match && match[1]) {
-        content = match[1].trim();
-        if (content.length > 500) {
-          break;
+      const matches = html.matchAll(new RegExp(selector.source, 'gi'));
+      for (const match of matches) {
+        if (match && match[1]) {
+          const candidate = match[1].trim();
+          // Look for substantial content (has paragraphs, headings, etc.)
+          if (candidate.length > 500 && 
+              (candidate.includes('<p') || candidate.includes('<h') || candidate.includes('text-'))) {
+            content = candidate;
+            break;
+          }
         }
+      }
+      if (content && content.length > 500) {
+        break;
       }
     }
 
@@ -218,9 +230,32 @@ export default function BlogDashboard() {
           .replace(/<nav[^>]*>[\s\S]*?<\/nav>/gi, "")
           .replace(/<header[^>]*>[\s\S]*?<\/header>/gi, "")
           .replace(/<footer[^>]*>[\s\S]*?<\/footer>/gi, "")
-          .replace(/<aside[^>]*>[\s\S]*?<\/aside>/gi, "");
+          .replace(/<aside[^>]*>[\s\S]*?<\/aside>/gi, "")
+          .replace(/<div[^>]*id=["']root["'][^>]*>([\s\S]*?)<\/div>/gi, "$1"); // Extract React root content
         
-        content = bodyContent.trim();
+        // Try to find the main content div within body
+        const mainContentMatch = bodyContent.match(/<div[^>]*class=["'][^"']*min-h-screen[^"']*["'][^>]*>([\s\S]*?)<\/div>/i);
+        if (mainContentMatch && mainContentMatch[1].length > 500) {
+          content = mainContentMatch[1].trim();
+        } else {
+          content = bodyContent.trim();
+        }
+      }
+    }
+    
+    // If still no content, try to extract from React hydration data or JSON
+    if (!content || content.length < 100) {
+      // Look for JSON data in script tags that might contain content
+      const jsonDataMatch = html.match(/<script[^>]*type=["']application\/json["'][^>]*>([\s\S]*?)<\/script>/i);
+      if (jsonDataMatch) {
+        try {
+          const jsonData = JSON.parse(jsonDataMatch[1]);
+          if (jsonData.content || jsonData.body) {
+            content = jsonData.content || jsonData.body;
+          }
+        } catch {
+          // Ignore JSON parse errors
+        }
       }
     }
 
@@ -350,8 +385,36 @@ export default function BlogDashboard() {
           throw new Error("Could not extract title from page");
         }
 
+        // If content is still too short, try a more aggressive extraction
         if (!content || content.length < 100) {
-          throw new Error("Could not extract sufficient content from page");
+          // Last resort: extract all text from body
+          const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+          if (bodyMatch) {
+            let textContent = bodyMatch[1]
+              .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
+              .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+              .replace(/<[^>]+>/g, " ")
+              .replace(/\s+/g, " ")
+              .trim();
+            
+            if (textContent.length > 200) {
+              // Use the text content as HTML paragraphs
+              const paragraphs = textContent
+                .split(/\n\n+|\.\s+/)
+                .filter(p => p.trim().length > 20)
+                .slice(0, 20) // Limit to first 20 paragraphs
+                .map(p => `<p>${p.trim()}</p>`)
+                .join("\n");
+              content = paragraphs;
+            }
+          }
+        }
+
+        if (!content || content.length < 100) {
+          throw new Error(
+            "Could not extract sufficient content from page. " +
+            "The page might be client-side rendered. Try copying the content manually or ensure the page is server-rendered."
+          );
         }
 
         // Generate slug
