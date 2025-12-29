@@ -49,7 +49,6 @@ interface BlogPost {
   word_count: number;
   seo_score: number;
   seo_breakdown: SEOBreakdown | null;
-  seo_last_scored_at: string | null;
   seo_flags: string[] | null;
   seo_last_scored_at: string | null;
   meta_description: string | null;
@@ -506,7 +505,7 @@ export default function BlogDashboard() {
       // Use select with explicit columns to ensure we get all data
       const { data, error: dbError } = await supabase
         .from("blogs")
-        .select("id, title, slug, status, publish_date, last_updated, word_count, seo_score, seo_breakdown, seo_flags, meta_description, content, created_at, created_by")
+        .select("id, title, slug, status, publish_date, last_updated, word_count, seo_score, seo_breakdown, seo_flags, seo_last_scored_at, meta_description, content, created_at, created_by")
         .order("last_updated", { ascending: false });
 
       if (dbError) {
