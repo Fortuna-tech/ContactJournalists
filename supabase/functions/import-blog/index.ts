@@ -5,6 +5,7 @@ const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
 // Whitelist allowed domains
@@ -163,9 +164,29 @@ serve(async (req) => {
   }
 
   try {
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     const blogAdminPassword = Deno.env.get("BLOG_ADMIN_PASSWORD") || "admin123";
+
+    if (!supabaseUrl) {
+      return new Response(
+        JSON.stringify({ error: "SUPABASE_URL environment variable is not set" }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    if (!supabaseServiceKey) {
+      return new Response(
+        JSON.stringify({ error: "SUPABASE_SERVICE_ROLE_KEY environment variable is not set" }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
 
     // Create admin client with service role key (bypasses RLS)
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);

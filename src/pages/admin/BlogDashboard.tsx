@@ -321,50 +321,50 @@ export default function BlogDashboard() {
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       let useClientSide = false;
 
-      if (supabaseUrl) {
-        try {
-          const blogAdminPassword = import.meta.env.VITE_BLOG_ADMIN_PASSWORD || "admin123";
-          const response = await fetch(
-            `${supabaseUrl}/functions/v1/import-blog`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                apikey: import.meta.env.VITE_SUPABASE_ANON_KEY || "",
-              },
-              body: JSON.stringify({
-                url: importUrl.trim(),
-                password: blogAdminPassword,
-              }),
-            }
-          );
+      // Always use edge function - no client-side fallback
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      if (!supabaseUrl) {
+        throw new Error("VITE_SUPABASE_URL is not configured");
+      }
 
-          if (response.ok) {
-            const data = await response.json();
-            toast({
-              title: "Blog imported successfully",
-              description: `${data.title} has been imported as a draft`,
-            });
-            setImportUrl("");
-            loadBlogs();
-            return;
-          }
-        } catch (fetchError) {
-          // Edge function not available, use client-side
-          useClientSide = true;
+      const blogAdminPassword = import.meta.env.VITE_BLOG_ADMIN_PASSWORD || "admin123";
+      const response = await fetch(
+        `${supabaseUrl}/functions/v1/import-blog`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY || "",
+          },
+          body: JSON.stringify({
+            url: importUrl.trim(),
+            password: blogAdminPassword,
+          }),
         }
-      } else {
-        useClientSide = true;
+      );
+
+      if (!response.ok) {
+        // Parse error response
+        let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+          if (errorData.details) {
+            errorMessage += ` (${errorData.details})`;
+          }
+        } catch {
+          // If JSON parsing fails, use status text
+        }
+        throw new Error(errorMessage);
       }
 
-      // Client-side fallback removed - all inserts must go through edge function
-      // If edge function fails, show error
-      if (useClientSide) {
-        throw new Error(
-          "Edge function not available. Please deploy the import-blog function: " +
-          "supabase functions deploy import-blog"
-        );
-      }
+      const data = await response.json();
+      toast({
+        title: "Blog imported successfully",
+        description: `${data.title} has been imported as a draft`,
+      });
+      setImportUrl("");
+      loadBlogs();
     } catch (error: any) {
       console.error("Import error:", error);
       toast({
