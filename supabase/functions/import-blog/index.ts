@@ -347,13 +347,23 @@ serve(async (req) => {
       slug = generateSlugFromTitle(title);
     }
 
-    // Check if blog with this slug already exists
-    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
-    const { data: existing } = await supabaseAdmin
+    // Check if blog with this slug already exists (using admin client)
+    const { data: existing, error: checkError } = await supabaseAdmin
       .from("blogs")
       .select("id")
       .eq("slug", slug)
-      .single();
+      .maybeSingle();
+
+    if (checkError) {
+      console.error("Check existing error:", checkError);
+      return new Response(
+        JSON.stringify({ error: `Failed to check existing blog: ${checkError.message}` }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
 
     if (existing) {
       return new Response(
@@ -388,7 +398,11 @@ serve(async (req) => {
     if (insertError) {
       console.error("Insert error:", insertError);
       return new Response(
-        JSON.stringify({ error: `Failed to save blog: ${insertError.message}` }),
+        JSON.stringify({ 
+          error: `Failed to save blog: ${insertError.message}`,
+          details: insertError.details || null,
+          hint: insertError.hint || null,
+        }),
         {
           status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
