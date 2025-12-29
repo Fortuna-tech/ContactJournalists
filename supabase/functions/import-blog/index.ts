@@ -378,7 +378,7 @@ serve(async (req) => {
     }
 
     // Parse HTML
-    const { title, metaDescription, content } = parseHTML(html);
+    let { title, metaDescription, content } = parseHTML(html);
 
     if (!title) {
       return new Response(
@@ -390,14 +390,23 @@ serve(async (req) => {
       );
     }
 
+    // If content extraction fails, create a placeholder that can be edited
     if (!content || content.length < 100) {
-      return new Response(
-        JSON.stringify({ error: "Could not extract sufficient content from page" }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+      console.warn("Could not extract sufficient content, creating placeholder");
+      // Create a minimal content entry that can be edited
+      content = `<div class="prose">
+        <p><strong>Note:</strong> Content could not be automatically extracted from this React-rendered page.</p>
+        <p>Please edit this blog post and add the content manually by:</p>
+        <ol>
+          <li>Opening the blog post URL in your browser</li>
+          <li>Copying the content</li>
+          <li>Pasting it into the content field</li>
+        </ol>
+        <p>Original URL: <a href="${url}" target="_blank">${url}</a></p>
+      </div>`;
+      
+      // Still proceed with import, but with placeholder content
+      // The user can edit it later
     }
 
     // Generate slug
