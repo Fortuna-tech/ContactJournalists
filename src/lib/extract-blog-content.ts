@@ -968,52 +968,64 @@ const blogContent = {
   }
 };
 
-export async function extractAndUpdateBlogContent() {
-  console.log('Starting content extraction and blog updates...');
+export async function extractAndUpdateBlogContent(supabaseClient?: any) {
+  console.log('Starting DIRECT content extraction and blog updates...');
 
   const results = [];
+  const supabase = supabaseClient;
 
-  const adminPassword = import.meta.env.VITE_BLOG_ADMIN_PASSWORD || "admin123";
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  // Direct database updates with full content
+  for (const blog of blogFiles) {
+    try {
+      console.log(`Processing: ${blog.slug} -> "${blog.title}"`);
 
-  // Use extract-blog-content edge function approach
-  try {
-    const functionUrl = `${supabaseUrl}/functions/v1/extract-blog-content`;
+      // Get the full content and meta description
+      const blogData = blogContent[blog.slug as keyof typeof blogContent];
+      const fullContent = blogData?.content || '';
 
-    console.log("Attempting to call extract-blog-content edge function...");
+      if (!fullContent || fullContent.length < 100) {
+        console.error(`No content found for ${blog.slug}`);
+        results.push({ slug: blog.slug, success: false, error: 'No content available' });
+        continue;
+      }
 
-    const response = await fetch(functionUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${anonKey}`,
-        "apikey": anonKey,
-      },
-      body: JSON.stringify({
-        password: adminPassword,
-        blogUpdates: blogFiles.map(blog => {
-          const blogData = blogContent[blog.slug as keyof typeof blogContent];
-          return {
-            slug: blog.slug,
-            title: blog.title,
-            content: blogData?.content || fullBlogContent[blog.slug as keyof typeof fullBlogContent] || '',
-            publishDate: blog.publishDate,
-            metaDescription: blogData?.metaDescription || blog.metaDescription,
-          };
-        }),
-      }),
-    });
+      // Calculate word count properly
+      const cleanContent = fullContent
+        .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+        .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
 
-    if (response.ok) {
-      const edgeResults = await response.json();
-      console.log('Edge function succeeded:', edgeResults);
-      return edgeResults;
-    } else {
-      console.log('Edge function not available, falling back to manual update...');
+      const wordCount = cleanContent.split(/\s+/).filter(w => w.length > 0).length;
+
+      console.log(`Word count for ${blog.slug}: ${wordCount} words`);
+
+      // Update the blog directly
+      const { error } = await supabase
+        .from('blogs')
+        .update({
+          title: blog.title,
+          content: fullContent,
+          meta_description: blogData?.metaDescription || null,
+          status: "published",
+          word_count: wordCount,
+          publish_date: blog.publishDate,
+          last_updated: new Date().toISOString(),
+        })
+        .eq('slug', blog.slug);
+
+      if (error) {
+        console.error(`Database update failed for ${blog.slug}:`, error);
+        results.push({ slug: blog.slug, success: false, error: error.message });
+      } else {
+        console.log(`✓ Updated ${blog.slug} with ${wordCount} words`);
+        results.push({ slug: blog.slug, success: true });
+      }
+    } catch (error: any) {
+      console.error(`Error processing ${blog.slug}:`, error);
+      results.push({ slug: blog.slug, success: false, error: error.message });
     }
-  } catch (error) {
-    console.log('Edge function failed, falling back to manual update:', error);
   }
 
   // Fallback: Update with proper titles, status, and existing content

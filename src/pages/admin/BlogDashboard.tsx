@@ -923,7 +923,7 @@ export default function BlogDashboard() {
                     description: "Extracting content from React components and updating database...",
                   });
                   try {
-                    const results = await extractAndUpdateBlogContent();
+                    const results = await extractAndUpdateBlogContent(supabase);
                     const successCount = results.filter((r: any) => r.success).length;
                     const failCount = results.filter((r: any) => !r.success).length;
 
