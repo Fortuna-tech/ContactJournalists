@@ -195,38 +195,44 @@ function parseHTML(html: string): {
   };
 }
 
-async function fetchBlogContent(url: string): Promise<{
+async function importBlogViaEdgeFunction(url: string, password: string): Promise<{
+  id: string;
   title: string;
-  metaDescription: string;
-  content: string;
-  publishDate: string | null;
+  slug: string;
 }> {
   try {
-    console.log(`Fetching: ${url}`);
-    const response = await fetch(url, {
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    
+    if (!supabaseUrl || !anonKey) {
+      throw new Error("Missing Supabase configuration");
+    }
+
+    const functionUrl = `${supabaseUrl}/functions/v1/import-blog`;
+    
+    console.log(`Calling edge function for: ${url}`);
+    const response = await fetch(functionUrl, {
+      method: "POST",
       headers: {
-        "User-Agent": "Mozilla/5.0 (compatible; ContactJournalists/1.0)",
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${anonKey}`,
+        "apikey": anonKey,
       },
+      body: JSON.stringify({
+        url,
+        password,
+      }),
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      const errorData = await response.json().catch(() => ({ error: response.statusText }));
+      throw new Error(errorData.error || errorData.message || `HTTP ${response.status}`);
     }
 
-    const html = await response.text();
-    const parsed = parseHTML(html);
-
-    if (!parsed.title) {
-      throw new Error("Could not extract title");
-    }
-
-    if (!parsed.content || parsed.content.length < 500) {
-      throw new Error("Could not extract sufficient content");
-    }
-
-    return parsed;
-  } catch (error) {
-    console.error(`Error fetching ${url}:`, error);
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    console.error(`Error calling edge function for ${url}:`, error);
     throw error;
   }
 }
@@ -234,71 +240,60 @@ async function fetchBlogContent(url: string): Promise<{
 export async function batchImportBlogs() {
   console.log("Starting batch import of blog posts...");
   const results: Array<{ url: string; success: boolean; error?: string }> = [];
+  
+  // Get admin password from env or use default
+  const adminPassword = import.meta.env.VITE_BLOG_ADMIN_PASSWORD || "admin123";
 
   for (const blogUrl of BLOG_URLS) {
     try {
       console.log(`\nProcessing: ${blogUrl.url}`);
 
-      // Fetch and parse content
-      const { title, metaDescription, content, publishDate } = await fetchBlogContent(blogUrl.url);
+      // Use edge function to import (handles CORS and server-side fetching)
+      const imported = await importBlogViaEdgeFunction(blogUrl.url, adminPassword);
+      
+      console.log(`✓ Imported via edge function: ${imported.title}`);
 
-      // Use expected publish date if available, otherwise use extracted date or current date
-      const finalPublishDate = blogUrl.expectedPublishDate || publishDate || new Date().toISOString();
-
-      // Calculate word count
-      const wordCount = content.replace(/<[^>]*>/g, " ").split(/\s+/).filter((w) => w.length > 0).length;
-
-      // Calculate SEO score
-      const seoData = calculateSEOScore({
-        title,
-        metaDescription,
-        content,
-        slug: blogUrl.slug,
-      });
-
-      // Check if blog already exists
-      const { data: existing } = await supabase
+      // Now update with expected publish date and recalculate SEO if needed
+      const { data: blog } = await supabase
         .from("blogs")
-        .select("id")
-        .eq("slug", blogUrl.slug)
+        .select("*")
+        .eq("id", imported.id)
         .single();
 
-      const blogData = {
-        title,
-        slug: blogUrl.slug,
-        status: "published" as const,
-        publish_date: finalPublishDate,
-        meta_description: metaDescription || null,
-        content,
-        word_count: wordCount,
-        seo_score: seoData.score,
-        seo_breakdown: seoData.breakdown,
-        seo_flags: seoData.flags,
-        seo_last_scored_at: new Date().toISOString(),
-        last_updated: new Date().toISOString(),
-      };
-
-      if (existing) {
-        // Update existing blog
-        console.log(`Updating existing blog: ${title}`);
-        const { error } = await supabase
-          .from("blogs")
-          .update(blogData)
-          .eq("id", existing.id);
-
-        if (error) {
-          throw error;
+      if (blog) {
+        // Update publish date if we have an expected one
+        const updates: any = {};
+        
+        if (blogUrl.expectedPublishDate) {
+          updates.publish_date = blogUrl.expectedPublishDate;
         }
-        console.log(`✓ Updated: ${title}`);
-      } else {
-        // Insert new blog
-        console.log(`Inserting new blog: ${title}`);
-        const { error } = await supabase.from("blogs").insert(blogData);
 
-        if (error) {
-          throw error;
+        // Recalculate SEO if we have content
+        if (blog.content && blog.content.trim().length > 0) {
+          const seoData = calculateSEOScore({
+            title: blog.title,
+            metaDescription: blog.meta_description || undefined,
+            content: blog.content,
+            slug: blog.slug,
+          });
+          
+          updates.seo_score = seoData.score;
+          updates.seo_breakdown = seoData.breakdown;
+          updates.seo_flags = seoData.flags;
+          updates.seo_last_scored_at = new Date().toISOString();
         }
-        console.log(`✓ Inserted: ${title}`);
+
+        if (Object.keys(updates).length > 0) {
+          updates.last_updated = new Date().toISOString();
+          const { error: updateError } = await supabase
+            .from("blogs")
+            .update(updates)
+            .eq("id", imported.id);
+
+          if (updateError) {
+            console.warn(`Warning: Could not update blog ${imported.id}:`, updateError);
+          }
+        }
       }
 
       results.push({ url: blogUrl.url, success: true });
