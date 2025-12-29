@@ -410,11 +410,25 @@ export default function BlogDashboard() {
           }
         }
 
+        // If still no content, create a placeholder with instructions
         if (!content || content.length < 100) {
-          throw new Error(
-            "Could not extract sufficient content from page. " +
-            "The page might be client-side rendered. Try copying the content manually or ensure the page is server-rendered."
-          );
+          // Create a minimal content entry that can be edited
+          content = `<div class="prose">
+            <p><strong>Note:</strong> Content could not be automatically extracted from this React-rendered page.</p>
+            <p>Please edit this blog post and add the content manually by:</p>
+            <ol>
+              <li>Opening the blog post URL in your browser</li>
+              <li>Copying the content</li>
+              <li>Pasting it into the content field</li>
+            </ol>
+            <p>Original URL: <a href="${importUrl.trim()}" target="_blank">${importUrl.trim()}</a></p>
+          </div>`;
+          
+          toast({
+            title: "Partial import",
+            description: "Title and metadata imported. Please add content manually by editing the post.",
+            variant: "default",
+          });
         }
 
         // Generate slug
