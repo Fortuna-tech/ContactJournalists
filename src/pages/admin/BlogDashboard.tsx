@@ -199,21 +199,17 @@ export default function BlogDashboard() {
       /<div[^>]*class=["'][^"']*content[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
     ];
 
-    for (const selector of contentSelectors) {
-      const matches = html.matchAll(new RegExp(selector.source, 'gi'));
-      for (const match of matches) {
-        if (match && match[1]) {
-          const candidate = match[1].trim();
-          // Look for substantial content (has paragraphs, headings, etc.)
-          if (candidate.length > 500 && 
-              (candidate.includes('<p') || candidate.includes('<h') || candidate.includes('text-'))) {
-            content = candidate;
-            break;
-          }
+    for (let i = 0; i < contentSelectors.length; i++) {
+      const selector = contentSelectors[i];
+      const match = html.match(selector);
+      if (match && match[1]) {
+        const candidate = match[1].trim();
+        // Look for substantial content (has paragraphs, headings, etc.)
+        if (candidate.length > 500 && 
+            (candidate.includes('<p') || candidate.includes('<h') || candidate.includes('text-'))) {
+          content = candidate;
+          break;
         }
-      }
-      if (content && content.length > 500) {
-        break;
       }
     }
 
