@@ -199,46 +199,50 @@ serve(async (req) => {
     let userId: string | null = null;
     const authHeader = req.headers.get("Authorization");
 
-    if (authHeader) {
-      // Try Supabase auth first
+    // First check password auth (for blog admin dashboard) - this is simpler and works without auth headers
+    if (password && password === blogAdminPassword) {
+      userId = "blog-admin"; // Placeholder ID for password auth
+    } else if (authHeader) {
+      // Try Supabase auth if password doesn't match
       try {
-        const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-        const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-          global: {
-            headers: { Authorization: authHeader },
-          },
-        });
+        const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
+        if (supabaseAnonKey) {
+          const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+            global: {
+              headers: { Authorization: authHeader },
+            },
+          });
 
-        const {
-          data: { user },
-          error: authError,
-        } = await supabase.auth.getUser();
+          const {
+            data: { user },
+            error: authError,
+          } = await supabase.auth.getUser();
 
-        if (!authError && user) {
-          // Check if user has admin privileges
-          const { data: staffCheck } = await supabase
-            .from("staff_privileges")
-            .select("user_id")
-            .eq("user_id", user.id)
-            .single();
+          if (!authError && user) {
+            // Check if user has admin privileges
+            const { data: staffCheck } = await supabase
+              .from("staff_privileges")
+              .select("user_id")
+              .eq("user_id", user.id)
+              .maybeSingle();
 
-          if (staffCheck) {
-            userId = user.id;
+            if (staffCheck) {
+              userId = user.id;
+            }
           }
         }
       } catch (error) {
-        // Supabase auth failed, try password
+        console.error("Supabase auth error:", error);
+        // Supabase auth failed, will check password below
       }
-    }
-
-    // Fallback to password auth (for blog admin dashboard)
-    if (!userId && password === blogAdminPassword) {
-      userId = "blog-admin"; // Placeholder ID for password auth
     }
 
     if (!userId) {
       return new Response(
-        JSON.stringify({ error: "Unauthorized: Admin access required" }),
+        JSON.stringify({ 
+          error: "Unauthorized: Admin access required",
+          hint: password ? "Password incorrect or missing" : "Password required in request body"
+        }),
         {
           status: 401,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
