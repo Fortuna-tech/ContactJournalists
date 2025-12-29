@@ -32,14 +32,13 @@ interface BlogPost {
 const BLOG_ADMIN_PASSWORD = import.meta.env.VITE_BLOG_ADMIN_PASSWORD || "admin123";
 
 export default function BlogDashboard() {
-  const navigate = useNavigate();
-  const location = useLocation();
   const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Check if password is already in session storage
   useEffect(() => {
@@ -65,17 +64,31 @@ export default function BlogDashboard() {
 
   const loadBlogs = async () => {
     setLoading(true);
+    setError(null);
     try {
       // First, sync existing blog posts from the codebase
-      await syncBlogPosts();
+      try {
+        await syncBlogPosts();
+      } catch (syncError) {
+        console.error("Error syncing blogs:", syncError);
+        // Continue even if sync fails - table might not exist yet
+      }
 
       // Then load from database
-      const { data, error } = await supabase
+      const { data, error: dbError } = await supabase
         .from("blogs")
         .select("*")
         .order("last_updated", { ascending: false });
 
-      if (error) throw error;
+      if (dbError) {
+        // If table doesn't exist, show helpful message
+        if (dbError.code === "42P01" || dbError.message.includes("does not exist")) {
+          setError("Blogs table not found. Please run the database migration first.");
+          setBlogs([]);
+          return;
+        }
+        throw dbError;
+      }
 
       // Calculate SEO scores for blogs that need it or have content updates
       const blogsWithSEO = await Promise.all(
@@ -107,10 +120,12 @@ export default function BlogDashboard() {
       );
 
       setBlogs(blogsWithSEO);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error loading blogs:", error);
+      setError(error?.message || "Failed to load blogs. Please check the database connection.");
       toast({
         title: "Error loading blogs",
+        description: error?.message || "Please check the console for details.",
         variant: "destructive",
       });
     } finally {
@@ -234,11 +249,11 @@ export default function BlogDashboard() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-base-900 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-md bg-base-800 border-white/10">
           <CardHeader>
             <div className="flex items-center gap-2 mb-2">
-              <Lock className="h-5 w-5" />
-              <CardTitle>Blog Admin Access</CardTitle>
+              <Lock className="h-5 w-5 text-white" />
+              <CardTitle className="text-white">Blog Admin Access</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
@@ -291,6 +306,29 @@ export default function BlogDashboard() {
           <div className="text-center py-12">
             <p className="text-slate-400">Loading blogs...</p>
           </div>
+        ) : error ? (
+          <Card className="bg-base-800 border-white/10">
+            <CardContent className="p-6">
+              <div className="text-center py-8">
+                <p className="text-red-400 mb-4">{error}</p>
+                <p className="text-slate-400 text-sm mb-4">
+                  Make sure you've run the database migration:
+                </p>
+                <code className="block bg-base-900 p-3 rounded text-sm text-slate-300 mb-4">
+                  supabase/migrations/20251223000000_create_blogs_table.sql
+                </code>
+                <Button
+                  onClick={() => {
+                    setError(null);
+                    loadBlogs();
+                  }}
+                  variant="outline"
+                >
+                  Retry
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         ) : (
           <Card className="bg-base-800 border-white/10">
             <CardContent className="p-0">
