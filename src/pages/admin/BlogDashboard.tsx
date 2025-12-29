@@ -387,16 +387,16 @@ export default function BlogDashboard() {
         />
         <div className="flex-1">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-white capitalize">
+            <span className="text-sm font-medium capitalize" style={{ color: '#ffffff' }}>
               {key.replace(/_/g, " ")}
             </span>
-            <span className="text-sm text-slate-400">
+            <span className="text-sm" style={{ color: '#94a3b8' }}>
               {item.score}
               {item.max && ` / ${item.max}`}
             </span>
           </div>
           {item.reason && (
-            <p className="text-xs text-slate-400 mt-1">{item.reason}</p>
+            <p className="text-xs mt-1" style={{ color: '#94a3b8' }}>{item.reason}</p>
           )}
         </div>
       </div>
@@ -409,8 +409,8 @@ export default function BlogDashboard() {
         <Card className="w-full max-w-md bg-base-800 border-white/10">
           <CardHeader>
             <div className="flex items-center gap-2 mb-2">
-              <Lock className="h-5 w-5 text-white" />
-              <CardTitle className="text-white">Blog Admin Access</CardTitle>
+              <Lock className="h-5 w-5" style={{ color: '#ffffff' }} />
+              <CardTitle style={{ color: '#ffffff' }}>Blog Admin Access</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
@@ -424,10 +424,15 @@ export default function BlogDashboard() {
                     setPassword(e.target.value);
                     setPasswordError("");
                   }}
-                  className={passwordError ? "border-red-500" : "bg-base-900 text-white"}
+                  className={passwordError ? "border-red-500" : ""}
+                  style={{
+                    backgroundColor: '#1e293b',
+                    color: '#ffffff',
+                    borderColor: passwordError ? '#ef4444' : 'rgba(255, 255, 255, 0.1)'
+                  }}
                 />
                 {passwordError && (
-                  <p className="text-sm text-red-500 mt-1">{passwordError}</p>
+                  <p className="text-sm mt-1" style={{ color: '#ef4444' }}>{passwordError}</p>
                 )}
               </div>
               <Button type="submit" className="w-full">
@@ -673,10 +678,10 @@ export default function BlogDashboard() {
       <Dialog open={showBreakdown} onOpenChange={setShowBreakdown}>
         <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto bg-base-800 border-white/10">
           <DialogHeader>
-            <DialogTitle className="text-white text-2xl">
+            <DialogTitle className="text-2xl" style={{ color: '#ffffff' }}>
               SEO Breakdown: {selectedBlog?.title}
             </DialogTitle>
-            <DialogDescription className="text-slate-400">
+            <DialogDescription style={{ color: '#94a3b8' }}>
               Detailed analysis of SEO score and recommendations
             </DialogDescription>
           </DialogHeader>
@@ -686,7 +691,7 @@ export default function BlogDashboard() {
               {/* Overall Score */}
               <div className="bg-base-900 rounded-lg p-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-lg font-semibold text-white">Overall Score</span>
+                  <span className="text-lg font-semibold" style={{ color: '#ffffff' }}>Overall Score</span>
                   <div className="flex items-center gap-3">
                     <div
                       className={`w-4 h-4 rounded-full ${getSEOScoreDot(
@@ -700,7 +705,7 @@ export default function BlogDashboard() {
                     >
                       {selectedBlog.seo_score || 0}
                     </span>
-                    <span className="text-slate-400">/ 100</span>
+                    <span style={{ color: '#94a3b8' }}>/ 100</span>
                   </div>
                 </div>
               </div>
@@ -711,10 +716,10 @@ export default function BlogDashboard() {
                 return (
                   <div key={category} className="bg-base-900 rounded-lg p-4">
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-lg font-semibold text-white capitalize">
+                      <h3 className="text-lg font-semibold capitalize" style={{ color: '#ffffff' }}>
                         {category.replace(/_/g, " ")}
                       </h3>
-                      <span className="text-sm text-slate-400">
+                      <span className="text-sm" style={{ color: '#94a3b8' }}>
                         {data.score} / {data.max}
                       </span>
                     </div>
@@ -732,7 +737,7 @@ export default function BlogDashboard() {
               {selectedBlog.seo_breakdown.penalties &&
                 Object.keys(selectedBlog.seo_breakdown.penalties.items || {}).length > 0 && (
                   <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4">
-                    <h3 className="text-lg font-semibold text-red-400 mb-3">Penalties</h3>
+                    <h3 className="text-lg font-semibold mb-3" style={{ color: '#f87171' }}>Penalties</h3>
                     <div className="space-y-1">
                       {Object.entries(
                         selectedBlog.seo_breakdown.penalties.items || {}
@@ -744,7 +749,7 @@ export default function BlogDashboard() {
               {/* Flags */}
               {selectedBlog.seo_flags && selectedBlog.seo_flags.length > 0 && (
                 <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-4">
-                  <h3 className="text-lg font-semibold text-yellow-400 mb-2">Issues Found</h3>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#fbbf24' }}>Issues Found</h3>
                   <div className="flex flex-wrap gap-2">
                     {selectedBlog.seo_flags.map((flag) => (
                       <Badge key={flag} variant="outline" className="text-yellow-400">
