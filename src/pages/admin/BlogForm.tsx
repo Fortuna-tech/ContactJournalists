@@ -190,7 +190,7 @@ export default function BlogForm() {
       <div className="min-h-screen bg-base-900 flex items-center justify-center p-4">
         <Card className="w-full max-w-md bg-base-800 border-white/10">
           <CardHeader>
-            <CardTitle className="text-white">Blog Admin Access</CardTitle>
+            <CardTitle style={{ color: '#ffffff' }}>Blog Admin Access</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handlePasswordSubmit} className="space-y-4">
@@ -200,6 +200,11 @@ export default function BlogForm() {
                   placeholder="Enter password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  style={{
+                    backgroundColor: '#1e293b',
+                    color: '#ffffff',
+                    borderColor: 'rgba(255, 255, 255, 0.1)'
+                  }}
                 />
               </div>
               <Button type="submit" className="w-full">
@@ -215,13 +220,13 @@ export default function BlogForm() {
   if (loading) {
     return (
       <div className="min-h-screen bg-base-900 flex items-center justify-center">
-        <p className="text-slate-400">Loading...</p>
+        <p style={{ color: '#94a3b8' }}>Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-base-900 text-slate-200 p-8">
+    <div className="min-h-screen bg-base-900 p-8" style={{ color: '#e2e8f0' }}>
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center gap-4 mb-8">
           <Button
@@ -231,7 +236,7 @@ export default function BlogForm() {
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Dashboard
           </Button>
-          <h1 className="text-3xl font-bold text-white">
+          <h1 className="text-3xl font-bold" style={{ color: '#ffffff' }}>
             {id ? "Edit Blog Post" : "Create New Blog Post"}
           </h1>
         </div>
@@ -240,7 +245,7 @@ export default function BlogForm() {
           <CardContent className="p-6">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="title" className="text-white">
+                <Label htmlFor="title" style={{ color: '#ffffff' }}>
                   Title *
                 </Label>
                 <Input
@@ -248,12 +253,16 @@ export default function BlogForm() {
                   value={formData.title}
                   onChange={(e) => handleTitleChange(e.target.value)}
                   required
-                  className="bg-base-900 border-white/10 text-white"
+                  style={{
+                    backgroundColor: '#1e293b',
+                    color: '#ffffff',
+                    borderColor: 'rgba(255, 255, 255, 0.1)'
+                  }}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="slug" className="text-white">
+                <Label htmlFor="slug" style={{ color: '#ffffff' }}>
                   Slug *
                 </Label>
                 <Input
@@ -263,17 +272,21 @@ export default function BlogForm() {
                     setFormData((prev) => ({ ...prev, slug: e.target.value }))
                   }
                   required
-                  className="bg-base-900 border-white/10 text-white"
+                  style={{
+                    backgroundColor: '#1e293b',
+                    color: '#ffffff',
+                    borderColor: 'rgba(255, 255, 255, 0.1)'
+                  }}
                   placeholder="blog-post-slug"
                 />
-                <p className="text-sm text-slate-400">
+                <p className="text-sm" style={{ color: '#94a3b8' }}>
                   URL-friendly version of the title (auto-generated from title)
                 </p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="status" className="text-white">
+                  <Label htmlFor="status" style={{ color: '#ffffff' }}>
                     Status *
                   </Label>
                   <Select
@@ -282,19 +295,23 @@ export default function BlogForm() {
                       setFormData((prev) => ({ ...prev, status: value }))
                     }
                   >
-                    <SelectTrigger className="bg-base-900 border-white/10 text-white">
+                    <SelectTrigger style={{
+                      backgroundColor: '#1e293b',
+                      color: '#ffffff',
+                      borderColor: 'rgba(255, 255, 255, 0.1)'
+                    }}>
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="draft">Draft</SelectItem>
-                      <SelectItem value="scheduled">Scheduled</SelectItem>
-                      <SelectItem value="published">Published</SelectItem>
+                    <SelectContent style={{ backgroundColor: '#1e293b', color: '#ffffff' }}>
+                      <SelectItem value="draft" style={{ color: '#ffffff' }}>Draft</SelectItem>
+                      <SelectItem value="scheduled" style={{ color: '#ffffff' }}>Scheduled</SelectItem>
+                      <SelectItem value="published" style={{ color: '#ffffff' }}>Published</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="publish_date" className="text-white">
+                  <Label htmlFor="publish_date" style={{ color: '#ffffff' }}>
                     Publish Date
                   </Label>
                   <Input
@@ -307,13 +324,17 @@ export default function BlogForm() {
                         publish_date: e.target.value,
                       }))
                     }
-                    className="bg-base-900 border-white/10 text-white"
+                    style={{
+                      backgroundColor: '#1e293b',
+                      color: '#ffffff',
+                      borderColor: 'rgba(255, 255, 255, 0.1)'
+                    }}
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="meta_description" className="text-white">
+                <Label htmlFor="meta_description" style={{ color: '#ffffff' }}>
                   Meta Description
                 </Label>
                 <Textarea
@@ -326,13 +347,17 @@ export default function BlogForm() {
                     }))
                   }
                   rows={3}
-                  className="bg-base-900 border-white/10 text-white"
+                  style={{
+                    backgroundColor: '#1e293b',
+                    color: '#ffffff',
+                    borderColor: 'rgba(255, 255, 255, 0.1)'
+                  }}
                   placeholder="SEO meta description (150-160 characters recommended)"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="content" className="text-white">
+                <Label htmlFor="content" style={{ color: '#ffffff' }}>
                   Content *
                 </Label>
                 <Textarea
@@ -346,10 +371,16 @@ export default function BlogForm() {
                   }
                   rows={20}
                   required
-                  className="bg-base-900 border-white/10 text-white font-mono text-sm"
+                  style={{
+                    backgroundColor: '#1e293b',
+                    color: '#ffffff',
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    fontFamily: 'monospace',
+                    fontSize: '0.875rem'
+                  }}
                   placeholder="Enter blog content (HTML/JSX supported)"
                 />
-                <p className="text-sm text-slate-400">
+                <p className="text-sm" style={{ color: '#94a3b8' }}>
                   You can use HTML or JSX syntax for formatting
                 </p>
               </div>
