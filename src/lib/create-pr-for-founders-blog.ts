@@ -52,7 +52,7 @@ function addInternalLinks(content: string): string {
 export async function createPRForFoundersBlog() {
   const title = "How Founders Can Use PR to Explode Early-Stage Growth (Without a PR Agency)";
   const slug = "how-founders-can-use-pr-to-explode-early-stage-growth";
-  const metaDescription = "A practical guide for founders and solopreneurs on using PR to grow early-stage businesses without hiring a PR agency. Learn how to get press coverage, respond to journalist requests, and build evergreen credibility.";
+  const metaDescription = "A practical guide for founders and solopreneurs on using PR to grow early-stage businesses without hiring a PR agency. Learn how to get press coverage, respond to journalist requests, build credibility, and create evergreen visibility that compounds over time. Written by Fortuna, founder of ContactJournalists.com.";
   
   // Content with Fortuna's image and internal links
   const content = `
@@ -88,7 +88,7 @@ export async function createPRForFoundersBlog() {
     <p class="text-slate-200 mb-4">
       PR stops being overwhelming when timing is handled for you, relevance is obvious, and you're responding to real demand, not shouting into the void.
     </p>
-    <a href="/waitlist-signup" class="inline-flex items-center gap-2 rounded-lg bg-white text-black px-6 py-3 font-semibold hover:opacity-95 transition-opacity">
+    <a href="/waitlist-signup" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important; background-color: #ffffff !important;">
       👉 Start your 7-day free trial of ContactJournalists.com now. We know you'll love it.
     </a>
   </div>
@@ -111,7 +111,7 @@ export async function createPRForFoundersBlog() {
       <img
         src="/assets/fortuna-founder-balloons.jpg"
         alt="Fortuna, founder of ContactJournalists.com"
-        class="w-full md:w-64 md:flex-shrink-0 h-48 object-cover rounded-lg"
+        class="w-full md:w-64 md:flex-shrink-0 h-48 object-cover rounded-lg float-left md:mr-6 mb-4"
       />
       <div class="flex-1">
         <p class="text-slate-300 mb-4">
@@ -240,9 +240,19 @@ export async function createPRForFoundersBlog() {
 
     <h3 class="text-2xl font-semibold text-white mb-4">Why PR Beats Paid Ads in the Early Days</h3>
 
-    <p class="text-slate-300 mb-6">
-      Ads can work. I'm not anti-ads. But for early-stage founders, ads often create a false sense of progress.
-    </p>
+    <div class="flex flex-col md:flex-row gap-6 mb-6 items-start">
+      <img
+        src="/assets/magazines-stack.jpg"
+        alt="Stack of magazines representing press coverage and media"
+        class="w-full md:w-80 md:flex-shrink-0 h-auto object-cover rounded-lg mb-4"
+        style="max-width: 320px; float: left; margin-right: 1.5rem; margin-bottom: 1rem;"
+      />
+      <div class="flex-1">
+        <p class="text-slate-300 mb-4">
+          Ads can work. I'm not anti-ads. But for early-stage founders, ads often create a false sense of progress.
+        </p>
+      </div>
+    </div>
 
     <p class="text-slate-300 mb-6">
       You're paying for attention, not earning trust. The moment you stop spending, everything disappears.
@@ -574,9 +584,19 @@ export async function createPRForFoundersBlog() {
 
     <h3 class="text-2xl font-semibold text-white mb-4">What Journalists Actually Want From Founders</h3>
 
-    <p class="text-slate-300 mb-6">
-      Here's what journalists value far more than polished press releases:
-    </p>
+    <div class="flex flex-col md:flex-row gap-6 mb-6 items-start">
+      <img
+        src="/assets/person-reading-magazine.jpg"
+        alt="Person reading a magazine, representing journalists reviewing pitches"
+        class="w-full md:w-80 md:flex-shrink-0 h-auto object-cover rounded-lg mb-4"
+        style="max-width: 320px; float: right; margin-left: 1.5rem; margin-bottom: 1rem;"
+      />
+      <div class="flex-1">
+        <p class="text-slate-300 mb-4">
+          Here's what journalists value far more than polished press releases:
+        </p>
+      </div>
+    </div>
 
     <ul class="text-slate-300 mb-6 space-y-2 list-disc list-inside">
       <li>Clear opinions</li>
@@ -1173,9 +1193,19 @@ export async function createPRForFoundersBlog() {
 
     <h3 class="text-2xl font-semibold text-white mb-4">Evergreen PR vs Everything Else</h3>
 
-    <p class="text-slate-300 mb-6">
-      Most growth channels reset.
-    </p>
+    <div class="flex flex-col md:flex-row gap-6 mb-6 items-start">
+      <img
+        src="/assets/magazine-collection.jpg"
+        alt="Extensive collection of magazines representing long-term press coverage"
+        class="w-full md:w-96 md:flex-shrink-0 h-auto object-cover rounded-lg mb-4"
+        style="max-width: 384px; float: left; margin-right: 1.5rem; margin-bottom: 1rem;"
+      />
+      <div class="flex-1">
+        <p class="text-slate-300 mb-4">
+          Most growth channels reset.
+        </p>
+      </div>
+    </div>
 
     <p class="text-slate-300 mb-6">
       Paid ads stop the moment you stop spending. Social posts disappear within hours. Algorithms change. Reach drops.
@@ -1353,17 +1383,17 @@ export async function createPRForFoundersBlog() {
     </p>
 
     <div class="bg-gradient-to-r from-accent-blue to-accent-violet rounded-lg p-8 text-center my-8">
-      <h3 class="text-3xl md:text-4xl font-bold text-white mb-4">Call to Action</h3>
-      <p class="text-slate-200 mb-6 max-w-2xl mx-auto">
+      <h3 class="text-3xl md:text-4xl font-bold mb-4" style="color: #ffffff !important;">Call to Action</h3>
+      <p class="mb-6 max-w-2xl mx-auto" style="color: #ffffff !important;">
         If you want PR that compounds instead of disappearing:
       </p>
-      <p class="text-slate-200 mb-6">
-        👉 <a href="/waitlist-signup" class="text-white font-semibold underline">Start your 7-day free trial of ContactJournalists.com</a>.
+      <p class="mb-6">
+        👉 <a href="/waitlist-signup" class="font-semibold underline inline-block bg-white text-black px-6 py-3 rounded-lg hover:opacity-95 transition-opacity" style="color: #000000 !important; background-color: #ffffff !important;">Start your 7-day free trial of ContactJournalists.com</a>
       </p>
-      <p class="text-slate-200 mb-6">
+      <p class="mb-6" style="color: #ffffff !important;">
         It's built for founders who want evergreen visibility, not short-term noise.
       </p>
-      <p class="text-slate-200">
+      <p style="color: #ffffff !important;">
         We're confident you'll love it.
       </p>
     </div>
