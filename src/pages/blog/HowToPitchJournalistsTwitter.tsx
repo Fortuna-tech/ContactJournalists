@@ -32,12 +32,28 @@ const HowToPitchJournalistsTwitter = () => {
             How To Pitch Journalists on Twitter (Full Breakdown)
           </h1>
 
-          <div className="flex items-center gap-4 text-sm text-slate-400 border-b border-white/10 pb-6">
-            <time>December 23, 2025</time>
+          <div className="flex items-center gap-4 text-sm text-slate-400 border-b border-white/10 pb-6 mb-8">
+            <time>December 27, 2025</time>
             <span>•</span>
             <span>15 min read</span>
             <span>•</span>
             <span>By Fortuna, Founder</span>
+          </div>
+
+          {/* Header Image with Overlay */}
+          <div className="relative rounded-lg overflow-hidden mb-8 border border-white/10">
+            <img
+              src="/assets/twitter-x-laptop.jpg"
+              alt="Twitter X logo on laptop screen"
+              className="w-full h-64 md:h-80 object-cover"
+              style={{ objectPosition: 'center 40%' }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+            <div className="absolute bottom-6 left-6 right-6">
+              <p className="text-2xl md:text-3xl font-bold text-white drop-shadow-2xl">
+                ContactJournalists.com
+              </p>
+            </div>
           </div>
         </div>
 
@@ -709,6 +725,72 @@ const HowToPitchJournalistsTwitter = () => {
             <p className="text-slate-300 mb-6">
               Good luck, and go for it.
             </p>
+          </section>
+
+          {/* Related Blog Posts */}
+          <section className="mt-16 pt-8 border-t border-white/10">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">More Founder Guides</h2>
+            <div className="grid md:grid-cols-2 gap-4">
+              <a
+                href="/blog/the-fastest-ways-to-get-press-coverage-without-an-agency"
+                className="block p-6 rounded-lg border border-white/10 bg-base-800/50 hover:border-accent-blue/50 hover:bg-base-800/70 transition-all"
+              >
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  The Fastest Ways to Get Press Coverage Without an Agency
+                </h3>
+                <p className="text-sm text-slate-400">
+                  Learn the fastest ways to get press coverage without hiring a PR agency. Real strategies from a founder.
+                </p>
+              </a>
+
+              <a
+                href="/blog/press-pitch-examples-that-get-replies"
+                className="block p-6 rounded-lg border border-white/10 bg-base-800/50 hover:border-accent-blue/50 hover:bg-base-800/70 transition-all"
+              >
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  7 Press Pitch Examples That Actually Get Replies
+                </h3>
+                <p className="text-sm text-slate-400">
+                  Real press pitch templates that work in 2025. Copy, customize, and start getting journalist replies.
+                </p>
+              </a>
+
+              <a
+                href="/blog/ultimate-guide-best-platforms-contacting-journalists-2026"
+                className="block p-6 rounded-lg border border-white/10 bg-base-800/50 hover:border-accent-blue/50 hover:bg-base-800/70 transition-all"
+              >
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  The Ultimate Guide to the Best Platforms for Contacting Journalists in 2026
+                </h3>
+                <p className="text-sm text-slate-400">
+                  Deep dive into PR tools, media databases, and outreach platforms so you can choose the right way to reach journalists.
+                </p>
+              </a>
+
+              <a
+                href="/blog/how-to-get-press-for-your-brand-without-a-pr-agency"
+                className="block p-6 rounded-lg border border-white/10 bg-base-800/50 hover:border-accent-blue/50 hover:bg-base-800/70 transition-all"
+              >
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  How to Get Press for Your Brand Without a PR Agency
+                </h3>
+                <p className="text-sm text-slate-400">
+                  A practical guide to getting press coverage without hiring a PR agency. Real strategies from a founder.
+                </p>
+              </a>
+
+              <a
+                href="/blog/free-small-business-pl-template-google-sheets-excel"
+                className="block p-6 rounded-lg border border-white/10 bg-base-800/50 hover:border-accent-blue/50 hover:bg-base-800/70 transition-all"
+              >
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  Free Small Business P&L Template (Google Sheets + Excel)
+                </h3>
+                <p className="text-sm text-slate-400">
+                  Track your revenue, expenses, and profit with ease. Simple, clean, currency-agnostic P&L template made for founders.
+                </p>
+              </a>
+            </div>
           </section>
 
         </div>
