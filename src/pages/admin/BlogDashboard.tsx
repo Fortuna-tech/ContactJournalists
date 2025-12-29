@@ -873,12 +873,27 @@ export default function BlogDashboard() {
                     const results = await batchImportBlogs();
                     const successCount = results.filter((r) => r.success).length;
                     const failCount = results.filter((r) => !r.success).length;
-                    toast({
-                      title: "Batch import complete",
-                      description: `Successfully imported ${successCount} posts. ${failCount > 0 ? `${failCount} failed.` : ""}`,
-                    });
+                    
+                    if (failCount > 0) {
+                      const failedUrls = results
+                        .filter((r) => !r.success)
+                        .map((r) => `${r.url}: ${r.error}`)
+                        .join("\n");
+                      console.error("Failed imports:", failedUrls);
+                      toast({
+                        title: "Batch import complete",
+                        description: `Successfully imported ${successCount} posts. ${failCount} failed. Check console for details.`,
+                        variant: failCount === results.length ? "destructive" : "default",
+                      });
+                    } else {
+                      toast({
+                        title: "Batch import complete",
+                        description: `Successfully imported ${successCount} posts.`,
+                      });
+                    }
                     setTimeout(() => loadBlogs(), 2000);
                   } catch (error: any) {
+                    console.error("Batch import error:", error);
                     toast({
                       title: "Batch import failed",
                       description: error?.message || "Check console for details",
