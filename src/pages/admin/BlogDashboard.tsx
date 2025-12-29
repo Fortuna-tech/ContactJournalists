@@ -487,8 +487,12 @@ export default function BlogDashboard() {
       return;
     }
 
+    // Add a ref to track if we've already shown the error to prevent flashing
+    const errorShownKey = 'blog_dashboard_error_shown';
+    const lastError = sessionStorage.getItem(errorShownKey);
+    
     setLoading(true);
-    setError(null);
+    // Don't clear error immediately to prevent flashing
     try {
       try {
         await syncBlogPosts();
@@ -537,23 +541,27 @@ export default function BlogDashboard() {
 
       if (dbError) {
         console.error("Database error:", dbError);
+        let errorMessage = "";
         if (dbError.code === "42P01" || dbError.message.includes("does not exist")) {
-          setError("Blogs table not found. Please run the database migration first.");
-          setBlogs([]);
-          setLoading(false);
-          return;
+          errorMessage = "Blogs table not found. Please run the database migration first.";
+        } else if (dbError.code === "42501" || dbError.message.includes("permission denied") || dbError.message.includes("row-level security")) {
+          errorMessage = "RLS policy blocking access. Please run this SQL in Supabase: CREATE POLICY \"Allow reading all blogs for admin\" ON public.blogs FOR SELECT USING (true);";
+        } else {
+          errorMessage = `Database error: ${dbError.message}`;
         }
-        if (dbError.code === "42501" || dbError.message.includes("permission denied") || dbError.message.includes("row-level security")) {
-          setError("RLS policy blocking access. Please run this SQL in Supabase: CREATE POLICY \"Allow reading all blogs for admin\" ON public.blogs FOR SELECT USING (true);");
-          setBlogs([]);
-          setLoading(false);
-          return;
+        
+        // Only set error if it's different from what we've shown
+        if (lastError !== errorMessage) {
+          setError(errorMessage);
+          sessionStorage.setItem(errorShownKey, errorMessage);
         }
-        setError(`Database error: ${dbError.message}`);
         setBlogs([]);
         setLoading(false);
         return;
       }
+      
+      // Clear error shown flag on success
+      sessionStorage.removeItem(errorShownKey);
 
       console.log(`Loaded ${data?.length || 0} blogs from database`);
 
