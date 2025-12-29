@@ -375,7 +375,7 @@ export default function BlogDashboard() {
         }
 
         // Parse HTML
-        const { title, metaDescription, content } = parseHTMLContent(html);
+        let { title, metaDescription, content } = parseHTMLContent(html);
 
         if (!title) {
           throw new Error("Could not extract title from page");
