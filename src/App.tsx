@@ -39,7 +39,7 @@ import AdminJournalists from "@/pages/admin/Journalists";
 import AdminCsvImport from "@/pages/admin/CsvImport";
 import AdminBannerManagement from "@/pages/admin/BannerManagement";
 import AdminStoryRequestBroadcasts from "@/pages/admin/StoryRequestBroadcasts";
-import BlogDashboard from "@/pages/admin/BlogDashboard";
+import SimpleBlogScheduler from "@/pages/admin/SimpleBlogScheduler";
 import BlogForm from "@/pages/admin/BlogForm";
 
 const queryClient = new QueryClient();
@@ -121,7 +121,7 @@ const App = () => (
             {/* Private Blog Admin Dashboard - Secret URL */}
             <Route
               path="/admin/blog-dashboard-a7f3b9c2d1e4f5a6"
-              element={<BlogDashboard />}
+              element={<SimpleBlogScheduler />}
             />
             <Route
               path="/admin/blog-dashboard-a7f3b9c2d1e4f5a6/new"

@@ -1,33 +1,20 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
-import { calculateSEOScore, SEOBreakdown } from "@/lib/blog-seo";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths } from "date-fns";
+import { ChevronLeft, ChevronRight, Calendar, Clock, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
-import {
-  ExternalLink,
-  Edit,
-  Lock,
-  Plus,
-  Database,
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
   RefreshCw,
   BarChart3,
   CheckCircle2,
@@ -47,13 +34,6 @@ interface BlogPost {
   slug: string;
   status: "draft" | "scheduled" | "published";
   publish_date: string | null;
-  last_updated: string;
-  word_count: number;
-  seo_score: number;
-  seo_breakdown: SEOBreakdown | null;
-  seo_flags: string[] | null;
-  seo_last_scored_at: string | null;
-  meta_description: string | null;
   content: string | null;
 }
 
@@ -61,19 +41,17 @@ const BLOG_ADMIN_PASSWORD = import.meta.env.VITE_BLOG_ADMIN_PASSWORD || "admin12
 
 export default function BlogDashboard() {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [showScheduleDialog, setShowScheduleDialog] = useState(false);
   const [selectedBlog, setSelectedBlog] = useState<BlogPost | null>(null);
-  const [showBreakdown, setShowBreakdown] = useState(false);
-  const [recalculating, setRecalculating] = useState<string | null>(null);
-  const [bulkRecalculating, setBulkRecalculating] = useState(false);
-  const [importUrl, setImportUrl] = useState("");
-  const [importing, setImporting] = useState(false);
+  const [newBlogTitle, setNewBlogTitle] = useState("");
+  const [newBlogContent, setNewBlogContent] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     let mounted = true;
