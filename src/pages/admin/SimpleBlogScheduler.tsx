@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { prForFoundersBlogContent, prForFoundersBlogMeta } from "@/lib/pr-for-founders-blog-content";
 
 interface BlogPost {
   id: string;
@@ -166,6 +167,45 @@ export default function SimpleBlogScheduler() {
     }
   };
 
+  const createPRForFoundersBlog = async () => {
+    setSaving(true);
+    try {
+      // Calculate word count
+      const cleanContent = prForFoundersBlogContent
+        .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+        .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      
+      const wordCount = cleanContent.split(/\s+/).filter(w => w.length > 0).length;
+
+      const { error } = await supabase
+        .from("blogs")
+        .insert({
+          title: prForFoundersBlogMeta.title,
+          slug: prForFoundersBlogMeta.slug,
+          status: "scheduled",
+          publish_date: prForFoundersBlogMeta.publishDate,
+          content: prForFoundersBlogContent,
+          meta_description: prForFoundersBlogMeta.metaDescription,
+          word_count: wordCount,
+          created_at: new Date().toISOString(),
+          last_updated: new Date().toISOString(),
+        });
+
+      if (error) throw error;
+
+      await loadBlogs();
+      alert(`✅ Blog scheduled successfully for ${new Date(prForFoundersBlogMeta.publishDate).toLocaleDateString()} at 9am!`);
+    } catch (error: any) {
+      console.error("Error creating PR for Founders blog:", error);
+      alert(`Error: ${error.message}`);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const getBlogsForDate = (date: Date) => {
     return blogs.filter(blog =>
       blog.publish_date &&
@@ -220,15 +260,24 @@ export default function SimpleBlogScheduler() {
             <Calendar className="h-8 w-8" />
             Blog Scheduler
           </h1>
-          <Button
-            variant="outline"
-            onClick={() => {
-              sessionStorage.removeItem("blog_admin_authenticated");
-              setIsAuthenticated(false);
-            }}
-          >
-            Logout
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="default"
+              onClick={createPRForFoundersBlog}
+              disabled={saving}
+            >
+              {saving ? "Creating..." : "Create PR for Founders Blog"}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                sessionStorage.removeItem("blog_admin_authenticated");
+                setIsAuthenticated(false);
+              }}
+            >
+              Logout
+            </Button>
+          </div>
         </div>
 
         <Card>
