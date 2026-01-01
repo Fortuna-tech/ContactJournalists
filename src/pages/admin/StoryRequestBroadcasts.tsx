@@ -48,7 +48,12 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
-import { createQuery, getQueries, getCategories } from "@/lib/api";
+import {
+  createQuery,
+  getQueries,
+  getCategories,
+  sendBroadcastAlerts,
+} from "@/lib/api";
 import { Query, Category } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -141,10 +146,18 @@ export default function StoryRequestBroadcasts() {
       setCurrentPage(1); // Reset to first page to show new items
 
       if (sendAlerts) {
-        // TODO: Implement send alerts API call
-        toast.success(
-          `${createdQueries.length} story request(s) saved and alerts sent!`
-        );
+        try {
+          const queryIds = createdQueries.map((q) => q.id);
+          const result = await sendBroadcastAlerts(queryIds);
+          toast.success(
+            `${createdQueries.length} story request(s) saved and ${result.sent} alert(s) sent!`
+          );
+        } catch (alertError) {
+          console.error("Failed to send alerts:", alertError);
+          toast.warning(
+            `${createdQueries.length} story request(s) saved, but failed to send alerts.`
+          );
+        }
       } else {
         toast.success(`${createdQueries.length} story request(s) saved!`);
       }
@@ -239,7 +252,7 @@ export default function StoryRequestBroadcasts() {
                     )}
                   />
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-4 items-center justify-center">
                     <FormField
                       control={form.control}
                       name={`requests.${index}.categoryId`}
@@ -275,7 +288,7 @@ export default function StoryRequestBroadcasts() {
                       control={form.control}
                       name={`requests.${index}.deadline`}
                       render={({ field }) => (
-                        <FormItem className="flex flex-col">
+                        <FormItem className="flex flex-col mt-2">
                           <FormLabel>Deadline (Optional)</FormLabel>
                           <Popover>
                             <PopoverTrigger asChild>

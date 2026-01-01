@@ -117,6 +117,35 @@ const sendNotification = async (payload: {
   }
 };
 
+// Broadcast story alerts to founders/agencies (admin only)
+export const sendBroadcastAlerts = async (queryIds: string[]) => {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) throw new Error("Not authenticated");
+
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const response = await fetch(
+    `${supabaseUrl}/functions/v1/broadcast-story-alerts`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query_ids: queryIds }),
+    }
+  );
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error || "Failed to send broadcast alerts");
+  }
+
+  return data as { message: string; sent: number; total?: number };
+};
+
 // Profile API
 export const getProfile = async () => {
   const {
