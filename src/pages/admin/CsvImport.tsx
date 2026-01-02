@@ -103,32 +103,35 @@ export default function CsvImportPage() {
     setPhase("profiles");
     setError(null);
 
-    try {
-      const mappedData = applyMapping(csvData.rows, csvData.headers, mappings);
+    const mappedData = applyMapping(csvData.rows, csvData.headers, mappings);
 
-      // Validate all rows
-      const validRows = mappedData.filter((row) => {
-        const validation = validateRow(row);
-        return validation.valid;
-      });
+    // Validate all rows
+    const validRows = mappedData.filter((row) => {
+      const validation = validateRow(row);
+      return validation.valid;
+    });
 
-      if (validRows.length === 0) {
-        throw new Error("No valid rows to import");
-      }
+    if (validRows.length === 0) {
+      setError("No valid rows to import");
+      setState("mapping");
+      toast.error("No valid rows to import");
+      return;
+    }
 
-      // ===== PHASE 1: Import profiles in batches of 200 =====
-      setProfileProgress({ current: 0, total: validRows.length });
+    // ===== PHASE 1: Import profiles in batches =====
+    setProfileProgress({ current: 0, total: validRows.length });
 
-      const aggregatedResult: BulkImportResult = {
-        recordsInserted: 0,
-        skipped: 0,
-        skippedRows: [],
-        errors: [],
-        profilesWithImages: [],
-      };
+    const aggregatedResult: BulkImportResult = {
+      recordsInserted: 0,
+      skipped: 0,
+      skippedRows: [],
+      errors: [],
+      profilesWithImages: [],
+    };
 
-      for (let i = 0; i < validRows.length; i += PROFILE_BATCH_SIZE) {
-        const batch = validRows.slice(i, i + PROFILE_BATCH_SIZE);
+    for (let i = 0; i < validRows.length; i += PROFILE_BATCH_SIZE) {
+      const batch = validRows.slice(i, i + PROFILE_BATCH_SIZE);
+      try {
         const batchResult = await bulkImportJournalists(batch);
 
         // Aggregate results
@@ -139,34 +142,45 @@ export default function CsvImportPage() {
         aggregatedResult.profilesWithImages.push(
           ...batchResult.profilesWithImages
         );
-
-        // Update progress
-        setProfileProgress({
-          current: Math.min(i + PROFILE_BATCH_SIZE, validRows.length),
-          total: validRows.length,
+      } catch (err) {
+        // Log batch error but continue with next batch
+        console.error(`Batch ${i / PROFILE_BATCH_SIZE + 1} failed:`, err);
+        aggregatedResult.errors.push({
+          row: i + 1,
+          message: `Batch failed: ${
+            err instanceof Error ? err.message : "Unknown error"
+          }`,
         });
       }
 
-      // ===== PHASE 2: Process images in batches of 10 =====
-      // Always transition to Phase 2 (independent of Phase 1 results)
-      setPhase("images");
+      // Update progress regardless of success/failure
+      setProfileProgress({
+        current: Math.min(i + PROFILE_BATCH_SIZE, validRows.length),
+        total: validRows.length,
+      });
+    }
 
-      if (aggregatedResult.profilesWithImages.length > 0) {
-        let imageQueue = [...aggregatedResult.profilesWithImages];
-        const totalImages = imageQueue.length;
+    // ===== PHASE 2: Process images in batches =====
+    // Always transition to Phase 2 (independent of Phase 1 results)
+    setPhase("images");
 
-        setImageProgress({
-          current: 0,
-          total: totalImages,
-          successful: 0,
-          failed: 0,
-        });
+    if (aggregatedResult.profilesWithImages.length > 0) {
+      let imageQueue = [...aggregatedResult.profilesWithImages];
+      const totalImages = imageQueue.length;
 
-        let successfulCount = 0;
-        let failedCount = 0;
+      setImageProgress({
+        current: 0,
+        total: totalImages,
+        successful: 0,
+        failed: 0,
+      });
 
-        while (imageQueue.length > 0) {
-          const batch = imageQueue.slice(0, IMAGE_BATCH_SIZE);
+      let successfulCount = 0;
+      let failedCount = 0;
+
+      while (imageQueue.length > 0) {
+        const batch = imageQueue.slice(0, IMAGE_BATCH_SIZE);
+        try {
           const result = await processImageBatch(batch);
 
           // Remove successful items from queue
@@ -183,37 +197,51 @@ export default function CsvImportPage() {
 
           successfulCount += result.successful.length;
           failedCount += result.failed.length;
-
-          setImageProgress({
-            current: successfulCount + failedCount,
-            total: totalImages,
-            successful: successfulCount,
-            failed: failedCount,
-          });
+        } catch (err) {
+          // Mark current batch as failed but continue
+          console.error("Image batch failed:", err);
+          failedCount += batch.length;
+          // Remove failed batch from queue
+          const batchIds = new Set(batch.map((b) => b.profileId));
+          imageQueue = imageQueue.filter(
+            (item) => !batchIds.has(item.profileId)
+          );
         }
-      } else {
-        // No images to process, mark as complete immediately
+
         setImageProgress({
-          current: 0,
-          total: 0,
-          successful: 0,
-          failed: 0,
+          current: successfulCount + failedCount,
+          total: totalImages,
+          successful: successfulCount,
+          failed: failedCount,
         });
       }
+    } else {
+      // No images to process, mark as complete immediately
+      setImageProgress({
+        current: 0,
+        total: 0,
+        successful: 0,
+        failed: 0,
+      });
+    }
 
-      setImportResult(aggregatedResult);
-      setState("complete");
+    setImportResult(aggregatedResult);
+    setState("complete");
 
-      const successMsg = `Imported ${aggregatedResult.recordsInserted} journalists`;
-      const skipMsg =
-        aggregatedResult.skipped > 0
-          ? `, ${aggregatedResult.skipped} skipped`
-          : "";
-      toast.success(successMsg + skipMsg);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Import failed");
-      setState("mapping");
-      toast.error("Import failed");
+    const successMsg = `Imported ${aggregatedResult.recordsInserted} journalists`;
+    const skipMsg =
+      aggregatedResult.skipped > 0
+        ? `, ${aggregatedResult.skipped} skipped`
+        : "";
+    const errorMsg =
+      aggregatedResult.errors.length > 0
+        ? `, ${aggregatedResult.errors.length} errors`
+        : "";
+
+    if (aggregatedResult.recordsInserted > 0 || aggregatedResult.skipped > 0) {
+      toast.success(successMsg + skipMsg + errorMsg);
+    } else if (aggregatedResult.errors.length > 0) {
+      toast.error("Import completed with errors");
     }
   };
 
@@ -290,7 +318,10 @@ export default function CsvImportPage() {
               <Image className="h-4 w-4" />
               <AlertDescription>
                 Email screenshots URLs will be stored in the profile metadata
-                for later processing. Only Google Drive links are supported.
+                for later processing.{" "}
+                <span className="font-bold text-amber-500">
+                  Only Google Drive links are supported.
+                </span>
               </AlertDescription>
             </Alert>
           )}

@@ -150,7 +150,7 @@ export default function StoryRequestBroadcasts() {
           category_id: request.values.categoryId,
           journalist_id: request.values.journalistId,
           deadline: request.values.deadline?.toISOString() || null,
-          preferred_contact_method: "platform",
+          preferred_contact_method: "email",
         });
         createdQueries.push(query);
       }

@@ -339,6 +339,24 @@ serve(async (req: Request) => {
                   row: i + 1,
                   email: row._email || "unknown",
                 });
+                // For skipped profiles, look up existing profile ID for image processing
+                if (
+                  row._email &&
+                  row._screenshot &&
+                  isGoogleDriveLink(row._screenshot)
+                ) {
+                  const { data: existingProfile } = await supabaseAdmin
+                    .from("profiles")
+                    .select("id")
+                    .eq("email", row._email)
+                    .single();
+                  if (existingProfile) {
+                    results.profilesWithImages.push({
+                      profileId: existingProfile.id,
+                      url: row._screenshot,
+                    });
+                  }
+                }
               } else {
                 results.errors.push({
                   row: i + 1,
@@ -358,13 +376,24 @@ serve(async (req: Request) => {
           }
         } else if (inserted) {
           results.recordsInserted = inserted.length;
-          // Track profiles with Google Drive images
-          for (let i = 0; i < inserted.length && i < insertRows.length; i++) {
-            const row = insertRows[i];
-            if (row._screenshot && isGoogleDriveLink(row._screenshot)) {
+          // Create a map from email to screenshot URL for proper matching
+          const emailToScreenshot = new Map<string, string>();
+          for (const row of insertRows) {
+            if (
+              row._email &&
+              row._screenshot &&
+              isGoogleDriveLink(row._screenshot)
+            ) {
+              emailToScreenshot.set(row._email, row._screenshot);
+            }
+          }
+          // Track profiles with Google Drive images using email matching
+          for (const profile of inserted) {
+            const screenshotUrl = emailToScreenshot.get(profile.email);
+            if (screenshotUrl) {
               results.profilesWithImages.push({
-                profileId: inserted[i].id,
-                url: row._screenshot,
+                profileId: profile.id,
+                url: screenshotUrl,
               });
             }
           }
