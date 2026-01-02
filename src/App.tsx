@@ -41,6 +41,8 @@ import AdminBannerManagement from "@/pages/admin/BannerManagement";
 import AdminStoryRequestBroadcasts from "@/pages/admin/StoryRequestBroadcasts";
 import SimpleBlogScheduler from "@/pages/admin/SimpleBlogScheduler";
 import BlogForm from "@/pages/admin/BlogForm";
+import MfaSetup from "@/pages/admin/MfaSetup";
+import MfaVerify from "@/pages/admin/MfaVerify";
 
 const queryClient = new QueryClient();
 
@@ -105,6 +107,10 @@ const App = () => (
               <Route path="settings" element={<JournalistSettings />} />
               <Route path="help" element={<JournalistHelp />} />
             </Route>
+
+            {/* Admin MFA Routes (outside AdminLayout to avoid redirect loops) */}
+            <Route path="/admin/mfa-setup" element={<MfaSetup />} />
+            <Route path="/admin/mfa-verify" element={<MfaVerify />} />
 
             {/* Admin Routes */}
             <Route path="/admin" element={<AdminLayout />}>
