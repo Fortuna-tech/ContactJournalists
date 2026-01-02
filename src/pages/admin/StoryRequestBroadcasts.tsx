@@ -1,32 +1,11 @@
 import { useState, useEffect } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { format } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -38,42 +17,34 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import {
-  Plus,
   Loader2,
-  Trash2,
   ArrowLeft,
-  CalendarIcon,
   ChevronLeft,
   ChevronRight,
+  Plus,
+  Trash2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import { getQueries, getCategories, sendBroadcastAlerts } from "@/lib/api";
 import {
-  createQuery,
-  getQueries,
-  getCategories,
-  sendBroadcastAlerts,
-} from "@/lib/api";
+  createQueryAdmin,
+  updateQueryAdmin,
+  deleteQueryAdmin,
+} from "@/lib/admin-api";
 import { Query, Category } from "@/types";
-import { cn } from "@/lib/utils";
+import AdminStoryRequestForm, {
+  StoryRequestFormValues,
+  queryToFormValues,
+} from "@/components/admin/AdminStoryRequestForm";
 
 const ITEMS_PER_PAGE = 10;
 
-// Story Request Schema - matches createQuery requirements
-const storyRequestItemSchema = z.object({
-  title: z.string().min(5, "Title must be at least 5 characters"),
-  description: z.string().optional(),
-  categoryId: z.string().min(1, "Please select a category"),
-  deadline: z.date().optional(),
-});
-
-const storyRequestFormSchema = z.object({
-  requests: z
-    .array(storyRequestItemSchema)
-    .min(1, "At least one story request is required"),
-});
-
-type StoryRequestFormData = z.infer<typeof storyRequestFormSchema>;
+// Type for pending requests (before they're submitted)
+interface PendingRequest {
+  id: string; // Temporary ID for React key
+  values: StoryRequestFormValues;
+}
 
 export default function StoryRequestBroadcasts() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -82,19 +53,16 @@ export default function StoryRequestBroadcasts() {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const form = useForm<StoryRequestFormData>({
-    resolver: zodResolver(storyRequestFormSchema),
-    defaultValues: {
-      requests: [
-        { title: "", description: "", categoryId: "", deadline: undefined },
-      ],
-    },
-  });
+  // Bulk creation state - list of pending requests
+  const [pendingRequests, setPendingRequests] = useState<PendingRequest[]>([
+    { id: crypto.randomUUID(), values: getEmptyFormValues() },
+  ]);
 
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "requests",
-  });
+  // Edit modal state
+  const [editingQuery, setEditingQuery] = useState<Query | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Pagination calculations
   const totalPages = Math.ceil(storyRequests.length / ITEMS_PER_PAGE);
@@ -122,21 +90,67 @@ export default function StoryRequestBroadcasts() {
     loadData();
   }, []);
 
-  const handleSave = async (
-    data: StoryRequestFormData,
-    sendAlerts: boolean
+  function getEmptyFormValues(): StoryRequestFormValues {
+    return {
+      title: "",
+      description: "",
+      categoryId: "",
+      deadline: undefined,
+      journalistId: "",
+    };
+  }
+
+  const handleAddRequest = () => {
+    setPendingRequests((prev) => [
+      ...prev,
+      { id: crypto.randomUUID(), values: getEmptyFormValues() },
+    ]);
+  };
+
+  const handleRemoveRequest = (id: string) => {
+    if (pendingRequests.length > 1) {
+      setPendingRequests((prev) => prev.filter((r) => r.id !== id));
+    }
+  };
+
+  const handleUpdatePendingRequest = (
+    id: string,
+    values: StoryRequestFormValues
   ) => {
+    setPendingRequests((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, values } : r))
+    );
+  };
+
+  const handleBulkSubmit = async (sendAlerts: boolean) => {
+    // Validate all requests have required fields
+    const invalidRequests = pendingRequests.filter(
+      (r) =>
+        !r.values.title ||
+        r.values.title.length < 5 ||
+        !r.values.categoryId ||
+        !r.values.journalistId
+    );
+
+    if (invalidRequests.length > 0) {
+      toast.error(
+        "Please fill in all required fields (title, category, and journalist) for each request."
+      );
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const createdQueries: Query[] = [];
 
-      for (const request of data.requests) {
-        const query = await createQuery({
-          title: request.title,
-          description: request.description || "",
-          categoryId: request.categoryId,
-          deadline: request.deadline,
-          preferredContactMethod: "platform",
+      for (const request of pendingRequests) {
+        const query = await createQueryAdmin({
+          title: request.values.title,
+          description: request.values.description || "",
+          category_id: request.values.categoryId,
+          journalist_id: request.values.journalistId,
+          deadline: request.values.deadline?.toISOString() || null,
+          preferred_contact_method: "platform",
         });
         createdQueries.push(query);
       }
@@ -162,16 +176,71 @@ export default function StoryRequestBroadcasts() {
         toast.success(`${createdQueries.length} story request(s) saved!`);
       }
 
-      form.reset({
-        requests: [
-          { title: "", description: "", categoryId: "", deadline: undefined },
-        ],
-      });
+      // Reset form to single empty request
+      setPendingRequests([
+        { id: crypto.randomUUID(), values: getEmptyFormValues() },
+      ]);
     } catch (error) {
       console.error("Failed to save story requests:", error);
       toast.error("Failed to save story requests");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleRowClick = (query: Query) => {
+    setEditingQuery(query);
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdate = async (data: StoryRequestFormValues) => {
+    if (!editingQuery) return;
+
+    setIsUpdating(true);
+    try {
+      const updated = await updateQueryAdmin(editingQuery.id, {
+        title: data.title,
+        description: data.description || "",
+        category_id: data.categoryId,
+        deadline: data.deadline?.toISOString() || null,
+        preferred_contact_method:
+          editingQuery.preferredContactMethod || "platform",
+      });
+
+      // Update local state
+      setStoryRequests((prev) =>
+        prev.map((q) => (q.id === updated.id ? updated : q))
+      );
+
+      toast.success("Story request updated successfully!");
+      setIsEditModalOpen(false);
+      setEditingQuery(null);
+    } catch (error) {
+      console.error("Failed to update story request:", error);
+      toast.error("Failed to update story request");
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!editingQuery) return;
+
+    setIsDeleting(true);
+    try {
+      await deleteQueryAdmin(editingQuery.id);
+
+      // Remove from local state
+      setStoryRequests((prev) => prev.filter((q) => q.id !== editingQuery.id));
+
+      toast.success("Story request deleted successfully!");
+      setIsEditModalOpen(false);
+      setEditingQuery(null);
+    } catch (error) {
+      console.error("Failed to delete story request:", error);
+      toast.error("Failed to delete story request");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -191,187 +260,80 @@ export default function StoryRequestBroadcasts() {
         <h1 className="text-3xl font-bold">Story Request Broadcasts</h1>
       </div>
 
-      {/* Form Section - Rendered above the list */}
+      {/* Bulk Form Section */}
       <Card>
         <CardHeader>
           <CardTitle>Create New Story Requests</CardTitle>
         </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form className="space-y-4">
-              {fields.map((field, index) => (
-                <div key={field.id} className="p-4 border rounded-lg space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">
-                      Story Request #{index + 1}
-                    </span>
-                    {fields.length > 1 && (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => remove(index)}
-                      >
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                    )}
-                  </div>
-
-                  <FormField
-                    control={form.control}
-                    name={`requests.${index}.title`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Title *</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="e.g. Looking for experts on AI safety..."
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name={`requests.${index}.description`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Description (Optional)</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            placeholder="Provide more details about what you need..."
-                            className="min-h-[100px]"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="grid grid-cols-2 gap-4 items-center justify-center">
-                    <FormField
-                      control={form.control}
-                      name={`requests.${index}.categoryId`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Category / Beat *</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select a category" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {categories.map((category) => (
-                                <SelectItem
-                                  key={category.id}
-                                  value={category.id}
-                                >
-                                  {category.title}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name={`requests.${index}.deadline`}
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col mt-2">
-                          <FormLabel>Deadline (Optional)</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant="outline"
-                                  className={cn(
-                                    "w-full pl-3 text-left font-normal",
-                                    !field.value && "text-muted-foreground"
-                                  )}
-                                >
-                                  {field.value ? (
-                                    format(field.value, "PPP")
-                                  ) : (
-                                    <span>Pick a date</span>
-                                  )}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className="w-auto p-0"
-                              align="start"
-                            >
-                              <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                disabled={(date) => date < new Date()}
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-              ))}
-
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full"
-                onClick={() =>
-                  append({
-                    title: "",
-                    description: "",
-                    categoryId: "",
-                    deadline: undefined,
-                  })
-                }
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Another Story Request
-              </Button>
-
-              <div className="flex justify-end gap-2 pt-4">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  disabled={isSubmitting}
-                  onClick={form.handleSubmit((data) => handleSave(data, false))}
-                >
-                  {isSubmitting && (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  )}
-                  Save
-                </Button>
-                <Button
-                  type="button"
-                  disabled={isSubmitting}
-                  onClick={form.handleSubmit((data) => handleSave(data, true))}
-                >
-                  {isSubmitting && (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  )}
-                  Save & Send Alerts
-                </Button>
+        <CardContent className="space-y-6">
+          {pendingRequests.map((request, index) => (
+            <div
+              key={request.id}
+              className="p-4 border rounded-lg space-y-4 relative"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">
+                  Story Request #{index + 1}
+                </span>
+                {pendingRequests.length > 1 && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleRemoveRequest(request.id)}
+                  >
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
+                )}
               </div>
-            </form>
-          </Form>
+
+              <AdminStoryRequestForm
+                categories={categories}
+                defaultValues={request.values}
+                onSubmit={async () => {}} // Not used in bulk mode
+                onChange={(values) =>
+                  handleUpdatePendingRequest(request.id, values)
+                }
+                isLoading={false}
+                showJournalistField
+                hideButtons
+              />
+            </div>
+          ))}
+
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={handleAddRequest}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Another Story Request
+          </Button>
+
+          <div className="flex justify-end gap-2 pt-4">
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={isSubmitting}
+              onClick={() => handleBulkSubmit(false)}
+            >
+              {isSubmitting && (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              )}
+              Save
+            </Button>
+            <Button
+              type="button"
+              disabled={isSubmitting}
+              onClick={() => handleBulkSubmit(true)}
+            >
+              {isSubmitting && (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              )}
+              Save & Send Alerts
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
@@ -402,7 +364,11 @@ export default function StoryRequestBroadcasts() {
                 </TableHeader>
                 <TableBody>
                   {paginatedRequests.map((request) => (
-                    <TableRow key={request.id}>
+                    <TableRow
+                      key={request.id}
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => handleRowClick(request)}
+                    >
                       <TableCell>
                         <div>
                           <p className="font-medium">{request.title}</p>
@@ -466,6 +432,28 @@ export default function StoryRequestBroadcasts() {
           )}
         </CardContent>
       </Card>
+
+      {/* Edit Modal */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Edit Story Request</DialogTitle>
+          </DialogHeader>
+          {editingQuery && (
+            <AdminStoryRequestForm
+              categories={categories}
+              defaultValues={queryToFormValues(editingQuery)}
+              onSubmit={handleUpdate}
+              onDelete={handleDelete}
+              isLoading={isUpdating}
+              isDeleting={isDeleting}
+              submitLabel="Update"
+              showDelete
+              showJournalistField
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

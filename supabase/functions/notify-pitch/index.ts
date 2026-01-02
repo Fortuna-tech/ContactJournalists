@@ -60,7 +60,7 @@ async function sendEmail(apiKey: string | undefined, data: EmailData) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "HARO Platform <noreply@haro-platform.com>",
+      from: "ContactJournalists <new-requests@updates.contactjournalists.com>",
       to: [data.to],
       subject: data.subject,
       html: data.html,
@@ -321,9 +321,8 @@ serve(async (req) => {
       const emailPromises = recipients.map((p) =>
         sendEmail(resendApiKey, {
           to: p.email,
-          subject: `New Opportunity: ${query.title}`,
+          subject: `New HARO Request: ${query.title}`,
           html: `
-            <h2>New Journalist Request</h2>
             <p>A new request matching your category <strong>${
               query.category
             }</strong> has been posted.</p>
