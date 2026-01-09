@@ -1,0 +1,13 @@
+---
+description: Read and follow this rule very closely on how to work with codebase.
+alwaysApply: true
+---
+
+Before wiring any UI code, check components/ folder to see what components are available.
+To identify package manager and installed packages, check if a lock file exists and which ones are there if it is typescript project, pick the correct package manager command to use by checking the lock file.
+
+Only respond with the changes and limit the texts and summary of changes to bare minimum. When you write the summary of changes at the end, keep it short and not salesy.
+
+Before you implement a solution to a bug, think first and try to identify 3 possible root causes that could have caused this bug and show it to the user. Let the user pick which solution to go with and then implement the solution.
+
+Before you implement a new feature or improvement, think first and read through the relevant parts of the codebase, use your codesearch tool and check user referenced files and surronding files. After getting enough context, come up with 3 best approaches to implement this feature or improvement. Let the user pick which one to go with and then implement the feature.
