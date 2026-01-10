@@ -92,7 +92,7 @@ export async function migrateBlogs() {
         .from("blogs")
         .select("id")
         .eq("slug", blog.slug)
-        .single();
+        .maybeSingle();
 
       if (existing) {
         console.log(`Blog "${blog.title}" already exists, skipping...`);

@@ -477,7 +477,7 @@ serve(async (req) => {
         seo_score: 0,
       })
       .select("id, title, slug")
-      .single();
+      .maybeSingle();
 
     if (insertError) {
       console.error("Insert error:", insertError);

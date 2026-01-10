@@ -245,7 +245,7 @@ serve(async (req) => {
       .from("staff_privileges")
       .select("permissions")
       .eq("user_id", user.id)
-      .single();
+      .maybeSingle();
 
     if (!staffPrivileges?.permissions?.includes("admin")) {
       return new Response(

@@ -208,7 +208,7 @@ async function verifyStaffAccess(authHeader: string): Promise<boolean> {
       .from("staff_privileges")
       .select("user_id")
       .eq("user_id", user.id)
-      .single();
+      .maybeSingle();
 
     return !!staffRecord;
   } catch {
@@ -249,7 +249,7 @@ serve(async (req: Request) => {
             categories: insertData.categories || [],
           })
           .select()
-          .single();
+          .maybeSingle();
 
         if (error) throw error;
 
@@ -267,7 +267,7 @@ serve(async (req: Request) => {
           .update(data)
           .eq("id", id)
           .select()
-          .single();
+          .maybeSingle();
 
         if (error) throw error;
 
@@ -330,7 +330,7 @@ serve(async (req: Request) => {
                 .from("profiles")
                 .insert(row.data)
                 .select("id, email")
-                .single();
+                .maybeSingle();
 
             if (singleError) {
               if (singleError.code === "23505") {
@@ -349,7 +349,7 @@ serve(async (req: Request) => {
                     .from("profiles")
                     .select("id")
                     .eq("email", row._email)
-                    .single();
+                    .maybeSingle();
                   if (existingProfile) {
                     results.profilesWithImages.push({
                       profileId: existingProfile.id,

@@ -26,7 +26,7 @@ const Auth = () => {
         .from("profiles")
         .select("onboarding_complete")
         .eq("id", session.user.id)
-        .single();
+        .maybeSingle();
 
       if (profile?.onboarding_complete) {
         navigate("/feed");

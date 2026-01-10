@@ -33,7 +33,7 @@ const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
           .from("staff_privileges")
           .select("user_id")
           .eq("user_id", user.id)
-          .single();
+          .maybeSingle();
 
         if (!staffRecord) {
           setAdminState("not-staff");

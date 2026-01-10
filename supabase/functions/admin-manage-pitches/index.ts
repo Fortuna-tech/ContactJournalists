@@ -43,7 +43,7 @@ async function verifyStaffAccess(authHeader: string): Promise<boolean> {
       .from("staff_privileges")
       .select("user_id")
       .eq("user_id", user.id)
-      .single();
+      .maybeSingle();
 
     return !!staffRecord;
   } catch {
@@ -185,7 +185,7 @@ serve(async (req: Request) => {
           `
           )
           .eq("id", id)
-          .single();
+          .maybeSingle();
 
         if (error) throw error;
 
@@ -208,7 +208,7 @@ serve(async (req: Request) => {
           .update(updates)
           .eq("id", id)
           .select()
-          .single();
+          .maybeSingle();
 
         if (error) throw error;
 

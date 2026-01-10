@@ -29,6 +29,7 @@ import PLTemplateBlogPost from "./pages/blog/PLTemplateBlog";
 import UltimateGuideBlog from "./pages/blog/UltimateGuideBlog";
 import PressWithoutAgencyBlog from "./pages/blog/PressWithoutAgencyBlog";
 import HowToPitchJournalistsTwitter from "./pages/blog/HowToPitchJournalistsTwitter";
+import HowToFindRightReporterBlog from "./pages/blog/HowToFindRightReporterBlog";
 import BlogPost from "./pages/blog/BlogPost";
 import WaitlisSignup from "./pages/WaitlisSignup";
 
@@ -80,6 +81,10 @@ const App = () => (
             <Route
               path="/blog/how-to-pitch-journalists-on-twitter"
               element={<HowToPitchJournalistsTwitter />}
+            />
+            <Route
+              path="/blog/how-to-find-the-right-reporter-for-your-story"
+              element={<HowToFindRightReporterBlog />}
             />
             {/* Generic blog post route - reads from Supabase */}
             <Route path="/blog/:slug" element={<BlogPost />} />

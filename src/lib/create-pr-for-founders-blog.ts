@@ -1545,7 +1545,7 @@ export async function createPRForFoundersBlog() {
       .from("blogs")
       .select("id")
       .eq("slug", slug)
-      .single();
+      .maybeSingle();
 
     const blogData = {
       title,

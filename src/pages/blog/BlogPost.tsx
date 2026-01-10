@@ -34,7 +34,7 @@ export default function BlogPost() {
           .select("*")
           .eq("slug", slug)
           .eq("status", "published")
-          .single();
+          .maybeSingle();
 
         if (dbError) throw dbError;
 

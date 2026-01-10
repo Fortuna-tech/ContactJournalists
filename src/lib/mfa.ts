@@ -133,7 +133,7 @@ export async function isStaffUser(userId: string): Promise<boolean> {
     .from("staff_privileges")
     .select("user_id")
     .eq("user_id", userId)
-    .single();
+    .maybeSingle();
   return !!data;
 }
 

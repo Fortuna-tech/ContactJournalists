@@ -254,7 +254,7 @@ export async function batchImportBlogs() {
         .from("blogs")
         .select("id, content")
         .eq("slug", slug)
-        .single();
+        .maybeSingle();
 
       if (existing) {
         console.log(`Blog ${slug} already exists, updating...`);
@@ -278,7 +278,7 @@ export async function batchImportBlogs() {
               .from("blogs")
               .select("*")
               .eq("id", imported.id)
-              .single();
+              .maybeSingle();
 
             if (freshBlog && freshBlog.content && freshBlog.content.length > existing.content?.length) {
               updates.content = freshBlog.content;

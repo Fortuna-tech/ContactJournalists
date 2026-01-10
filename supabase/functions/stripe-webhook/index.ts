@@ -104,7 +104,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     .from("profiles")
     .select("id")
     .eq("email", customerEmail)
-    .single();
+    .maybeSingle();
 
   if (profileError || !profile) {
     console.error("Profile not found for email:", customerEmail, profileError);

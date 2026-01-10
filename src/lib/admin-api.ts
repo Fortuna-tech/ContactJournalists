@@ -502,7 +502,7 @@ export const updateQueryAdmin = async (
     .update(updates)
     .eq("id", id)
     .select("*, category:categories(id,title)")
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
 
@@ -540,7 +540,7 @@ export const createQueryAdmin = async (query: {
     .from("queries")
     .insert(query)
     .select("*, category:categories(id,title)")
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
 

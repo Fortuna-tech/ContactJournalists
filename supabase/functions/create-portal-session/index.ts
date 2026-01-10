@@ -43,7 +43,7 @@ serve(async (req) => {
       .from("billing_accounts")
       .select("stripe_customer_id")
       .eq("profile_id", user.id)
-      .single();
+      .maybeSingle();
 
     if (billingError || !billingAccount?.stripe_customer_id) {
       throw new Error("No billing account or Stripe customer found");

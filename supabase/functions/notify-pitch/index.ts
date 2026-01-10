@@ -143,7 +143,7 @@ serve(async (req) => {
         `
         )
         .eq("id", pitchId)
-        .single();
+        .maybeSingle();
 
       if (pitchError || !pitch)
         throw new Error("Pitch not found or access denied");
@@ -213,7 +213,7 @@ serve(async (req) => {
         `
         )
         .eq("id", commentId)
-        .single();
+        .maybeSingle();
 
       if (commentError || !comment) throw new Error("Comment not found");
 
@@ -287,7 +287,7 @@ serve(async (req) => {
         .from("queries")
         .select("id, title, category, description, journalist_id")
         .eq("id", queryId)
-        .single();
+        .maybeSingle();
 
       if (queryError || !query) throw new Error("Query not found");
 

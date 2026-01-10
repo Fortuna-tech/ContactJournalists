@@ -644,7 +644,7 @@ export default function BlogDashboard() {
         .from("blogs")
         .select("id")
         .eq("slug", blog.slug)
-        .single();
+        .maybeSingle();
 
       if (!existing) {
         await supabase.from("blogs").insert({

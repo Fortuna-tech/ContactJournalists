@@ -71,7 +71,7 @@ export default function BlogForm() {
         .from("blogs")
         .select("*")
         .eq("id", blogId)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
 

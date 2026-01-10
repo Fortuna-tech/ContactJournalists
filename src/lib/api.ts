@@ -157,7 +157,7 @@ export const getProfile = async () => {
     .from("profiles")
     .select("*, billing_accounts(*)")
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
 
@@ -192,7 +192,7 @@ export const updateProfile = async (updates: {
     .update(updates)
     .eq("id", user.id)
     .select()
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
   return data;
@@ -277,7 +277,7 @@ export const getProfileById = async (userId: string) => {
     .from("profiles")
     .select("*, queries(*)")
     .eq("id", userId)
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
 
@@ -317,7 +317,7 @@ export const getQuery = async (id: string) => {
     .from("queries")
     .select("*, category:categories(id,title)")
     .eq("id", id)
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
 
@@ -441,7 +441,7 @@ export const createQuery = async (query: {
       attachment_url: query.attachmentUrl,
     })
     .select("*, category:categories(id,title)")
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
 
@@ -695,7 +695,7 @@ export const createPitch = async (pitch: {
       status: "pending",
     })
     .select()
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
 
@@ -724,7 +724,7 @@ export const updatePitchStatus = async (
     .update({ status })
     .eq("id", pitchId)
     .select()
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
 
@@ -792,7 +792,7 @@ export const createPitchComment = async (pitchId: string, content: string) => {
       content,
     })
     .select("*, author:user_id(id, full_name, role, company, meta)")
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
 
@@ -944,7 +944,7 @@ export const createCategory = async (title: string): Promise<Category> => {
       title: sanitizedTitle,
     })
     .select()
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
   return data as Category;
@@ -983,7 +983,7 @@ export const createMediaList = async (name: string) => {
     .from("media_lists")
     .insert({ user_id: user.id, name })
     .select()
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
   return {
@@ -1155,7 +1155,7 @@ export const getSuggestedSources = async () => {
     .from("profiles")
     .select("categories")
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
 
   if (!profile || !profile.categories || profile.categories.length === 0) {
     return [];

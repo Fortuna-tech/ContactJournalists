@@ -129,7 +129,7 @@ export default function BannerManagement() {
           expiry_date: data.expiryDate || null,
         })
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
 

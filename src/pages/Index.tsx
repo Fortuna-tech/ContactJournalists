@@ -743,39 +743,41 @@ const Index = () => {
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {/* Featured Blog Post – Latest Guide */}
-              <article className="md:col-span-2 lg:col-span-3 rounded-2xl border border-white/10 bg-base-800/50 p-6 md:p-8 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
+              <article className="md:col-span-2 lg:col-span-3 rounded-2xl border border-accent-mint/30 bg-base-800/50 p-6 md:p-8 backdrop-blur-sm hover:border-accent-mint/50 transition-all relative">
+                <div className="absolute -top-3 -right-3 bg-gradient-to-r from-accent-blue to-accent-mint px-3 py-1.5 rounded-full text-xs font-bold text-white uppercase tracking-wide shadow-lg">
+                  🆕 Latest
+                </div>
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
+                  <span className="text-xs font-semibold text-accent-mint uppercase tracking-wide">
                     Featured Guide
                   </span>
                   <span className="text-xs text-slate-500">•</span>
-                  <span className="text-xs text-slate-400">2026 Edition</span>
+                  <span className="text-xs text-slate-400">January 2026</span>
                 </div>
 
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
-                  The Fastest Ways to Get Press Coverage Without an Agency
+                  How to Find the Right Reporter for Your Story
                 </h3>
 
                 <div className="prose prose-invert max-w-none">
                   <p className="text-slate-300 mb-4">
-                    A founder-led playbook on landing press fast—without
-                    retainers, guesswork, or noisy outreach. Learn how to respond
-                    to live journalist requests, pitch with context, and turn
-                    momentum into coverage.
+                    Most founders struggle to get press because they pitch the wrong journalists. 
+                    This guide breaks down how to find journalists who actually want your story, 
+                    how to respond to journalist requests quickly, and how to get press without a PR agency.
                   </p>
 
                   <p className="text-slate-300 mb-4">
-                    Built from real experience (Forbes, Men&apos;s Health, Coach)
-                    plus practical CTA-ready steps, templates, and the exact
-                    workflow solo founders use to get featured.
+                    From my seven years building and selling a startup, I learned PR the hard way. 
+                    Now I&apos;m sharing exactly how to find the right reporters—without wasting months 
+                    on Google and Twitter.
                   </p>
 
                   <a
-                    href="/blog/the-fastest-ways-to-get-press-coverage-without-an-agency"
+                    href="/blog/how-to-find-the-right-reporter-for-your-story"
                     onClick={(e) => {
                       e.preventDefault();
                       window.location.href =
-                        "/blog/the-fastest-ways-to-get-press-coverage-without-an-agency";
+                        "/blog/how-to-find-the-right-reporter-for-your-story";
                     }}
                     className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity"
                   >

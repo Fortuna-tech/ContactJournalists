@@ -1554,7 +1554,7 @@ async function scheduleBlog() {
       last_updated: new Date().toISOString(),
     })
     .select()
-    .single();
+    .maybeSingle();
 
   if (error) {
     console.error('Error scheduling blog:', error);

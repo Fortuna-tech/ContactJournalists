@@ -34,7 +34,7 @@ const Feed = () => {
         .from("profiles")
         .select("role, onboarding_complete")
         .eq("id", session.user.id)
-        .single();
+        .maybeSingle();
 
       if (!profile?.onboarding_complete) {
         navigate("/onboarding");
