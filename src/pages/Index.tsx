@@ -1007,6 +1007,110 @@ const Index = () => {
                   </svg>
                 </a>
               </article>
+
+              {/* The Fastest Ways to Get Press Coverage Without an Agency */}
+              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
+                    PR Playbook
+                  </span>
+                  <span className="text-xs text-slate-500">•</span>
+                  <span className="text-xs text-slate-400">2026 Edition</span>
+                </div>
+
+                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
+                  The Fastest Ways to Get Press Coverage Without an Agency
+                </h3>
+
+                <p className="text-sm text-slate-300 mb-4">
+                  A founder-led playbook on landing press fast—without retainers, 
+                  guesswork, or noisy outreach. Learn how to respond to live journalist 
+                  requests and turn momentum into coverage.
+                </p>
+
+                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
+                  <time>December 2025</time>
+                  <span>•</span>
+                  <span>18 min read</span>
+                </div>
+
+                <a
+                  href="/blog/the-fastest-ways-to-get-press-coverage-without-an-agency"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href =
+                      "/blog/the-fastest-ways-to-get-press-coverage-without-an-agency";
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
+                >
+                  Read Full Guide
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
+              </article>
+
+              {/* How to Get Press for Your Brand Without a PR Agency */}
+              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-xs font-semibold text-accent-mint uppercase tracking-wide">
+                    Founder Guide
+                  </span>
+                  <span className="text-xs text-slate-500">•</span>
+                  <span className="text-xs text-slate-400">PR Strategy</span>
+                </div>
+
+                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
+                  How to Get Press for Your Brand Without a PR Agency
+                </h3>
+
+                <p className="text-sm text-slate-300 mb-4">
+                  The complete guide to DIY PR for founders. Learn how to build media 
+                  relationships, craft compelling pitches, and get featured in top 
+                  publications without hiring expensive agencies.
+                </p>
+
+                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
+                  <time>November 2025</time>
+                  <span>•</span>
+                  <span>15 min read</span>
+                </div>
+
+                <a
+                  href="/blog/how-to-get-press-for-your-brand-without-a-pr-agency"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href =
+                      "/blog/how-to-get-press-for-your-brand-without-a-pr-agency";
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
+                >
+                  Read Full Guide
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
+              </article>
             </div>
           </div>
         </section>
