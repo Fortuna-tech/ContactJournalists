@@ -1111,6 +1111,76 @@ const Index = () => {
                   </svg>
                 </a>
               </article>
+
+              {/* More Guides CTA - Full Width with Image */}
+              <a
+                href="/guides"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.href = "/guides";
+                }}
+                className="md:col-span-2 lg:col-span-3 group relative overflow-hidden rounded-2xl border border-accent-violet/30 hover:border-accent-violet/60 transition-all"
+              >
+                <div className="absolute inset-0">
+                  <img
+                    src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1600&q=80"
+                    alt="Newspaper and journalism"
+                    className="w-full h-full object-cover opacity-40 group-hover:opacity-50 group-hover:scale-105 transition-all duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-base-900 via-base-900/90 to-base-900/70"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-base-900 via-transparent to-transparent"></div>
+                </div>
+                
+                <div className="relative p-8 md:p-12 flex items-center justify-between">
+                  <div className="max-w-2xl">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="inline-flex items-center gap-2 rounded-full bg-accent-violet/20 border border-accent-violet/40 px-3 py-1 text-xs font-semibold text-accent-violet uppercase tracking-wide">
+                        <span className="text-base">📚</span>
+                        Resource Hub
+                      </span>
+                      <span className="text-xs text-slate-400">7 Guides Available</span>
+                    </div>
+                    
+                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 group-hover:text-accent-violet transition-colors">
+                      More Guides On How To Contact Journalists and Get Publicity for Your Start Up
+                    </h3>
+                    
+                    <p className="text-slate-300 mb-4 max-w-xl">
+                      Explore our complete library of PR guides, pitch templates, and founder resources. 
+                      Everything you need to get press coverage—all in one place.
+                    </p>
+                    
+                    <span className="inline-flex items-center gap-2 text-accent-violet font-semibold group-hover:gap-3 transition-all">
+                      Browse All Guides
+                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </span>
+                  </div>
+                  
+                  <div className="hidden lg:flex items-center justify-center">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-accent-blue to-accent-violet rounded-full blur-2xl opacity-30 animate-pulse"></div>
+                      <div className="relative bg-gradient-to-br from-accent-violet/20 to-accent-blue/20 border border-white/10 rounded-2xl p-6 backdrop-blur">
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="bg-white/5 rounded-lg p-3 text-center">
+                            <div className="text-2xl font-bold text-white">7</div>
+                            <div className="text-xs text-slate-400">Guides</div>
+                          </div>
+                          <div className="bg-white/5 rounded-lg p-3 text-center">
+                            <div className="text-2xl font-bold text-white">90+</div>
+                            <div className="text-xs text-slate-400">Min Read</div>
+                          </div>
+                          <div className="bg-white/5 rounded-lg p-3 text-center col-span-2">
+                            <div className="text-lg font-bold text-accent-mint">Free</div>
+                            <div className="text-xs text-slate-400">All Resources</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
             </div>
           </div>
         </section>
