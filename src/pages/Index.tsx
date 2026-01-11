@@ -799,7 +799,59 @@ const Index = () => {
                 </div>
               </article>
 
-              {/* How To Pitch Journalists on Twitter Blog Post - Latest */}
+              {/* How Founders Can Use PR to Explode Early-Stage Growth */}
+              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
+                    Founder Growth
+                  </span>
+                  <span className="text-xs text-slate-500">•</span>
+                  <span className="text-xs text-slate-400">PR Strategy</span>
+                </div>
+
+                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
+                  How Founders Can Use PR to Explode Early-Stage Growth
+                </h3>
+
+                <p className="text-sm text-slate-300 mb-4">
+                  Learn how founders and solopreneurs can use PR to grow an early-stage business 
+                  without hiring a PR agency. Get press coverage, respond to journalist requests, 
+                  and build credibility that compounds over time.
+                </p>
+
+                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
+                  <time>January 8, 2026</time>
+                  <span>•</span>
+                  <span>30 min read</span>
+                </div>
+
+                <a
+                  href="/blog/how-founders-can-use-pr-to-explode-early-stage-growth"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href =
+                      "/blog/how-founders-can-use-pr-to-explode-early-stage-growth";
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
+                >
+                  Read Full Guide
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
+              </article>
+
+              {/* How To Pitch Journalists on Twitter Blog Post */}
               <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="text-xs font-semibold text-accent-violet uppercase tracking-wide">
@@ -1138,7 +1190,7 @@ const Index = () => {
                         <span className="text-base">📚</span>
                         Resource Hub
                       </span>
-                      <span className="text-xs text-slate-400">7 Guides Available</span>
+                      <span className="text-xs text-slate-400">8 Guides Available</span>
                     </div>
                     
                     <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 group-hover:text-accent-violet transition-colors">
@@ -1164,7 +1216,7 @@ const Index = () => {
                       <div className="relative bg-gradient-to-br from-accent-violet/20 to-accent-blue/20 border border-white/10 rounded-2xl p-6 backdrop-blur">
                         <div className="grid grid-cols-2 gap-3">
                           <div className="bg-white/5 rounded-lg p-3 text-center">
-                            <div className="text-2xl font-bold text-white">7</div>
+                            <div className="text-2xl font-bold text-white">8</div>
                             <div className="text-xs text-slate-400">Guides</div>
                           </div>
                           <div className="bg-white/5 rounded-lg p-3 text-center">

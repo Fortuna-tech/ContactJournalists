@@ -22,6 +22,17 @@ const GUIDES = [
     isNew: true,
   },
   {
+    id: 8,
+    title: "How Founders Can Use PR to Explode Early-Stage Growth",
+    slug: "how-founders-can-use-pr-to-explode-early-stage-growth",
+    description: "Learn how founders and solopreneurs can use PR to grow an early-stage business without hiring a PR agency. Get press coverage and build credibility that compounds.",
+    category: "pr-strategy",
+    readTime: "30 min",
+    date: "January 2026",
+    featured: true,
+    isNew: true,
+  },
+  {
     id: 2,
     title: "How To Pitch Journalists on Twitter",
     slug: "how-to-pitch-journalists-on-twitter",
