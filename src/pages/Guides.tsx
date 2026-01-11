@@ -167,7 +167,7 @@ const Guides = () => {
             </span>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 tracking-tight">
-              More Guides On How To{" "}
+              Guides: How To{" "}
               <span className="bg-gradient-to-r from-accent-blue via-accent-violet to-accent-mint bg-clip-text text-transparent">
                 Contact Journalists
               </span>

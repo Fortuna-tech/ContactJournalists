@@ -1194,7 +1194,7 @@ const Index = () => {
                     </div>
                     
                     <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 group-hover:text-accent-violet transition-colors">
-                      More Guides On How To Contact Journalists and Get Publicity for Your Start Up
+                      Guides: How To Contact Journalists and Get Publicity for Your Start Up
                     </h3>
                     
                     <p className="text-slate-300 mb-4 max-w-xl">
