@@ -31,6 +31,7 @@ import PressWithoutAgencyBlog from "./pages/blog/PressWithoutAgencyBlog";
 import HowToPitchJournalistsTwitter from "./pages/blog/HowToPitchJournalistsTwitter";
 import HowToFindRightReporterBlog from "./pages/blog/HowToFindRightReporterBlog";
 import PRForFoundersBlog from "./pages/blog/PRForFoundersBlog";
+import FounderMistakesBlog from "./pages/blog/FounderMistakesBlog";
 import BlogPost from "./pages/blog/BlogPost";
 import Guides from "./pages/Guides";
 import WaitlisSignup from "./pages/WaitlisSignup";
@@ -92,6 +93,10 @@ const App = () => (
             <Route
               path="/blog/how-founders-can-use-pr-to-explode-early-stage-growth"
               element={<PRForFoundersBlog />}
+            />
+            <Route
+              path="/blog/11-mistakes-founders-make-when-pitching-journalists"
+              element={<FounderMistakesBlog />}
             />
             {/* Generic blog post route - reads from Supabase */}
             <Route path="/blog/:slug" element={<BlogPost />} />

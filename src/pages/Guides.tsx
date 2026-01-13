@@ -11,6 +11,17 @@ const CATEGORIES = [
 
 const GUIDES = [
   {
+    id: 9,
+    title: "11 Mistakes Founders Make When Pitching Journalists",
+    slug: "11-mistakes-founders-make-when-pitching-journalists",
+    description: "Discover the 11 most common mistakes founders make when pitching journalists and learn how to fix them. Real advice from a founder who spent 7 years learning PR the hard way.",
+    category: "pitching",
+    readTime: "18 min",
+    date: "January 2026",
+    featured: true,
+    isNew: true,
+  },
+  {
     id: 1,
     title: "How to Find the Right Reporter for Your Story",
     slug: "how-to-find-the-right-reporter-for-your-story",
@@ -19,7 +30,7 @@ const GUIDES = [
     readTime: "15 min",
     date: "January 2026",
     featured: true,
-    isNew: true,
+    isNew: false,
   },
   {
     id: 8,
@@ -30,7 +41,7 @@ const GUIDES = [
     readTime: "30 min",
     date: "January 2026",
     featured: true,
-    isNew: true,
+    isNew: false,
   },
   {
     id: 2,

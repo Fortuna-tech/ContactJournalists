@@ -742,7 +742,7 @@ const Index = () => {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {/* Featured Blog Post – Latest Guide */}
+              {/* Featured Blog Post – 11 Mistakes */}
               <article className="md:col-span-2 lg:col-span-3 rounded-2xl border border-accent-mint/30 bg-base-800/50 p-6 md:p-8 backdrop-blur-sm hover:border-accent-mint/50 transition-all relative">
                 <div className="absolute -top-3 -right-3 bg-gradient-to-r from-accent-blue to-accent-mint px-3 py-1.5 rounded-full text-xs font-bold text-white uppercase tracking-wide shadow-lg">
                   🆕 Latest
@@ -756,47 +756,103 @@ const Index = () => {
                 </div>
 
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
+                  11 Mistakes Founders Make When Pitching Journalists
+                </h3>
+
+                <div className="flex flex-col md:flex-row gap-6">
+                  <img 
+                    src="/assets/fortuna-founder-balloons.jpg" 
+                    alt="Fortuna, founder of ContactJournalists.com" 
+                    className="w-full md:w-48 h-48 object-cover rounded-xl flex-shrink-0"
+                  />
+                  <div className="prose prose-invert max-w-none flex-1">
+                    <p className="text-slate-300 mb-4">
+                      I spent seven years building, scaling, and selling a supplement company. PR worked, 
+                      but figuring out how to pitch journalists properly took far more time and energy than it should have.
+                    </p>
+
+                    <p className="text-slate-300 mb-4">
+                      Most founders don&apos;t fail at PR because they&apos;re bad at writing. They fail because 
+                      they&apos;re guessing. Learn the 11 mistakes that slow founders down the most—and how to fix them.
+                    </p>
+
+                    <a
+                      href="/blog/11-mistakes-founders-make-when-pitching-journalists"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        window.location.href =
+                          "/blog/11-mistakes-founders-make-when-pitching-journalists";
+                      }}
+                      className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity"
+                    >
+                      Read Full Guide
+                      <svg
+                        className="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </article>
+
+              {/* How to Find the Right Reporter */}
+              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
+                    Featured Guide
+                  </span>
+                  <span className="text-xs text-slate-500">•</span>
+                  <span className="text-xs text-slate-400">January 2026</span>
+                </div>
+
+                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
                   How to Find the Right Reporter for Your Story
                 </h3>
 
-                <div className="prose prose-invert max-w-none">
-                  <p className="text-slate-300 mb-4">
-                    Most founders struggle to get press because they pitch the wrong journalists. 
-                    This guide breaks down how to find journalists who actually want your story, 
-                    how to respond to journalist requests quickly, and how to get press without a PR agency.
-                  </p>
+                <p className="text-sm text-slate-300 mb-4">
+                  Most founders struggle to get press because they pitch the wrong journalists. 
+                  Learn how to find journalists who actually want your story and get press without a PR agency.
+                </p>
 
-                  <p className="text-slate-300 mb-4">
-                    From my seven years building and selling a startup, I learned PR the hard way. 
-                    Now I&apos;m sharing exactly how to find the right reporters—without wasting months 
-                    on Google and Twitter.
-                  </p>
-
-                  <a
-                    href="/blog/how-to-find-the-right-reporter-for-your-story"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.location.href =
-                        "/blog/how-to-find-the-right-reporter-for-your-story";
-                    }}
-                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity"
-                  >
-                    Read Full Guide
-                    <svg
-                      className="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </a>
+                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
+                  <time>January 2026</time>
+                  <span>•</span>
+                  <span>20 min read</span>
                 </div>
+
+                <a
+                  href="/blog/how-to-find-the-right-reporter-for-your-story"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href =
+                      "/blog/how-to-find-the-right-reporter-for-your-story";
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
+                >
+                  Read Full Guide
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
               </article>
 
               {/* How Founders Can Use PR to Explode Early-Stage Growth */}
