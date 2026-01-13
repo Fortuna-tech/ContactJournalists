@@ -12,3 +12,5 @@ create policy "Allow admin manage blogs"
   for all
   using (true)
   with check (true);
+
+

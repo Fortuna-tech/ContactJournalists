@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Table,
@@ -19,11 +19,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { JournalistForm } from "@/components/admin/JournalistForm";
 import {
   getJournalistsAdmin,
@@ -36,12 +31,11 @@ import { toast } from "sonner";
 import {
   Search,
   Plus,
-  MoreHorizontal,
   Pencil,
-  Trash2,
   ExternalLink,
   Loader2,
   RefreshCw,
+  Trash2,
 } from "lucide-react";
 import { format } from "date-fns";
 
@@ -51,10 +45,6 @@ export default function JournalistsPage() {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const pageSize = 20;
-  const [selectedJournalist, setSelectedJournalist] =
-    useState<AdminJournalistProfile | null>(null);
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
 
   // Debounce search
   useEffect(() => {
@@ -105,7 +95,7 @@ export default function JournalistsPage() {
 
   // Delete mutation
   const deleteMutation = useMutation({
-    mutationFn: deleteJournalistAdmin,
+    mutationFn: (id: string) => deleteJournalistAdmin(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-journalists"] });
       toast.success("Journalist deleted successfully");
@@ -115,39 +105,26 @@ export default function JournalistsPage() {
     },
   });
 
+  const handleDelete = (journalist: AdminJournalistProfile) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete ${journalist.full_name || journalist.email || "this journalist"}?`
+    );
+    if (confirmed) {
+      deleteMutation.mutate(journalist.id);
+    }
+  };
+
   const handleCreate = async (data: Record<string, unknown>) => {
     await createMutation.mutateAsync(
       data as Parameters<typeof createJournalistAdmin>[0]
     );
   };
 
-  const handleUpdate = async (data: Record<string, unknown>) => {
-    if (!selectedJournalist) return;
-    await updateMutation.mutateAsync({
-      id: selectedJournalist.id,
-      updates: data,
-    });
-    setEditDialogOpen(false);
-    setSelectedJournalist(null);
-  };
-
-  const handleDelete = async (journalist: AdminJournalistProfile) => {
-    if (
-      !confirm(
-        `Are you sure you want to delete ${
-          journalist.full_name || journalist.email
-        }?`
-      )
-    ) {
-      return;
-    }
-    await deleteMutation.mutateAsync(journalist.id);
-  };
-
-  const handleRowClick = (journalist: AdminJournalistProfile) => {
-    setSelectedJournalist(journalist);
-    setEditDialogOpen(true);
-  };
+  const handleUpdate =
+    (journalist: AdminJournalistProfile) =>
+    async (data: Record<string, unknown>) => {
+      await updateMutation.mutateAsync({ id: journalist.id, updates: data });
+    };
 
   const getSubscriptionBadge = (
     billing: AdminJournalistProfile["billing_account"]
@@ -228,7 +205,7 @@ export default function JournalistsPage() {
               <TableHead>Links</TableHead>
               <TableHead>Subscription</TableHead>
               <TableHead>Created</TableHead>
-              <TableHead className="w-[80px]">Actions</TableHead>
+              <TableHead className="w-[100px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -258,17 +235,13 @@ export default function JournalistsPage() {
               </TableRow>
             ) : (
               journalists.map((journalist) => (
-                <TableRow
-                  key={journalist.id}
-                  className="cursor-pointer hover:bg-muted/50"
-                  onClick={() => handleRowClick(journalist)}
-                >
+                <TableRow key={journalist.id}>
                   <TableCell className="font-medium">
                     {journalist.full_name || "—"}
                   </TableCell>
                   <TableCell>{journalist.email || "—"}</TableCell>
                   <TableCell>{journalist.press || "—"}</TableCell>
-                  <TableCell onClick={(e) => e.stopPropagation()}>
+                  <TableCell>
                     <div className="flex gap-2">
                       {journalist.website && (
                         <a
@@ -331,45 +304,35 @@ export default function JournalistsPage() {
                   <TableCell className="text-muted-foreground text-sm">
                     {format(new Date(journalist.created_at), "MMM d, yyyy")}
                   </TableCell>
-                  <TableCell onClick={(e) => e.stopPropagation()}>
-                    <Popover
-                      open={openPopoverId === journalist.id}
-                      onOpenChange={(open) =>
-                        setOpenPopoverId(open ? journalist.id : null)
-                      }
-                    >
-                      <PopoverTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-32 p-1" align="end">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="w-full justify-start gap-2"
-                          onClick={() => {
-                            setOpenPopoverId(null);
-                            handleRowClick(journalist);
-                          }}
-                        >
-                          <Pencil className="h-4 w-4" />
-                          Edit
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="w-full justify-start gap-2 text-destructive hover:text-destructive"
-                          onClick={() => {
-                            setOpenPopoverId(null);
-                            handleDelete(journalist);
-                          }}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                          Delete
-                        </Button>
-                      </PopoverContent>
-                    </Popover>
+                  <TableCell>
+                    <div className="flex gap-1">
+                      <JournalistForm
+                        defaultValues={{
+                          full_name: journalist.full_name || "",
+                          email: journalist.email || "",
+                          press: journalist.press || "",
+                          company: journalist.company || "",
+                          website: journalist.website || "",
+                          linkedin: journalist.linkedin || "",
+                          x_handle: journalist.x_handle || "",
+                        }}
+                        onSubmit={handleUpdate(journalist)}
+                        title="Edit Journalist"
+                        trigger={
+                          <Button variant="ghost" size="icon">
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                        }
+                      />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDelete(journalist)}
+                        disabled={deleteMutation.isPending}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
@@ -421,34 +384,6 @@ export default function JournalistsPage() {
             </PaginationContent>
           </Pagination>
         </div>
-      )}
-
-      {/* Edit Dialog */}
-      {selectedJournalist && (
-        <JournalistForm
-          key={selectedJournalist.id}
-          defaultValues={{
-            full_name: selectedJournalist.full_name || "",
-            email: selectedJournalist.email || "",
-            press: selectedJournalist.press || "",
-            company: selectedJournalist.company || "",
-            website: selectedJournalist.website || "",
-            linkedin: selectedJournalist.linkedin || "",
-            x_handle: selectedJournalist.x_handle || "",
-          }}
-          onSubmit={handleUpdate}
-          onDelete={async () => {
-            await deleteMutation.mutateAsync(selectedJournalist.id);
-            setEditDialogOpen(false);
-            setSelectedJournalist(null);
-          }}
-          title="Edit Journalist"
-          open={editDialogOpen}
-          onOpenChange={(open) => {
-            setEditDialogOpen(open);
-            if (!open) setSelectedJournalist(null);
-          }}
-        />
       )}
     </div>
   );

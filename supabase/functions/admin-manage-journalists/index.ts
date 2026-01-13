@@ -467,7 +467,6 @@ serve(async (req: Request) => {
       case "delete": {
         if (!id) throw new Error("ID is required for delete");
 
-        // Delete the profile (cascading deletes will handle related records if configured)
         const { error } = await supabaseAdmin
           .from("profiles")
           .delete()

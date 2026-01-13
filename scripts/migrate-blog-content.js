@@ -90,3 +90,5 @@ function generateMigrationSQL() {
 // Run the migration
 generateMigrationSQL();
 
+
+

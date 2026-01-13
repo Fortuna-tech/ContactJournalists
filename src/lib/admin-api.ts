@@ -296,6 +296,10 @@ export const createJournalistAdmin = async (profile: {
   };
 };
 
+export const deleteJournalistAdmin = async (id: string): Promise<void> => {
+  await callJournalistsAdminFunction<{ success: boolean }>("delete", undefined, id);
+};
+
 export const bulkImportJournalists = async (
   rows: {
     full_name?: string;

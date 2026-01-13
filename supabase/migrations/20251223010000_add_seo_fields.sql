@@ -11,3 +11,5 @@ CREATE INDEX IF NOT EXISTS idx_blogs_seo_score ON public.blogs(seo_score);
 -- Add index for filtering by flags
 CREATE INDEX IF NOT EXISTS idx_blogs_seo_flags ON public.blogs USING GIN(seo_flags);
 
+
+

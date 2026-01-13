@@ -39,3 +39,5 @@ create policy "Public can view published blogs"
   for select
   using (status = 'published');
 
+
+

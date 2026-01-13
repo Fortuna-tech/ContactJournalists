@@ -52,3 +52,5 @@ console.log('Content extracted to:', outputPath);
 console.log('Content length:', proseContent.length);
 console.log('\nNext step: Review the extracted content and update the database manually via the admin form.');
 
+
+
