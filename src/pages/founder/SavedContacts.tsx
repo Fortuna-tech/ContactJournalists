@@ -24,12 +24,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Trash2, Plus, FolderPlus } from "lucide-react";
+import { FolderPlus } from "lucide-react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import {
   getSavedContacts,
-  removeSavedContact,
   getMediaLists,
   addJournalistToMediaList,
 } from "@/lib/api";
@@ -58,24 +57,6 @@ const SavedContacts = () => {
     queryKey: ["media-lists"],
     queryFn: getMediaLists,
   });
-
-  const handleRemoveContact = async (journalist: JournalistProfile) => {
-    try {
-      await removeSavedContact(journalist.userId);
-      toast({
-        title: "Contact Removed",
-        description: `${journalist.press} contact removed from your list.`,
-      });
-      refetch();
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Error",
-        description: "Failed to remove contact.",
-        variant: "destructive",
-      });
-    }
-  };
 
   const addToListMutation = useMutation({
     mutationFn: () =>
@@ -174,18 +155,6 @@ const SavedContacts = () => {
                       >
                         <FolderPlus className="h-4 w-4 mr-2" />
                         Add to List
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="text-destructive"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRemoveContact(journalist);
-                        }}
-                      >
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Remove
                       </Button>
                     </div>
                   </TableCell>

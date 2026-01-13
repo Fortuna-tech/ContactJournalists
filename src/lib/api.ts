@@ -829,6 +829,23 @@ export const saveContact = async (journalistId: string) => {
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
 
+  // Check usage limits
+  const billing = await getBillingAccount();
+  if (
+    billing &&
+    billing.remainingContacts <= 0 &&
+    billing.maxContacts < 9999999
+  ) {
+    toast.error("Contact limit reached", {
+      description: "You have reached your monthly contact limit.",
+      action: {
+        label: "Upgrade",
+        onClick: () => (window.location.href = "/founder/settings"),
+      },
+    });
+    throw new Error("Contact limit reached");
+  }
+
   const { error } = await supabase.from("saved_contacts").insert({
     user_id: user.id,
     journalist_id: journalistId,
@@ -869,6 +886,7 @@ export const getSavedContacts = async () => {
       journalist:journalist_id (
         id,
         role,
+        email,
         full_name,
         press,
         company,
@@ -885,23 +903,24 @@ export const getSavedContacts = async () => {
 
   if (error) throw error;
 
-  // Transform to JournalistProfile
-  return (data as unknown as { journalist: SearchProfileResult }[]).map(
-    (item) => {
-      const p = item.journalist;
-      return {
-        userId: p.id,
-        name: p.full_name || p.meta?.full_name || "Unknown",
-        press: p.press,
-        linkedin: p.linkedin,
-        publisherProfile: p.meta?.publisherProfile || "",
-        xHandle: p.x_handle,
-        categories: p.categories,
-        queryCount: p.queries?.[0]?.count ?? 0,
-        isSaved: true,
-      } as JournalistProfile;
-    }
-  );
+  // Transform to JournalistProfile with email
+  return (
+    data as unknown as { journalist: SearchProfileResult & { email: string } }[]
+  ).map((item) => {
+    const p = item.journalist;
+    return {
+      userId: p.id,
+      name: p.full_name || p.meta?.full_name || "Unknown",
+      press: p.press,
+      linkedin: p.linkedin,
+      publisherProfile: p.meta?.publisherProfile || "",
+      xHandle: p.x_handle,
+      categories: p.categories,
+      queryCount: p.queries?.[0]?.count ?? 0,
+      isSaved: true,
+      email: p.email,
+    } as JournalistProfile;
+  });
 };
 
 export const getSavedContactIds = async () => {
@@ -917,6 +936,34 @@ export const getSavedContactIds = async () => {
 
   if (error) throw error;
   return data.map((d) => d.journalist_id) as string[];
+};
+
+// Get saved contacts with their emails for quick lookup
+export const getSavedContactEmails = async (): Promise<
+  Record<string, string>
+> => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not authenticated");
+
+  const { data, error } = await supabase
+    .from("saved_contacts")
+    .select("journalist_id, journalist:journalist_id(email)")
+    .eq("user_id", user.id);
+
+  if (error) throw error;
+
+  const result: Record<string, string> = {};
+  for (const item of data as unknown as {
+    journalist_id: string;
+    journalist: { email: string };
+  }[]) {
+    if (item.journalist?.email) {
+      result[item.journalist_id] = item.journalist.email;
+    }
+  }
+  return result;
 };
 
 export const getCategories = async (): Promise<Category[]> => {

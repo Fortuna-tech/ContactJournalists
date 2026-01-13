@@ -10,24 +10,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, ExternalLink, Save, Check } from "lucide-react";
+import { Search, Mail, Eye } from "lucide-react";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import {
   searchJournalists,
   saveContact,
-  removeSavedContact,
-  getSavedContactIds,
+  getSavedContactEmails,
 } from "@/lib/api";
 import { JournalistProfile } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 
 const FindJournalists = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { toast } = useToast();
+  const [savingId, setSavingId] = useState<string | null>(null);
 
   const { data: journalists = [], isLoading } = useQuery({
     queryKey: ["journalists", searchTerm, selectedCategory],
@@ -36,39 +37,48 @@ const FindJournalists = () => {
         searchTerm: searchTerm || undefined,
         category: selectedCategory || undefined,
       }),
-    enabled: true, // Fetch on mount and when filters change
+    enabled: true,
   });
 
-  const { data: savedIds = [], refetch: refetchSaved } = useQuery({
-    queryKey: ["saved-contacts-ids"],
-    queryFn: getSavedContactIds,
+  // Get saved contacts with emails
+  const { data: savedEmails = {}, refetch: refetchSaved } = useQuery({
+    queryKey: ["saved-contact-emails"],
+    queryFn: getSavedContactEmails,
   });
 
-  const isSaved = (id: string) => savedIds.includes(id);
+  const isSaved = (id: string) => id in savedEmails;
+  const getEmail = (id: string) => savedEmails[id];
 
-  const handleToggleSave = async (journalist: JournalistProfile) => {
+  const handleShowEmail = async (journalist: JournalistProfile) => {
+    if (isSaved(journalist.userId)) {
+      // Already saved, email is shown
+      return;
+    }
+
     try {
-      if (isSaved(journalist.userId)) {
-        await removeSavedContact(journalist.userId);
+      setSavingId(journalist.userId);
+      await saveContact(journalist.userId);
+      toast({
+        title: "Contact Added",
+        description: `${journalist.name} added to your contacts.`,
+      });
+      // Refetch to get the email
+      await refetchSaved();
+      // Also invalidate saved-contacts query
+      queryClient.invalidateQueries({ queryKey: ["saved-contacts"] });
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to add contact.";
+      // Only show error toast if it's not the quota limit error (which shows its own toast)
+      if (errorMessage !== "Contact limit reached") {
         toast({
-          title: "Contact Removed",
-          description: `${journalist.press} contact removed from your list.`,
-        });
-      } else {
-        await saveContact(journalist.userId);
-        toast({
-          title: "Contact Saved",
-          description: `${journalist.press} contact saved to your list.`,
+          title: "Error",
+          description: errorMessage,
+          variant: "destructive",
         });
       }
-      refetchSaved();
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Error",
-        description: "Failed to update saved contacts.",
-        variant: "destructive",
-      });
+    } finally {
+      setSavingId(null);
     }
   };
 
@@ -129,7 +139,7 @@ const FindJournalists = () => {
               <TableHead>Publication</TableHead>
               <TableHead>Topics</TableHead>
               <TableHead>Queries</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead className="text-right">Email</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -180,30 +190,33 @@ const FindJournalists = () => {
                   </TableCell>
                   <TableCell>{journalist.queryCount}</TableCell>
                   <TableCell className="text-right">
-                    <Button
-                      size="sm"
-                      disabled={isSaved(journalist.userId)}
-                      className={
-                        isSaved(journalist.userId) ? "text-green-500" : ""
-                      }
-                      variant={isSaved(journalist.userId) ? "ghost" : "outline"}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleToggleSave(journalist);
-                      }}
-                    >
-                      {isSaved(journalist.userId) ? (
-                        <>
-                          <Check className="h-4 w-4 mr-2" />
-                          Saved
-                        </>
-                      ) : (
-                        <>
-                          <Save className="h-4 w-4 mr-2" />
-                          Save Contact
-                        </>
-                      )}
-                    </Button>
+                    {isSaved(journalist.userId) ? (
+                      <div className="flex items-center justify-end gap-2">
+                        <Mail className="h-4 w-4 text-muted-foreground" />
+                        <a
+                          href={`mailto:${getEmail(journalist.userId)}`}
+                          className="text-primary hover:underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {getEmail(journalist.userId)}
+                        </a>
+                      </div>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={savingId === journalist.userId}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleShowEmail(journalist);
+                        }}
+                      >
+                        <Eye className="h-4 w-4 mr-2" />
+                        {savingId === journalist.userId
+                          ? "Adding..."
+                          : "Show Email"}
+                      </Button>
+                    )}
                   </TableCell>
                 </TableRow>
               ))

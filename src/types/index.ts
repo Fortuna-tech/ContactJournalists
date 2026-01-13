@@ -20,6 +20,7 @@ export interface JournalistProfile {
   categories: string[];
   queryCount: number;
   isSaved?: boolean;
+  email?: string;
 }
 
 export interface AgencyFounderProfile {
@@ -55,6 +56,8 @@ export interface SubscriptionStatus {
   remainingPitchGen: number;
   maxUsers: number;
   remainingUsers: number;
+  maxContacts: number;
+  remainingContacts: number;
 }
 
 export interface Category {

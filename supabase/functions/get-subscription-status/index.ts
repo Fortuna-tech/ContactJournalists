@@ -15,6 +15,7 @@ const PLANS = {
       pitches: 200,
       users: 1,
       pitchGenerator: 30, // Daily sample
+      contacts: 300,
     },
   },
   growth: {
@@ -24,6 +25,7 @@ const PLANS = {
       pitches: 800,
       users: 3,
       pitchGenerator: 80, // Full access
+      contacts: 1500,
     },
   },
   team: {
@@ -33,6 +35,7 @@ const PLANS = {
       pitches: 9999999,
       users: 10,
       pitchGenerator: 200, // Full access
+      contacts: 9999999,
     },
   },
 };
@@ -101,6 +104,16 @@ serve(async (req) => {
 
     if (countError) throw countError;
 
+    // Count saved contacts by this user since period start
+    const { count: contactCount, error: contactCountError } =
+      await supabaseClient
+        .from("saved_contacts")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .gte("created_at", periodStart);
+
+    if (contactCountError) throw contactCountError;
+
     // Calculate limits
     const maxPitches = plan.entitlements.pitches;
     const remainingPitches = Math.max(0, maxPitches - (pitchCount || 0));
@@ -115,6 +128,10 @@ serve(async (req) => {
     const maxUsers = plan.entitlements.users;
     const remainingUsers = Math.max(0, maxUsers - 1); // Current user takes 1 slot
 
+    // Contacts Usage
+    const maxContacts = plan.entitlements.contacts;
+    const remainingContacts = Math.max(0, maxContacts - (contactCount || 0));
+
     const response = {
       plan: plan.name,
       status: billingAccount?.status || "free",
@@ -124,6 +141,8 @@ serve(async (req) => {
       remainingPitchGen,
       maxUsers,
       remainingUsers,
+      maxContacts,
+      remainingContacts,
     };
 
     return new Response(JSON.stringify(response), {
