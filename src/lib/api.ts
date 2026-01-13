@@ -1200,6 +1200,7 @@ export {
   getJournalistsAdmin,
   updateJournalistAdmin,
   createJournalistAdmin,
+  deleteJournalistAdmin,
   bulkImportJournalists,
   processImageBatch,
   // Pitch Admin Functions

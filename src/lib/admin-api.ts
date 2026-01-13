@@ -340,6 +340,10 @@ export const processImageBatch = async (
   };
 };
 
+export const deleteJournalistAdmin = async (id: string): Promise<void> => {
+  await callJournalistsAdminFunction("delete", undefined, id);
+};
+
 // ============================================================================
 // Pitch Admin Functions
 // ============================================================================

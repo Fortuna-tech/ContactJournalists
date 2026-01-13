@@ -464,6 +464,23 @@ serve(async (req: Request) => {
         });
       }
 
+      case "delete": {
+        if (!id) throw new Error("ID is required for delete");
+
+        // Delete the profile (cascading deletes will handle related records if configured)
+        const { error } = await supabaseAdmin
+          .from("profiles")
+          .delete()
+          .eq("id", id);
+
+        if (error) throw error;
+
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        });
+      }
+
       case "get_all": {
         const { page = 1, pageSize = 20, search = "" } = data || {};
 

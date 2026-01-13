@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 
 const formSchema = z.object({
   full_name: z.string().min(1, "Name is required"),
@@ -36,18 +36,36 @@ type FormData = z.infer<typeof formSchema>;
 interface JournalistFormProps {
   defaultValues?: Partial<FormData>;
   onSubmit: (data: FormData) => Promise<void>;
-  trigger: React.ReactNode;
+  onDelete?: () => Promise<void>;
+  trigger?: React.ReactNode;
   title: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export function JournalistForm({
   defaultValues,
   onSubmit,
+  onDelete,
   trigger,
   title,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
 }: JournalistFormProps) {
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Support both controlled and uncontrolled mode
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+  const setOpen = (newOpen: boolean) => {
+    if (isControlled && controlledOnOpenChange) {
+      controlledOnOpenChange(newOpen);
+    } else {
+      setInternalOpen(newOpen);
+    }
+  };
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -75,8 +93,8 @@ export function JournalistForm({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
+      <DialogContent className="sm:max-w-3xl">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
@@ -192,20 +210,53 @@ export function JournalistForm({
               )}
             />
 
-            <div className="flex justify-end gap-2 pt-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting && (
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                )}
-                {defaultValues ? "Save Changes" : "Create Journalist"}
-              </Button>
+            <div className="flex justify-between gap-2 pt-4">
+              {defaultValues && onDelete ? (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={async () => {
+                    if (
+                      !confirm(
+                        "Are you sure you want to delete this journalist?"
+                      )
+                    ) {
+                      return;
+                    }
+                    setIsDeleting(true);
+                    try {
+                      await onDelete();
+                      setOpen(false);
+                    } finally {
+                      setIsDeleting(false);
+                    }
+                  }}
+                  disabled={isDeleting || isSubmitting}
+                >
+                  {isDeleting && (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  )}
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete
+                </Button>
+              ) : (
+                <div />
+              )}
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isSubmitting || isDeleting}>
+                  {isSubmitting && (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  )}
+                  {defaultValues ? "Save Changes" : "Create Journalist"}
+                </Button>
+              </div>
             </div>
           </form>
         </Form>
