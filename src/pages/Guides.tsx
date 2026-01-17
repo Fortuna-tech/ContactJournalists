@@ -11,6 +11,17 @@ const CATEGORIES = [
 
 const GUIDES = [
   {
+    id: 10,
+    title: "Why Following Up Matters (And How Often to Do It)",
+    slug: "why-following-up-matters-and-how-often-to-do-it",
+    description: "A founder's guide to not overthinking, not annoying journalists, and not giving up too early. Learn when following up helps, when it hurts, and how often to do it.",
+    category: "pitching",
+    readTime: "22 min",
+    date: "January 2026",
+    featured: true,
+    isNew: true,
+  },
+  {
     id: 9,
     title: "11 Mistakes Founders Make When Pitching Journalists",
     slug: "11-mistakes-founders-make-when-pitching-journalists",
@@ -19,7 +30,7 @@ const GUIDES = [
     readTime: "18 min",
     date: "January 2026",
     featured: true,
-    isNew: true,
+    isNew: false,
   },
   {
     id: 1,

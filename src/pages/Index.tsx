@@ -742,7 +742,7 @@ const Index = () => {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {/* Featured Blog Post – 11 Mistakes */}
+              {/* Featured Blog Post – Why Following Up Matters */}
               <article className="md:col-span-2 lg:col-span-3 rounded-2xl border border-accent-mint/30 bg-base-800/50 p-6 md:p-8 backdrop-blur-sm hover:border-accent-mint/50 transition-all relative">
                 <div className="absolute -top-3 -right-3 bg-gradient-to-r from-accent-blue to-accent-mint px-3 py-1.5 rounded-full text-xs font-bold text-white uppercase tracking-wide shadow-lg">
                   🆕 Latest
@@ -756,7 +756,7 @@ const Index = () => {
                 </div>
 
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
-                  11 Mistakes Founders Make When Pitching Journalists
+                  Why Following Up Matters (And How Often to Do It)
                 </h3>
 
                 <div className="flex flex-col md:flex-row gap-6">
@@ -767,21 +767,21 @@ const Index = () => {
                   />
                   <div className="prose prose-invert max-w-none flex-1">
                     <p className="text-slate-300 mb-4">
-                      I spent seven years building, scaling, and selling a supplement company. PR worked, 
-                      but figuring out how to pitch journalists properly took far more time and energy than it should have.
+                      Following up is one of the most misunderstood parts of PR. Not because it&apos;s complicated, 
+                      but because we as founders attach far too much emotion to the silence and we take it personally.
                     </p>
 
                     <p className="text-slate-300 mb-4">
-                      Most founders don&apos;t fail at PR because they&apos;re bad at writing. They fail because 
-                      they&apos;re guessing. Learn the 11 mistakes that slow founders down the most—and how to fix them.
+                      Too soon feels pushy, too late feels pointless. This guide explains when following up genuinely 
+                      helps, when it quietly hurts, and how often to do it without second-guessing yourself.
                     </p>
 
                     <a
-                      href="/blog/11-mistakes-founders-make-when-pitching-journalists"
+                      href="/blog/why-following-up-matters-and-how-often-to-do-it"
                       onClick={(e) => {
                         e.preventDefault();
                         window.location.href =
-                          "/blog/11-mistakes-founders-make-when-pitching-journalists";
+                          "/blog/why-following-up-matters-and-how-often-to-do-it";
                       }}
                       className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity"
                     >
@@ -802,6 +802,57 @@ const Index = () => {
                     </a>
                   </div>
                 </div>
+              </article>
+
+              {/* Featured Blog Post – 11 Mistakes */}
+              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
+                    Featured Guide
+                  </span>
+                  <span className="text-xs text-slate-500">•</span>
+                  <span className="text-xs text-slate-400">January 2026</span>
+                </div>
+
+                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
+                  11 Mistakes Founders Make When Pitching Journalists
+                </h3>
+
+                <p className="text-sm text-slate-300 mb-4">
+                  Most founders don&apos;t fail at PR because they&apos;re bad at writing. They fail because 
+                  they&apos;re guessing. Learn the 11 mistakes that slow founders down the most.
+                </p>
+
+                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
+                  <time>January 2026</time>
+                  <span>•</span>
+                  <span>18 min read</span>
+                </div>
+
+                <a
+                  href="/blog/11-mistakes-founders-make-when-pitching-journalists"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href =
+                      "/blog/11-mistakes-founders-make-when-pitching-journalists";
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
+                >
+                  Read Full Guide
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
               </article>
 
               {/* How to Find the Right Reporter */}
@@ -1246,7 +1297,7 @@ const Index = () => {
                         <span className="text-base">📚</span>
                         Resource Hub
                       </span>
-                      <span className="text-xs text-slate-400">8 Guides Available</span>
+                      <span className="text-xs text-slate-400">9 Guides Available</span>
                     </div>
                     
                     <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 group-hover:text-accent-violet transition-colors">
@@ -1272,7 +1323,7 @@ const Index = () => {
                       <div className="relative bg-gradient-to-br from-accent-violet/20 to-accent-blue/20 border border-white/10 rounded-2xl p-6 backdrop-blur">
                         <div className="grid grid-cols-2 gap-3">
                           <div className="bg-white/5 rounded-lg p-3 text-center">
-                            <div className="text-2xl font-bold text-white">8</div>
+                            <div className="text-2xl font-bold text-white">9</div>
                             <div className="text-xs text-slate-400">Guides</div>
                           </div>
                           <div className="bg-white/5 rounded-lg p-3 text-center">

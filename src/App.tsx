@@ -32,6 +32,7 @@ import HowToPitchJournalistsTwitter from "./pages/blog/HowToPitchJournalistsTwit
 import HowToFindRightReporterBlog from "./pages/blog/HowToFindRightReporterBlog";
 import PRForFoundersBlog from "./pages/blog/PRForFoundersBlog";
 import FounderMistakesBlog from "./pages/blog/FounderMistakesBlog";
+import FollowingUpBlog from "./pages/blog/FollowingUpBlog";
 import BlogPost from "./pages/blog/BlogPost";
 import Guides from "./pages/Guides";
 import WaitlisSignup from "./pages/WaitlisSignup";
@@ -97,6 +98,10 @@ const App = () => (
             <Route
               path="/blog/11-mistakes-founders-make-when-pitching-journalists"
               element={<FounderMistakesBlog />}
+            />
+            <Route
+              path="/blog/why-following-up-matters-and-how-often-to-do-it"
+              element={<FollowingUpBlog />}
             />
             {/* Generic blog post route - reads from Supabase */}
             <Route path="/blog/:slug" element={<BlogPost />} />
