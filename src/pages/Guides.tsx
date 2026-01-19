@@ -11,6 +11,17 @@ const CATEGORIES = [
 
 const GUIDES = [
   {
+    id: 11,
+    title: "The Best Time of Day to Email Journalists (Backed by Data)",
+    slug: "best-time-of-day-to-email-journalists",
+    description: "Find the best time of day to email journalists, backed by real data from Muck Rack, Cision, and HubSpot. A calm, founder-to-founder guide to timing PR without guessing.",
+    category: "pitching",
+    readTime: "18 min",
+    date: "January 2026",
+    featured: true,
+    isNew: true,
+  },
+  {
     id: 10,
     title: "Why Following Up Matters (And How Often to Do It)",
     slug: "why-following-up-matters-and-how-often-to-do-it",
@@ -19,7 +30,7 @@ const GUIDES = [
     readTime: "22 min",
     date: "January 2026",
     featured: true,
-    isNew: true,
+    isNew: false,
   },
   {
     id: 9,

@@ -742,7 +742,7 @@ const Index = () => {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {/* Featured Blog Post – Why Following Up Matters */}
+              {/* Featured Blog Post – Best Time to Email Journalists */}
               <article className="md:col-span-2 lg:col-span-3 rounded-2xl border border-accent-mint/30 bg-base-800/50 p-6 md:p-8 backdrop-blur-sm hover:border-accent-mint/50 transition-all relative">
                 <div className="absolute -top-3 -right-3 bg-gradient-to-r from-accent-blue to-accent-mint px-3 py-1.5 rounded-full text-xs font-bold text-white uppercase tracking-wide shadow-lg">
                   🆕 Latest
@@ -756,32 +756,32 @@ const Index = () => {
                 </div>
 
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
-                  Why Following Up Matters (And How Often to Do It)
+                  The Best Time of Day to Email Journalists (Backed by Data)
                 </h3>
 
                 <div className="flex flex-col md:flex-row gap-6">
                   <img 
-                    src="/assets/fortuna-founder-balloons.jpg" 
-                    alt="Fortuna, founder of ContactJournalists.com" 
+                    src="/assets/best-time-email-journalists-2.jpg" 
+                    alt="Pink alarm clock showing the best time to email journalists" 
                     className="w-full md:w-48 h-48 object-cover rounded-xl flex-shrink-0"
                   />
                   <div className="prose prose-invert max-w-none flex-1">
                     <p className="text-slate-300 mb-4">
-                      Following up is one of the most misunderstood parts of PR. Not because it&apos;s complicated, 
-                      but because we as founders attach far too much emotion to the silence and we take it personally.
+                      There is a better time of day to email journalists. But timing only works when relevance is already right.
+                      Most founders don&apos;t struggle with PR because their pitch is bad—they struggle because they&apos;re guessing.
                     </p>
 
                     <p className="text-slate-300 mb-4">
-                      Too soon feels pushy, too late feels pointless. This guide explains when following up genuinely 
-                      helps, when it quietly hurts, and how often to do it without second-guessing yourself.
+                      This data-backed guide explains when reporters read emails, why mornings work best, and how founders 
+                      can get press without guessing or hiring a PR agency.
                     </p>
 
                     <a
-                      href="/blog/why-following-up-matters-and-how-often-to-do-it"
+                      href="/blog/best-time-of-day-to-email-journalists"
                       onClick={(e) => {
                         e.preventDefault();
                         window.location.href =
-                          "/blog/why-following-up-matters-and-how-often-to-do-it";
+                          "/blog/best-time-of-day-to-email-journalists";
                       }}
                       className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity"
                     >
@@ -802,6 +802,57 @@ const Index = () => {
                     </a>
                   </div>
                 </div>
+              </article>
+
+              {/* Featured Blog Post – Why Following Up Matters */}
+              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
+                    Featured Guide
+                  </span>
+                  <span className="text-xs text-slate-500">•</span>
+                  <span className="text-xs text-slate-400">January 2026</span>
+                </div>
+
+                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
+                  Why Following Up Matters (And How Often to Do It)
+                </h3>
+
+                <p className="text-sm text-slate-300 mb-4">
+                  Following up is one of the most misunderstood parts of PR. This guide explains when 
+                  following up genuinely helps, when it quietly hurts, and how often to do it.
+                </p>
+
+                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
+                  <time>January 2026</time>
+                  <span>•</span>
+                  <span>22 min read</span>
+                </div>
+
+                <a
+                  href="/blog/why-following-up-matters-and-how-often-to-do-it"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href =
+                      "/blog/why-following-up-matters-and-how-often-to-do-it";
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
+                >
+                  Read Full Guide
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
               </article>
 
               {/* Featured Blog Post – 11 Mistakes */}
