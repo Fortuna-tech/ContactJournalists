@@ -49,7 +49,7 @@ export const bestTimeToEmailBlogContent = `
     </p>
   </div>
 
-  <img src="/assets/best-time-email-journalists-1.jpg" alt="Clock on a shelf with warm lighting - representing the best time to email journalists" class="w-full rounded-2xl mb-6 shadow-lg" />
+  <img src="/assets/clock%20instagram%20post.jpg" alt="Clock on a shelf with warm lighting - representing the best time to email journalists" class="w-full rounded-2xl mb-6 shadow-lg" />
 
   <nav class="bg-base-800/50 border border-white/10 rounded-lg p-6 my-8">
     <h2 class="text-xl font-bold text-white mb-4">Table of Contents</h2>
@@ -74,7 +74,7 @@ export const bestTimeToEmailBlogContent = `
     <h2 class="text-3xl font-bold text-white mb-6">Hi, I'm Fortuna 👋</h2>
     
     <div class="flex flex-col md:flex-row gap-6 mb-8 items-start">
-      <img src="/assets/fortuna-founder-balloons.jpg" alt="Fortuna, founder of ContactJournalists.com" class="w-32 md:w-40 flex-shrink-0 rounded-2xl shadow-lg" />
+      <img src="/assets/fortuna-founder-feathers.jpg" alt="Fortuna, founder of ContactJournalists.com" class="w-32 md:w-40 flex-shrink-0 rounded-2xl shadow-lg" />
       <div class="flex-1">
         <p class="text-slate-300 mb-4">
           Before I built <a href="https://contactjournalists.com" class="text-accent-blue hover:underline">ContactJournalists.com</a> I ran a supplement brand called It Really Works Vitamins. PR wasn't part of some grand plan. It showed up when other channels became unreliable and I needed something steadier. Something I didn't have to keep feeding money into just to stay visible.
@@ -135,7 +135,7 @@ export const bestTimeToEmailBlogContent = `
     </p>
   </section>
 
-  <img src="/assets/best-time-email-journalists-2.jpg" alt="Pink alarm clock showing the best time to send emails to journalists" class="w-full rounded-2xl mb-6 shadow-lg" />
+  <img src="/assets/clock%20cj.com.png" alt="Pink alarm clock showing the best time to send emails to journalists" class="w-full rounded-2xl mb-6 shadow-lg" />
 
   <section id="morning" class="my-12">
     <h2 class="text-3xl font-bold text-white mb-6">Morning Emails: Why They Consistently Perform Best</h2>
@@ -341,7 +341,7 @@ export const bestTimeToEmailBlogContent = `
     </p>
   </section>
 
-  <img src="/assets/best-time-email-journalists-3.jpg" alt="Infographic showing the best time of day to email journalists - morning vs afternoon comparison" class="w-full rounded-2xl mb-6 shadow-lg" />
+  <img src="/assets/The%20Best%20Time%20of%20Day%20to%20Email%20Journalists.png" alt="Infographic showing the best time of day to email journalists - morning vs afternoon comparison" class="w-full rounded-2xl mb-6 shadow-lg" />
 
   <section id="day-of-week" class="my-12">
     <h2 class="text-3xl font-bold text-white mb-6">Does the Day of the Week Matter?</h2>

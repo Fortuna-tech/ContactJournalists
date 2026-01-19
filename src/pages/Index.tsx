@@ -761,7 +761,7 @@ const Index = () => {
 
                 <div className="flex flex-col md:flex-row gap-6">
                   <img 
-                    src="/assets/best-time-email-journalists-2.jpg" 
+                    src="/assets/clock%20cj.com.png" 
                     alt="Pink alarm clock showing the best time to email journalists" 
                     className="w-full md:w-48 h-48 object-cover rounded-xl flex-shrink-0"
                   />
