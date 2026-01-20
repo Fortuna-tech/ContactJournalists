@@ -9,7 +9,7 @@ export const prPlaybookSoloFoundersContent = `
     <strong>How to Get Press Without an Agency, a Team, or Burning Out</strong>
   </p>
 
-  <img src="/assets/stock_images/pr-pic-1.png" alt="Solo founder working on laptop with coffee" class="w-full rounded-2xl mb-8" />
+  <img src="/assets/stock_images/pr-pic-1.png" alt="Solo founder working on laptop with coffee" class="float-right ml-6 mb-4 rounded-2xl w-64 md:w-72" style="shape-outside: margin-box;" />
 
   <p class="text-slate-300 mb-6">
     If you're a solo founder, PR probably feels like something you're meant to be doing, but never quite get on top of.
@@ -51,9 +51,9 @@ export const prPlaybookSoloFoundersContent = `
     <p class="text-slate-400 text-sm mt-3">See journalist requests in your niche. No guessing. No cold pitching.</p>
   </div>
 
-  <h2 class="text-2xl font-bold text-white mt-12 mb-6">Why PR advice breaks down for solo founders</h2>
+  <h2 class="text-2xl font-bold text-white mt-12 mb-6 clear-both">Why PR advice breaks down for solo founders</h2>
 
-  <img src="/assets/stock_images/pr-pic-2.png" alt="Vogue magazine with coffee - media aesthetic" class="w-full rounded-2xl mb-8" />
+  <img src="/assets/stock_images/pr-pic-2.png" alt="Vogue magazine with coffee - media aesthetic" class="float-left mr-6 mb-4 rounded-2xl w-64 md:w-72" style="shape-outside: margin-box;" />
 
   <p class="text-slate-300 mb-6">
     Most PR advice isn't wrong. It's just written for a completely different kind of business.
@@ -83,7 +83,7 @@ export const prPlaybookSoloFoundersContent = `
     Solo founders don't struggle with PR because they're bad at it, or because their story isn't interesting enough. They struggle because most PR advice assumes a setup they simply don't have. When you're running things on your own, PR has to fit around the business you're already running, not demand a whole new way of working just to get started.
   </p>
 
-  <h2 class="text-2xl font-bold text-white mt-12 mb-6">PR for solo founders is not broadcasting, it's timing</h2>
+  <h2 class="text-2xl font-bold text-white mt-12 mb-6 clear-both">PR for solo founders is not broadcasting, it's timing</h2>
 
   <p class="text-slate-300 mb-6">
     The biggest shift that changed everything for me was realising that PR isn't about how many people you contact. It's about when you show up.
@@ -135,9 +135,9 @@ export const prPlaybookSoloFoundersContent = `
     </a>
   </div>
 
-  <h2 class="text-2xl font-bold text-white mt-12 mb-6">How journalists actually source stories in 2026</h2>
+  <h2 class="text-2xl font-bold text-white mt-12 mb-6 clear-both">How journalists actually source stories in 2026</h2>
 
-  <img src="/assets/stock_images/pr-pic-3.png" alt="Journalist working with notebook and laptop" class="w-full rounded-2xl mb-8" />
+  <img src="/assets/stock_images/pr-pic-3.png" alt="Journalist working with notebook and laptop" class="float-right ml-6 mb-4 rounded-2xl w-64 md:w-72" style="shape-outside: margin-box;" />
 
   <p class="text-slate-300 mb-6">
     One thing I didn't fully appreciate at first was just how quickly journalists have to move.
@@ -175,9 +175,9 @@ export const prPlaybookSoloFoundersContent = `
     That's the gap ContactJournalists.com fills. It brings journalist discovery and live requests into one place, so founders like me don't have to rely on luck, constant scrolling, or being "always on" just to spot a genuine opportunity.
   </p>
 
-  <h2 class="text-2xl font-bold text-white mt-12 mb-6">PR without an agency only works if you remove guessing</h2>
+  <h2 class="text-2xl font-bold text-white mt-12 mb-6 clear-both">PR without an agency only works if you remove guessing</h2>
 
-  <img src="/assets/stock_images/pr-pic-4.png" alt="Vogue magazine with coffee and gold spoon" class="w-full rounded-2xl mb-8" />
+  <img src="/assets/stock_images/pr-pic-4.png" alt="Vogue magazine with coffee and gold spoon" class="float-left mr-6 mb-4 rounded-2xl w-64 md:w-72" style="shape-outside: margin-box;" />
 
   <p class="text-slate-300 mb-6">
     Cold outreach feels heavy because it's built on uncertainty at every step.
@@ -250,9 +250,9 @@ export const prPlaybookSoloFoundersContent = `
     <p class="text-slate-400 text-sm mt-3">7-day free trial. No credit card required.</p>
   </div>
 
-  <h2 class="text-2xl font-bold text-white mt-12 mb-6">The Calm PR System for solo founders</h2>
+  <h2 class="text-2xl font-bold text-white mt-12 mb-6 clear-both">The Calm PR System for solo founders</h2>
 
-  <img src="/assets/stock_images/pr-pic-5.png" alt="Professional podcast microphone on desk - media setup" class="w-full rounded-2xl mb-8" />
+  <img src="/assets/stock_images/pr-pic-5.png" alt="Professional podcast microphone on desk - media setup" class="float-right ml-6 mb-4 rounded-2xl w-64 md:w-72" style="shape-outside: margin-box;" />
 
   <p class="text-slate-300 mb-6">
     Everything in this guide really comes back to one simple idea I wish I'd understood much earlier. PR works best when you stop chasing it and start monitoring what's already happening, when you respond to journalists who are already looking for something rather than broadcasting your story to everyone, and when you keep PR contained in one place instead of letting it spill across tabs, notes, and half-finished drafts.
@@ -294,7 +294,7 @@ export const prPlaybookSoloFoundersContent = `
     If you're doing PR on your own and want it to feel calmer and more predictable, the simplest next step is to try it for yourself. ContactJournalists.com has a 7-day free trial, and you'll know very quickly whether this way of doing PR works better for you than guessing your way through it.
   </p>
 
-  <h2 class="text-2xl font-bold text-white mt-12 mb-6">What ContactJournalists.com actually does</h2>
+  <h2 class="text-2xl font-bold text-white mt-12 mb-6 clear-both">What ContactJournalists.com actually does</h2>
 
   <p class="text-slate-300 mb-6">
     <strong>ContactJournalists.com helps solo founders:</strong>
@@ -325,7 +325,7 @@ export const prPlaybookSoloFoundersContent = `
     </a>
   </div>
 
-  <h2 class="text-2xl font-bold text-white mt-12 mb-6">A realistic weekly PR routine for solo founders</h2>
+  <h2 class="text-2xl font-bold text-white mt-12 mb-6 clear-both">A realistic weekly PR routine for solo founders</h2>
 
   <p class="text-slate-300 mb-6">
     PR should not dominate your calendar. If it does, it usually means something has gone wrong with the way it's set up.
@@ -347,7 +347,7 @@ export const prPlaybookSoloFoundersContent = `
     👉 <a href="/blog/how-founders-can-use-pr-to-explode-early-stage-growth" class="text-accent-blue hover:underline">How Founders Can Use PR to Explode Early-Stage Growth</a>
   </p>
 
-  <h2 class="text-2xl font-bold text-white mt-12 mb-6">Common PR mistakes solo founders make</h2>
+  <h2 class="text-2xl font-bold text-white mt-12 mb-6 clear-both">Common PR mistakes solo founders make</h2>
 
   <p class="text-slate-300 mb-6">
     Most PR mistakes don't come from laziness or bad strategy. They come from good intentions mixed with a lack of clarity.
@@ -373,7 +373,7 @@ export const prPlaybookSoloFoundersContent = `
     👉 <a href="/blog/11-mistakes-founders-make-when-pitching-journalists" class="text-accent-blue hover:underline">11 Mistakes Founders Make When Pitching Journalists</a>
   </p>
 
-  <h2 class="text-2xl font-bold text-white mt-12 mb-6">What PR success actually looks like</h2>
+  <h2 class="text-2xl font-bold text-white mt-12 mb-6 clear-both">What PR success actually looks like</h2>
 
   <p class="text-slate-300 mb-6">
     When I first started doing PR, I assumed success would be obvious. I thought it would show up as one big moment, a feature I could screenshot, a spike I could point to and say, "that worked". That's certainly how PR is usually sold to founders, and I bought into that idea for a long time.
@@ -419,7 +419,7 @@ export const prPlaybookSoloFoundersContent = `
     Nothing flashy. Just quietly effective.
   </p>
 
-  <h2 class="text-2xl font-bold text-white mt-12 mb-6">Frequently asked questions: PR for solo founders</h2>
+  <h2 class="text-2xl font-bold text-white mt-12 mb-6 clear-both">Frequently asked questions: PR for solo founders</h2>
 
   <h3 class="text-xl font-bold text-white mt-8 mb-4">Do solo founders actually need a PR agency?</h3>
 
@@ -439,7 +439,7 @@ export const prPlaybookSoloFoundersContent = `
     Founders tend to overestimate how often they should be pitching journalists. Most people think the answer is "regularly". In reality, it's much less than that. Constant pitching usually leads to forced angles and low response rates. Responding, on the other hand, works because the demand already exists. When a journalist has asked for something and you can genuinely help, that interaction is easier, quicker, and far more likely to go somewhere. Fewer messages, better timing, better outcomes.
   </p>
 
-  <h2 class="text-2xl font-bold text-white mt-12 mb-6">How to start without overthinking it</h2>
+  <h2 class="text-2xl font-bold text-white mt-12 mb-6 clear-both">How to start without overthinking it</h2>
 
   <p class="text-slate-300 mb-6">
     You don't need a perfect pitch to get started with PR. You don't need a big announcement. You don't need to wait until you feel "ready".
