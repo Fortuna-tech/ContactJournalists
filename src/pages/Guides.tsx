@@ -11,6 +11,17 @@ const CATEGORIES = [
 
 const GUIDES = [
   {
+    id: 12,
+    title: "The PR Playbook for Solo Founders",
+    slug: "pr-playbook-for-solo-founders",
+    description: "A founder-to-founder PR playbook for solo founders who want press without an agency. Learn how journalists source stories in 2026, why request-led PR beats cold pitching, and how to build a calm weekly routine that gets coverage without burnout.",
+    category: "pr-strategy",
+    readTime: "25 min",
+    date: "January 2026",
+    featured: true,
+    isNew: true,
+  },
+  {
     id: 11,
     title: "The Best Time of Day to Email Journalists (Backed by Data)",
     slug: "best-time-of-day-to-email-journalists",
@@ -19,7 +30,7 @@ const GUIDES = [
     readTime: "18 min",
     date: "January 2026",
     featured: true,
-    isNew: true,
+    isNew: false,
   },
   {
     id: 10,
