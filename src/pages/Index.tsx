@@ -742,7 +742,7 @@ const Index = () => {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {/* Featured Blog Post – Best Time to Email Journalists */}
+              {/* Featured Blog Post – PR Playbook for Solo Founders */}
               <article className="md:col-span-2 lg:col-span-3 rounded-2xl border border-accent-mint/30 bg-base-800/50 p-6 md:p-8 backdrop-blur-sm hover:border-accent-mint/50 transition-all relative">
                 <div className="absolute -top-3 -right-3 bg-gradient-to-r from-accent-blue to-accent-mint px-3 py-1.5 rounded-full text-xs font-bold text-white uppercase tracking-wide shadow-lg">
                   🆕 Latest
@@ -756,36 +756,37 @@ const Index = () => {
                 </div>
 
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
-                  The Best Time of Day to Email Journalists (Backed by Data)
+                  The PR Playbook for Solo Founders
                 </h3>
 
                 <div className="flex flex-col md:flex-row gap-6">
                   <img 
-                    src="/assets/clock%20cj.com.png" 
-                    alt="Pink alarm clock showing the best time to email journalists" 
+                    src="/assets/stock_images/pr-playbook-hero.jpg" 
+                    alt="Solo founder working on laptop with coffee - PR playbook" 
                     className="w-full md:w-48 h-48 object-cover rounded-xl flex-shrink-0"
                   />
                   <div className="prose prose-invert max-w-none flex-1">
                     <p className="text-slate-300 mb-4">
-                      There is a better time of day to email journalists. But timing only works when relevance is already right.
-                      Most founders don&apos;t struggle with PR because their pitch is bad—they struggle because they&apos;re guessing.
+                      How to get press without an agency, a team, or burning out. If you&apos;re a solo founder, PR probably 
+                      feels like something you&apos;re meant to be doing, but never quite get on top of. This is the playbook 
+                      I wish I&apos;d had when building my own Shopify store.
                     </p>
 
                     <p className="text-slate-300 mb-4">
-                      This data-backed guide explains when reporters read emails, why mornings work best, and how founders 
-                      can get press without guessing or hiring a PR agency.
+                      Real strategies from a founder who&apos;s been there—including celebrity outreach wins, journalist request 
+                      timing, and why excitement isn&apos;t a system.
                     </p>
 
                     <a
-                      href="/blog/best-time-of-day-to-email-journalists"
+                      href="/blog/pr-playbook-for-solo-founders"
                       onClick={(e) => {
                         e.preventDefault();
                         window.location.href =
-                          "/blog/best-time-of-day-to-email-journalists";
+                          "/blog/pr-playbook-for-solo-founders";
                       }}
                       className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity"
                     >
-                      Read Full Guide
+                      Read Full Playbook
                       <svg
                         className="h-4 w-4"
                         fill="none"
@@ -802,6 +803,57 @@ const Index = () => {
                     </a>
                   </div>
                 </div>
+              </article>
+
+              {/* Featured Blog Post – Best Time to Email Journalists */}
+              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
+                    Featured Guide
+                  </span>
+                  <span className="text-xs text-slate-500">•</span>
+                  <span className="text-xs text-slate-400">January 2026</span>
+                </div>
+
+                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
+                  The Best Time of Day to Email Journalists (Backed by Data)
+                </h3>
+
+                <p className="text-sm text-slate-300 mb-4">
+                  There is a better time of day to email journalists. This data-backed guide explains when reporters 
+                  read emails, why mornings work best, and how to get press without guessing.
+                </p>
+
+                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
+                  <time>January 2026</time>
+                  <span>•</span>
+                  <span>18 min read</span>
+                </div>
+
+                <a
+                  href="/blog/best-time-of-day-to-email-journalists"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href =
+                      "/blog/best-time-of-day-to-email-journalists";
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
+                >
+                  Read Full Guide
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
               </article>
 
               {/* Featured Blog Post – Why Following Up Matters */}

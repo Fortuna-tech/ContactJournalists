@@ -15,3 +15,4 @@ CREATE INDEX IF NOT EXISTS idx_blogs_seo_flags ON public.blogs USING GIN(seo_fla
 
 
 
+

@@ -34,6 +34,7 @@ import PRForFoundersBlog from "./pages/blog/PRForFoundersBlog";
 import FounderMistakesBlog from "./pages/blog/FounderMistakesBlog";
 import FollowingUpBlog from "./pages/blog/FollowingUpBlog";
 import BestTimeToEmailBlog from "./pages/blog/BestTimeToEmailBlog";
+import PRPlaybookSoloFoundersBlog from "./pages/blog/PRPlaybookSoloFoundersBlog";
 import BlogPost from "./pages/blog/BlogPost";
 import Guides from "./pages/Guides";
 import WaitlisSignup from "./pages/WaitlisSignup";
@@ -107,6 +108,10 @@ const App = () => (
             <Route
               path="/blog/best-time-of-day-to-email-journalists"
               element={<BestTimeToEmailBlog />}
+            />
+            <Route
+              path="/blog/pr-playbook-for-solo-founders"
+              element={<PRPlaybookSoloFoundersBlog />}
             />
             {/* Generic blog post route - reads from Supabase */}
             <Route path="/blog/:slug" element={<BlogPost />} />
