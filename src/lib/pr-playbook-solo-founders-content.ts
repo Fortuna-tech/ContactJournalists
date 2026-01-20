@@ -9,7 +9,7 @@ export const prPlaybookSoloFoundersContent = `
     <strong>How to Get Press Without an Agency, a Team, or Burning Out</strong>
   </p>
 
-  <img src="/assets/stock_images/pr-playbook-hero.jpg" alt="Solo founder working on laptop with coffee" class="w-full rounded-2xl mb-8" />
+  <img src="/assets/stock_images/pr-pic-1.png" alt="Solo founder working on laptop with coffee" class="w-full rounded-2xl mb-8" />
 
   <p class="text-slate-300 mb-6">
     If you're a solo founder, PR probably feels like something you're meant to be doing, but never quite get on top of.
@@ -28,7 +28,7 @@ export const prPlaybookSoloFoundersContent = `
   </p>
 
   <div class="my-8 p-6 bg-base-800 rounded-2xl border border-white/10">
-    <img src="/assets/stock_images/alex-reid-tweet.jpg" alt="Alex Reid promoting It Really Works Vitamins on Twitter" class="w-full max-w-xl mx-auto rounded-xl shadow-lg" />
+    <img src="/assets/stock_images/alex-reid-twitter.png" alt="Alex Reid promoting It Really Works Vitamins on Twitter" class="w-full max-w-xl mx-auto rounded-xl shadow-lg" />
     <p class="text-sm text-slate-400 text-center mt-4">One of our early influencer wins — Alex Reid sharing It Really Works Vitamins on Twitter</p>
   </div>
 
@@ -53,7 +53,7 @@ export const prPlaybookSoloFoundersContent = `
 
   <h2 class="text-2xl font-bold text-white mt-12 mb-6">Why PR advice breaks down for solo founders</h2>
 
-  <img src="/assets/stock_images/pr-playbook-vogue-aesthetic.jpg" alt="Vogue magazine with coffee - media aesthetic" class="w-full rounded-2xl mb-8" />
+  <img src="/assets/stock_images/pr-pic-2.png" alt="Vogue magazine with coffee - media aesthetic" class="w-full rounded-2xl mb-8" />
 
   <p class="text-slate-300 mb-6">
     Most PR advice isn't wrong. It's just written for a completely different kind of business.
@@ -137,7 +137,7 @@ export const prPlaybookSoloFoundersContent = `
 
   <h2 class="text-2xl font-bold text-white mt-12 mb-6">How journalists actually source stories in 2026</h2>
 
-  <img src="/assets/stock_images/pr-playbook-journalist-desk.jpg" alt="Journalist working with notebook and laptop" class="w-full rounded-2xl mb-8" />
+  <img src="/assets/stock_images/pr-pic-3.png" alt="Journalist working with notebook and laptop" class="w-full rounded-2xl mb-8" />
 
   <p class="text-slate-300 mb-6">
     One thing I didn't fully appreciate at first was just how quickly journalists have to move.
@@ -177,7 +177,7 @@ export const prPlaybookSoloFoundersContent = `
 
   <h2 class="text-2xl font-bold text-white mt-12 mb-6">PR without an agency only works if you remove guessing</h2>
 
-  <img src="/assets/stock_images/pr-playbook-media-coffee.jpg" alt="Vogue magazine with coffee and gold spoon" class="w-full rounded-2xl mb-8" />
+  <img src="/assets/stock_images/pr-pic-4.png" alt="Vogue magazine with coffee and gold spoon" class="w-full rounded-2xl mb-8" />
 
   <p class="text-slate-300 mb-6">
     Cold outreach feels heavy because it's built on uncertainty at every step.
@@ -252,7 +252,7 @@ export const prPlaybookSoloFoundersContent = `
 
   <h2 class="text-2xl font-bold text-white mt-12 mb-6">The Calm PR System for solo founders</h2>
 
-  <img src="/assets/stock_images/pr-playbook-podcast-mic.jpg" alt="Professional podcast microphone on desk - media setup" class="w-full rounded-2xl mb-8" />
+  <img src="/assets/stock_images/pr-pic-5.png" alt="Professional podcast microphone on desk - media setup" class="w-full rounded-2xl mb-8" />
 
   <p class="text-slate-300 mb-6">
     Everything in this guide really comes back to one simple idea I wish I'd understood much earlier. PR works best when you stop chasing it and start monitoring what's already happening, when you respond to journalists who are already looking for something rather than broadcasting your story to everyone, and when you keep PR contained in one place instead of letting it spill across tabs, notes, and half-finished drafts.

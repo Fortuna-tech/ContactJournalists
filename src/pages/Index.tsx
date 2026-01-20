@@ -761,7 +761,7 @@ const Index = () => {
 
                 <div className="flex flex-col md:flex-row gap-6">
                   <img 
-                    src="/assets/stock_images/pr-playbook-hero.jpg" 
+                    src="/assets/stock_images/pr-pic-1.png" 
                     alt="Solo founder working on laptop with coffee - PR playbook" 
                     className="w-full md:w-48 h-48 object-cover rounded-xl flex-shrink-0"
                   />
