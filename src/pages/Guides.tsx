@@ -11,6 +11,17 @@ const CATEGORIES = [
 
 const GUIDES = [
   {
+    id: 13,
+    title: "20 Places to Find Journalists Covering Your Niche",
+    slug: "20-places-to-find-journalists-covering-your-niche",
+    description: "A founder's guide to the 20 real places journalists actually use. Find journalists covering your niche without guessing, spamming, or hiring a PR agency. Complete breakdown of costs, effort, and what actually works.",
+    category: "tools",
+    readTime: "25 min",
+    date: "January 2026",
+    featured: true,
+    isNew: true,
+  },
+  {
     id: 12,
     title: "The PR Playbook for Solo Founders",
     slug: "pr-playbook-for-solo-founders",
@@ -19,7 +30,7 @@ const GUIDES = [
     readTime: "25 min",
     date: "January 2026",
     featured: true,
-    isNew: true,
+    isNew: false,
   },
   {
     id: 11,

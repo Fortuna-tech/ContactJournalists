@@ -742,10 +742,10 @@ const Index = () => {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {/* Featured Blog Post – PR Playbook for Solo Founders */}
+              {/* Featured Blog Post – 20 Places to Find Journalists */}
               <article className="md:col-span-2 lg:col-span-3 rounded-2xl border border-accent-mint/30 bg-base-800/50 p-6 md:p-8 backdrop-blur-sm hover:border-accent-mint/50 transition-all relative">
                 <div className="absolute -top-3 -right-3 bg-gradient-to-r from-accent-blue to-accent-mint px-3 py-1.5 rounded-full text-xs font-bold text-white uppercase tracking-wide shadow-lg">
-                  🆕 Latest
+                  🆕 Latest Guide
                 </div>
                 <div className="flex items-center gap-2 mb-4">
                   <span className="text-xs font-semibold text-accent-mint uppercase tracking-wide">
@@ -756,37 +756,37 @@ const Index = () => {
                 </div>
 
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
-                  The PR Playbook for Solo Founders
+                  <mark className="bg-accent-mint/20 text-accent-mint px-2 py-1 rounded">20 Places</mark> to Find Journalists Covering Your Niche
                 </h3>
 
                 <div className="flex flex-col md:flex-row gap-6">
                   <img 
-                    src="/assets/stock_images/pr-pic-1.png" 
-                    alt="Solo founder working on laptop with coffee - PR playbook" 
+                    src="/assets/stock_images/desk-pink-flowers.png" 
+                    alt="Modern desk setup with laptop and pink flowers" 
                     className="w-full md:w-48 h-48 object-cover rounded-xl flex-shrink-0"
                   />
                   <div className="prose prose-invert max-w-none flex-1">
                     <p className="text-slate-300 mb-4">
-                      How to get press without an agency, a team, or burning out. If you&apos;re a solo founder, PR probably 
-                      feels like something you&apos;re meant to be doing, but never quite get on top of. This is the playbook 
-                      I wish I&apos;d had when building my own Shopify store.
+                      Most founders don&apos;t struggle with PR because their story is bad — they struggle because they&apos;re 
+                      guessing where journalists actually hang out. This guide breaks down <mark className="bg-accent-blue/20 text-accent-blue px-1 rounded">20 real places</mark> journalists 
+                      use, what each one is best for, and the effort and cost trade-offs.
                     </p>
 
                     <p className="text-slate-300 mb-4">
-                      Real strategies from a founder who&apos;s been there—including celebrity outreach wins, journalist request 
-                      timing, and why excitement isn&apos;t a system.
+                      Stop bouncing between Twitter, Google News, and scattered spreadsheets. Find journalists covering 
+                      your niche without burning out.
                     </p>
 
                     <a
-                      href="/blog/pr-playbook-for-solo-founders"
+                      href="/blog/20-places-to-find-journalists-covering-your-niche"
                       onClick={(e) => {
                         e.preventDefault();
                         window.location.href =
-                          "/blog/pr-playbook-for-solo-founders";
+                          "/blog/20-places-to-find-journalists-covering-your-niche";
                       }}
                       className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity"
                     >
-                      Read Full Playbook
+                      Read Full Guide
                       <svg
                         className="h-4 w-4"
                         fill="none"
@@ -803,6 +803,57 @@ const Index = () => {
                     </a>
                   </div>
                 </div>
+              </article>
+
+              {/* PR Playbook for Solo Founders */}
+              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
+                    Featured Guide
+                  </span>
+                  <span className="text-xs text-slate-500">•</span>
+                  <span className="text-xs text-slate-400">January 2026</span>
+                </div>
+
+                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
+                  The PR Playbook for Solo Founders
+                </h3>
+
+                <p className="text-sm text-slate-300 mb-4">
+                  How to get press without an agency, a team, or burning out. Real strategies from a founder 
+                  who&apos;s been there—including celebrity outreach wins and journalist request timing.
+                </p>
+
+                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
+                  <time>January 2026</time>
+                  <span>•</span>
+                  <span>25 min read</span>
+                </div>
+
+                <a
+                  href="/blog/pr-playbook-for-solo-founders"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href =
+                      "/blog/pr-playbook-for-solo-founders";
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
+                >
+                  Read Full Playbook
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
               </article>
 
               {/* Featured Blog Post – Best Time to Email Journalists */}
@@ -1400,7 +1451,7 @@ const Index = () => {
                         <span className="text-base">📚</span>
                         Resource Hub
                       </span>
-                      <span className="text-xs text-slate-400">9 Guides Available</span>
+                      <span className="text-xs text-slate-400">10 Guides Available</span>
                     </div>
                     
                     <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 group-hover:text-accent-violet transition-colors">
@@ -1426,11 +1477,11 @@ const Index = () => {
                       <div className="relative bg-gradient-to-br from-accent-violet/20 to-accent-blue/20 border border-white/10 rounded-2xl p-6 backdrop-blur">
                         <div className="grid grid-cols-2 gap-3">
                           <div className="bg-white/5 rounded-lg p-3 text-center">
-                            <div className="text-2xl font-bold text-white">9</div>
+                            <div className="text-2xl font-bold text-white">10</div>
                             <div className="text-xs text-slate-400">Guides</div>
                           </div>
                           <div className="bg-white/5 rounded-lg p-3 text-center">
-                            <div className="text-2xl font-bold text-white">90+</div>
+                            <div className="text-2xl font-bold text-white">115+</div>
                             <div className="text-xs text-slate-400">Min Read</div>
                           </div>
                           <div className="bg-white/5 rounded-lg p-3 text-center col-span-2">
