@@ -77,7 +77,7 @@ export const howToPitchJournalistsTwitterContent = `
     </p>
   </div>
 
-  <img src="/assets/Turn%20tweet%20into%20a%20press%20feature.png" alt="How to Turn a Tweet Into a Press Feature - Infographic" class="w-full rounded-2xl mb-8 shadow-lg" />
+  <img src="/assets/turn-tweet-feature.png" alt="How to Turn a Tweet Into a Press Feature - Infographic" class="w-full rounded-2xl mb-8 shadow-lg" />
 
   <nav class="bg-base-800/50 border border-white/10 rounded-lg p-6 my-8">
     <h2 class="text-xl font-bold text-white mb-4">Table of Contents</h2>
@@ -171,7 +171,7 @@ export const howToPitchJournalistsTwitterContent = `
     <h2 class="text-3xl font-bold text-white mb-6">Why I Know This Works (Not Theory)</h2>
     
     <div class="mb-8">
-      <img src="/assets/fortuna-founder-feathers.jpg" alt="Fortuna, founder of ContactJournalists.com" class="float-left w-32 md:w-40 mr-6 mb-4 rounded-2xl shadow-lg" />
+      <img src="/assets/fortuna-balloons.png" alt="Fortuna, founder of ContactJournalists.com" class="float-left w-32 md:w-40 mr-6 mb-4 rounded-2xl shadow-lg" />
       <p class="text-slate-300 mb-4">
         I'm Fortuna, founder of <a href="https://contactjournalists.com" class="text-accent-blue hover:underline">ContactJournalists.com</a>
       </p>
@@ -208,7 +208,7 @@ export const howToPitchJournalistsTwitterContent = `
     <div class="clear-both"></div>
     
     <div class="my-8">
-      <img src="/assets/Alex%20Reid%20Twitter.png" alt="Alex Reid tweeting about It Really Works Vitamins" class="float-right w-48 md:w-64 ml-6 mb-4 rounded-2xl shadow-lg border border-white/10" />
+      <img src="/assets/alex-reid-twitter.png" alt="Alex Reid tweeting about It Really Works Vitamins" class="float-right w-48 md:w-64 ml-6 mb-4 rounded-2xl shadow-lg border border-white/10" />
       <p class="text-slate-300 mb-4">
         We even had genuinely cool organic moments, including being tweeted about by MMA Cage fighter Alex Reid woohoo! It came from relevance and timing.
       </p>
@@ -222,7 +222,7 @@ export const howToPitchJournalistsTwitterContent = `
     <div class="clear-both"></div>
   </section>
 
-  <img src="/assets/simple%20PR%20tips%20for%20founders.png" alt="Simple PR Tips for Founders - Watch #journorequest, Reply When Timing Matches, Perfect Writing Is Overrated" class="w-full rounded-2xl my-8 shadow-lg" />
+  <img src="/assets/simple-pr-tips.png" alt="Simple PR Tips for Founders - Watch #journorequest, Reply When Timing Matches, Perfect Writing Is Overrated" class="w-full rounded-2xl my-8 shadow-lg" />
 
   <section id="pr-worthy-tweet" class="my-12">
     <h2 class="text-3xl font-bold text-white mb-6">What Actually Counts as a PR-Worthy Tweet</h2>
@@ -337,7 +337,7 @@ export const howToPitchJournalistsTwitterContent = `
     </p>
   </section>
 
-  <img src="/assets/Twitter%20PR.png" alt="Twitter PR - Hashtags act as live sourcing signals, soft signals turn into articles" class="w-full rounded-2xl my-8 shadow-lg" />
+  <img src="/assets/twitter-pr.png" alt="Twitter PR - Hashtags act as live sourcing signals, soft signals turn into articles" class="w-full rounded-2xl my-8 shadow-lg" />
 
   <section id="real-examples" class="my-12">
     <h2 class="text-3xl font-bold text-white mb-6">Real Examples: Tweet → Feature</h2>

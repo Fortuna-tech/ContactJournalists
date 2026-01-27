@@ -10,11 +10,11 @@ const HowToTurnTweetIntoPressFeature = () => {
         <meta property="og:title" content={howToPitchJournalistsTwitterMeta.title} />
         <meta property="og:description" content={howToPitchJournalistsTwitterMeta.metaDescription} />
         <meta property="og:type" content="article" />
-        <meta property="og:image" content="/assets/Turn%20tweet%20into%20a%20press%20feature.png" />
+        <meta property="og:image" content="/assets/turn-tweet-feature.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={howToPitchJournalistsTwitterMeta.title} />
         <meta name="twitter:description" content={howToPitchJournalistsTwitterMeta.metaDescription} />
-        <meta name="twitter:image" content="/assets/Turn%20tweet%20into%20a%20press%20feature.png" />
+        <meta name="twitter:image" content="/assets/turn-tweet-feature.png" />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
