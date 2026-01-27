@@ -36,6 +36,7 @@ import FollowingUpBlog from "./pages/blog/FollowingUpBlog";
 import BestTimeToEmailBlog from "./pages/blog/BestTimeToEmailBlog";
 import PRPlaybookSoloFoundersBlog from "./pages/blog/PRPlaybookSoloFoundersBlog";
 import PlacesToFindJournalistsBlog from "./pages/blog/PlacesToFindJournalistsBlog";
+import HowToTurnTweetIntoPressFeature from "./pages/blog/HowToTurnTweetIntoPressFeature";
 import BlogPost from "./pages/blog/BlogPost";
 import Guides from "./pages/Guides";
 import WaitlisSignup from "./pages/WaitlisSignup";
@@ -117,6 +118,10 @@ const App = () => (
             <Route
               path="/blog/20-places-to-find-journalists-covering-your-niche"
               element={<PlacesToFindJournalistsBlog />}
+            />
+            <Route
+              path="/blog/how-to-turn-a-tweet-into-a-press-feature"
+              element={<HowToTurnTweetIntoPressFeature />}
             />
             {/* Generic blog post route - reads from Supabase */}
             <Route path="/blog/:slug" element={<BlogPost />} />

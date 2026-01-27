@@ -958,6 +958,60 @@ const Index = () => {
                 </a>
               </article>
 
+              {/* Featured Blog Post – How to Turn a Tweet Into a Press Feature */}
+              <article className="rounded-2xl border border-accent-violet/30 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-violet/50 transition-all relative">
+                <div className="absolute -top-3 -right-3 bg-gradient-to-r from-accent-violet to-accent-blue px-3 py-1.5 rounded-full text-xs font-bold text-white uppercase tracking-wide shadow-lg">
+                  🐦 Twitter PR
+                </div>
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-xs font-semibold text-accent-violet uppercase tracking-wide">
+                    Twitter PR Guide
+                  </span>
+                  <span className="text-xs text-slate-500">•</span>
+                  <span className="text-xs text-slate-400">January 27, 2026</span>
+                </div>
+
+                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
+                  How to Turn a Tweet Into a Press Feature
+                </h3>
+
+                <p className="text-sm text-slate-300 mb-4">
+                  Most founders think PR starts with writing a pitch. It doesn&apos;t. It starts with paying attention. 
+                  Learn how to spot journalist requests on Twitter and turn them into coverage.
+                </p>
+
+                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
+                  <time>January 27, 2026</time>
+                  <span>•</span>
+                  <span>15 min read</span>
+                </div>
+
+                <a
+                  href="/blog/how-to-turn-a-tweet-into-a-press-feature"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href =
+                      "/blog/how-to-turn-a-tweet-into-a-press-feature";
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-violet hover:text-accent-mint transition-colors"
+                >
+                  Read Full Guide
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
+              </article>
+
               {/* Featured Blog Post – 11 Mistakes */}
               <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
                 <div className="flex items-center gap-2 mb-4">
