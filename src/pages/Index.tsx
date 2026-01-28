@@ -742,7 +742,7 @@ const Index = () => {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {/* Featured Blog Post – 20 Places to Find Journalists */}
+              {/* Featured Blog Post – How to Reach Food, Fitness, Beauty & Tech Journalists */}
               <article className="md:col-span-2 lg:col-span-3 rounded-2xl border border-accent-mint/30 bg-base-800/50 p-6 md:p-8 backdrop-blur-sm hover:border-accent-mint/50 transition-all relative">
                 <div className="absolute -top-3 -right-3 bg-gradient-to-r from-accent-blue to-accent-mint px-3 py-1.5 rounded-full text-xs font-bold text-white uppercase tracking-wide shadow-lg">
                   🆕 Latest Guide
@@ -756,33 +756,32 @@ const Index = () => {
                 </div>
 
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
-                  <mark className="bg-accent-mint/20 text-accent-mint px-2 py-1 rounded">20 Places</mark> to Find Journalists Covering Your Niche
+                  How to Reach <mark className="bg-accent-mint/20 text-accent-mint px-2 py-1 rounded">Food, Fitness, Beauty & Tech</mark> Journalists
                 </h3>
 
                 <div className="flex flex-col md:flex-row gap-6">
                   <img 
-                    src="/assets/stock_images/desk-pink-flowers.png" 
-                    alt="Modern desk setup with laptop and pink flowers" 
+                    src="/assets/fortuna-founder-feathers.png" 
+                    alt="Fortuna Burke, founder of ContactJournalists.com" 
                     className="w-full md:w-48 h-48 object-cover rounded-xl flex-shrink-0"
                   />
                   <div className="prose prose-invert max-w-none flex-1">
                     <p className="text-slate-300 mb-4">
-                      Most founders don&apos;t struggle with PR because their story is bad — they struggle because they&apos;re 
-                      guessing where journalists actually hang out. This guide breaks down <mark className="bg-accent-blue/20 text-accent-blue px-1 rounded">20 real places</mark> journalists 
-                      use, what each one is best for, and the effort and cost trade-offs.
+                      If you&apos;re trying to reach food, fitness, beauty, or tech journalists, the hardest part isn&apos;t writing a pitch — 
+                      it&apos;s finding the <mark className="bg-accent-blue/20 text-accent-blue px-1 rounded">right people, in the right places, at the right moment</mark>.
                     </p>
 
                     <p className="text-slate-300 mb-4">
-                      Stop bouncing between Twitter, Google News, and scattered spreadsheets. Find journalists covering 
-                      your niche without burning out.
+                      This guide breaks down where journalists in each niche actually hang out now, how they prefer to be contacted, 
+                      and why journalist requests flip PR from &quot;guessing&quot; to &quot;responding&quot;.
                     </p>
 
                     <a
-                      href="/blog/20-places-to-find-journalists-covering-your-niche"
+                      href="/blog/how-to-reach-food-fitness-beauty-tech-journalists"
                       onClick={(e) => {
                         e.preventDefault();
                         window.location.href =
-                          "/blog/20-places-to-find-journalists-covering-your-niche";
+                          "/blog/how-to-reach-food-fitness-beauty-tech-journalists";
                       }}
                       className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity"
                     >
@@ -803,6 +802,57 @@ const Index = () => {
                     </a>
                   </div>
                 </div>
+              </article>
+
+              {/* 20 Places to Find Journalists */}
+              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
+                    Featured Guide
+                  </span>
+                  <span className="text-xs text-slate-500">•</span>
+                  <span className="text-xs text-slate-400">January 2026</span>
+                </div>
+
+                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
+                  20 Places to Find Journalists Covering Your Niche
+                </h3>
+
+                <p className="text-sm text-slate-300 mb-4">
+                  Most founders don&apos;t struggle with PR because their story is bad — they struggle because they&apos;re 
+                  guessing where journalists actually hang out. This guide breaks down 20 real places journalists use.
+                </p>
+
+                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
+                  <time>January 2026</time>
+                  <span>•</span>
+                  <span>22 min read</span>
+                </div>
+
+                <a
+                  href="/blog/20-places-to-find-journalists-covering-your-niche"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href =
+                      "/blog/20-places-to-find-journalists-covering-your-niche";
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
+                >
+                  Read Full Guide
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
               </article>
 
               {/* PR Playbook for Solo Founders */}
