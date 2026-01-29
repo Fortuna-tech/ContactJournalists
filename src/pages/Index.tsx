@@ -42,14 +42,14 @@ const Index = () => {
 
   const featureTabContent = {
     "journalist-finder": {
-      image: "/assets/we connect you with top journalists.png",
+      image: "/assets/we-connect-you-with-top-journalists.png",
       title: "Find your media match",
       description: "Search by topic or outlet. No spreadsheets, no stress.",
       cta: "Start searching for free",
       ctaLink: "/waitlist-signup",
     },
     "media-requests": {
-      image: "/assets/New Media Requests on a desk.png",
+      image: "/assets/new-media-requests-on-desk.png",
       title: "See what journalists are asking for right now",
       description:
         "New media requests appear in real time, so you can respond while the opportunity is still hot.",
@@ -57,7 +57,7 @@ const Index = () => {
       ctaLink: "/waitlist-signup",
     },
     "ai-pitch": {
-      image: "/assets/AI Pitch Suggestions.png",
+      image: "/assets/ai-pitch-suggestions.png",
       title: "Pitch smarter, not harder",
       description:
         "Use AI to draft clear, relevant pitches in seconds — then tweak them to sound like you.",
@@ -65,7 +65,7 @@ const Index = () => {
       ctaLink: "/waitlist-signup",
     },
     "easy-lists": {
-      image: "/assets/Live Requests on a Macbook.png",
+      image: "/assets/live-requests-on-macbook.png",
       title: "Keep everything in one place",
       description:
         "Save journalists, requests, and pitches into simple lists, so nothing slips through the cracks.",
@@ -304,7 +304,7 @@ const Index = () => {
               <div className="relative pb-20 sm:pb-24 lg:pb-0">
                 <div className="rounded-2xl overflow-hidden shadow-2xl">
                   <img
-                    src="/assets/Live Requests on a Macbook.png"
+                    src="/assets/live-requests-on-macbook.png"
                     alt="Live requests on a macbook"
                     className="w-full h-auto"
                   />
@@ -327,7 +327,7 @@ const Index = () => {
                     <div className="bg-[#F5F5DC] border-2 border-black rounded-xl p-3 sm:p-4 shadow-lg">
                       <span className="text-xl sm:text-2xl mb-1 sm:mb-2 block">✍️</span>
                       <p className="font-semibold text-xs sm:text-sm text-black">
-                        AI Pitch Assitant
+                        AI Pitch Assistant
                       </p>
                     </div>
                     <div className="bg-[#F5F5DC] border-2 border-black rounded-xl p-3 sm:p-4 shadow-lg">
@@ -358,7 +358,7 @@ const Index = () => {
                   style={{ height: "40px" }}
                 >
                   <img
-                    src="/assets/Men's Fitness Transparent.png"
+                    src="/assets/mens-fitness-transparent.png"
                     alt="Men's Fitness"
                     className="max-h-full max-w-full h-auto w-auto object-contain"
                   />
@@ -384,7 +384,7 @@ const Index = () => {
                   style={{ height: "40px" }}
                 >
                   <img
-                    src="/assets/bbc logo.png"
+                    src="/assets/bbc-logo.png"
                     alt="BBC"
                     className="max-h-full max-w-full h-auto w-auto object-contain scale-[2.0] sm:scale-[2.8]"
                   />
@@ -397,7 +397,7 @@ const Index = () => {
                   style={{ height: "40px" }}
                 >
                   <img
-                    src="/assets/theguardian logo.png"
+                    src="/assets/theguardian-logo.png"
                     alt="The Guardian"
                     className="max-h-full max-w-full h-auto w-auto object-contain"
                   />
@@ -454,7 +454,7 @@ const Index = () => {
               <div className="text-center">
                 <div className="rounded-2xl overflow-hidden mb-6 shadow-lg">
                   <img
-                    src="/assets/Find Journalists .png"
+                    src="/assets/find-journalists.png"
                     alt="Search & find journalists fast"
                     className="w-full h-auto"
                   />
@@ -482,7 +482,7 @@ const Index = () => {
               <div className="text-center">
                 <div className="rounded-2xl overflow-hidden mb-6 shadow-lg">
                   <img
-                    src="/assets/New Media Requests on a desk.png"
+                    src="/assets/new-media-requests-on-desk.png"
                     alt="Live Requests"
                     className="w-full h-auto"
                   />
@@ -509,7 +509,7 @@ const Index = () => {
               <div className="text-center">
                 <div className="rounded-2xl overflow-hidden mb-6 shadow-lg">
                   <img
-                    src="/assets/Pitches That Get Results.png"
+                    src="/assets/pitches-that-get-results.png"
                     alt="Pitches That Get Results"
                     className="w-full h-auto"
                   />
@@ -896,7 +896,7 @@ const Index = () => {
               </div>
               <div className="rounded-2xl overflow-hidden shadow-xl">
                 <img
-                  src="/assets/Save Lists.png"
+                  src="/assets/save-lists.png"
                   alt="Save Lists feature"
                   className="w-full h-auto"
                 />
