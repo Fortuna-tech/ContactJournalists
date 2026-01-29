@@ -1,124 +1,107 @@
-import { useEffect, useState } from "react";
-import {
-  Sparkles,
-  CheckCircle2,
-  Zap,
-  ListChecks,
-  Shield,
-  MapPin,
-} from "lucide-react";
-
-const ROTATING_WORDS = ["Journalists", "YouTubers", "Tiktokers", "Influencers"];
+import { useState, useEffect } from "react";
 
 const Index = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isAnnual, setIsAnnual] = useState(false);
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-  const [searchQuery, setSearchQuery] = useState("");
-  const [results, setResults] = useState([]);
-  const [showPitchGen, setShowPitchGen] = useState(false);
+  const [activeFeatureTab, setActiveFeatureTab] = useState<
+    "journalist-finder" | "media-requests" | "ai-pitch" | "easy-lists"
+  >("journalist-finder");
 
+  // Load Google Fonts for homepage only
   useEffect(() => {
-    // Update document with scroll-smooth class
-    document.documentElement.classList.add("scroll-smooth");
-
-    const rotationInterval = setInterval(() => {
-      setCurrentWordIndex((prev) => (prev + 1) % ROTATING_WORDS.length);
-    }, 2500); // Change word every 2.5 seconds
-
-    // Countdown timer
-    const targetDate = new Date("2026-01-31T09:00:00").getTime();
-
-    const calculateTimeLeft = () => {
-      const now = new Date().getTime();
-      const difference = targetDate - now;
-
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor(
-            (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-          ),
-          minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((difference % (1000 * 60)) / 1000),
-        });
-      }
-    };
-
-    calculateTimeLeft();
-    const countdownInterval = setInterval(calculateTimeLeft, 1000);
+    const link = document.createElement("link");
+    link.href =
+      "https://fonts.googleapis.com/css2?family=Caprasimo&family=DM+Sans:wght@400;500;600;700&display=swap";
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
 
     return () => {
-      document.documentElement.classList.remove("scroll-smooth");
-      clearInterval(rotationInterval);
-      clearInterval(countdownInterval);
+      document.head.removeChild(link);
     };
   }, []);
 
+  // Button style classes for Webflow tactile shadow button appearance
+  const primaryButtonClass =
+    "inline-flex items-center justify-center rounded-full bg-[#D8B4FE] px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F5DC] transition-all duration-150";
+  const secondaryButtonClass =
+    "inline-flex items-center justify-center rounded-full bg-[#F5F5DC] px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F5DC] transition-all duration-150";
+  const outlineButtonClass =
+    "inline-flex items-center justify-center rounded-full bg-[#F5F5DC] px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F5DC] transition-all duration-150";
+
+  // Heading style for Caprasimo font
+  const headingStyle = { fontFamily: "'Caprasimo', cursive" };
+  // Body style for DM Sans font
+  const bodyStyle = { fontFamily: "'DM Sans', sans-serif" };
+
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
-  };
-
-  const toggleBilling = () => {
-    setIsAnnual(!isAnnual);
-  };
-
-  const getPriceDisplay = (monthlyPrice: string, annualPrice: string) => {
-    return isAnnual ? annualPrice : monthlyPrice;
-  };
-
-  const handleSearch = () => {
-    // Dummy search logic
-    const dummyResults = [
-      { name: "Alice Smith", outlet: "The Guardian", beat: "Tech" },
-      { name: "Bob Johnson", outlet: "Wired UK", beat: "Gadgets" },
-      { name: "Charlie Brown", outlet: "BBC News", beat: "Business" },
-    ];
-    setResults(
-      dummyResults.filter(
-        (result) =>
-          result.beat.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          result.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          result.outlet.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
   };
 
   const closeMobileMenu = () => {
     setMobileMenuOpen(false);
   };
 
+  const featureTabContent = {
+    "journalist-finder": {
+      image: "/assets/we connect you with top journalists.png",
+      title: "Find your media match",
+      description: "Search by topic or outlet. No spreadsheets, no stress.",
+      cta: "Start searching for free",
+      ctaLink: "/waitlist-signup",
+    },
+    "media-requests": {
+      image: "/assets/New Media Requests on a desk.png",
+      title: "See what journalists are asking for right now",
+      description:
+        "New media requests appear in real time, so you can respond while the opportunity is still hot.",
+      cta: "Try AI",
+      ctaLink: "/waitlist-signup",
+    },
+    "ai-pitch": {
+      image: "/assets/AI Pitch Suggestions.png",
+      title: "Pitch smarter, not harder",
+      description:
+        "Use AI to draft clear, relevant pitches in seconds — then tweak them to sound like you.",
+      cta: "Start your free trial",
+      ctaLink: "/waitlist-signup",
+    },
+    "easy-lists": {
+      image: "/assets/Live Requests on a Macbook.png",
+      title: "Keep everything in one place",
+      description:
+        "Save journalists, requests, and pitches into simple lists, so nothing slips through the cracks.",
+      cta: "Start organising for free",
+      ctaLink: "/waitlist-signup",
+    },
+  };
+
   return (
-    <div className="bg-base-900 text-slate-200 antialiased selection:bg-accent-blue/20 selection:text-white">
+    <div
+      className="bg-[#F5F5DC] text-slate-800 antialiased selection:bg-purple-200 selection:text-purple-900 min-h-screen"
+      style={bodyStyle}
+    >
       {/* Skip link */}
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 bg-base-700 px-3 py-2 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-blue focus-visible:outline-offset-2"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 bg-white px-3 py-2 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-purple-500 focus-visible:outline-offset-2"
       >
         Skip to content
       </a>
 
       {/* Header */}
-      <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-base-900/70 border-b border-white/5">
+      <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-[#F5F5DC]/90 border-b border-black/5">
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
           <a
             href="#"
-            className="flex items-center gap-2 font-extrabold text-lg tracking-tight"
+            className="flex items-center gap-2 font-extrabold text-lg tracking-tight text-black"
             data-testid="link-logo"
           >
-            <span className="inline-block h-2.5 w-2.5 rounded-sm bg-gradient-to-br from-accent-blue to-accent-violet"></span>
-            Contact<span className="text-slate-400">Journalists</span>
+            <span className="inline-block h-2.5 w-2.5 rounded-sm bg-gradient-to-br from-purple-500 to-violet-600"></span>
+            Contact<span className="text-slate-500">Journalists</span>
           </a>
           <button
             id="navToggle"
             onClick={toggleMobileMenu}
-            className="md:hidden p-2 rounded hover:bg-white/5"
+            className="md:hidden p-2 rounded hover:bg-black/5"
             aria-expanded={mobileMenuOpen}
             aria-controls="primaryNav"
             aria-label="Open menu"
@@ -145,7 +128,7 @@ const Index = () => {
           >
             <li>
               <a
-                className="hover:text-white/90 text-slate-300"
+                className="hover:text-black text-slate-600"
                 href="#features"
                 data-testid="link-features"
               >
@@ -154,7 +137,7 @@ const Index = () => {
             </li>
             <li>
               <a
-                className="hover:text-white/90 text-slate-300"
+                className="hover:text-black text-slate-600"
                 href="#how"
                 data-testid="link-how"
               >
@@ -163,7 +146,7 @@ const Index = () => {
             </li>
             <li>
               <a
-                className="hover:text-white/90 text-slate-300"
+                className="hover:text-black text-slate-600"
                 href="#pricing"
                 data-testid="link-pricing"
               >
@@ -172,7 +155,7 @@ const Index = () => {
             </li>
             <li>
               <a
-                className="hover:text-white/90 text-slate-300"
+                className="hover:text-black text-slate-600"
                 href="#blog"
                 data-testid="link-blog"
               >
@@ -181,7 +164,7 @@ const Index = () => {
             </li>
             <li>
               <a
-                className="hover:text-white/90 text-slate-300"
+                className="hover:text-black text-slate-600"
                 href="#faq"
                 data-testid="link-faq"
               >
@@ -190,7 +173,7 @@ const Index = () => {
             </li>
             <li>
               <a
-                className="hover:text-white/90 text-slate-300"
+                className="hover:text-black text-slate-600"
                 href="/affiliates"
                 data-testid="link-affiliates"
               >
@@ -199,7 +182,7 @@ const Index = () => {
             </li>
             <li>
               <a
-                className="hover:text-white/90 text-slate-300"
+                className="hover:text-black text-slate-600"
                 href="/auth"
                 data-testid="link-login"
               >
@@ -208,7 +191,7 @@ const Index = () => {
             </li>
             <li>
               <a
-                className="ml-2 inline-flex items-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-4 py-2 font-semibold text-white shadow-glow hover:opacity-95"
+                className="ml-2 inline-flex items-center rounded-full bg-black px-4 py-2 font-semibold text-white hover:bg-black/90 transition-colors"
                 href="/waitlist-signup"
                 data-testid="button-get-started"
               >
@@ -219,61 +202,61 @@ const Index = () => {
         </nav>
         {/* mobile menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 right-0 bg-base-900 border-b border-white/5 shadow-xl">
+          <div className="md:hidden absolute top-full left-0 right-0 bg-[#F5F5DC] border-b border-black/5 shadow-xl">
             <div className="space-y-1 px-2 pb-3 pt-2">
               <a
                 href="#features"
                 onClick={closeMobileMenu}
-                className="block rounded-lg px-3 py-2 text-base font-medium text-slate-300 hover:bg-base-800 hover:text-white"
+                className="block rounded-lg px-3 py-2 text-base font-medium text-slate-600 hover:bg-black/5 hover:text-black"
               >
                 Features
               </a>
               <a
                 href="#how-it-works"
                 onClick={closeMobileMenu}
-                className="block rounded-lg px-3 py-2 text-base font-medium text-slate-300 hover:bg-base-800 hover:text-white"
+                className="block rounded-lg px-3 py-2 text-base font-medium text-slate-600 hover:bg-black/5 hover:text-black"
               >
                 How it Works
               </a>
               <a
                 href="#pricing"
                 onClick={closeMobileMenu}
-                className="block rounded-lg px-3 py-2 text-base font-medium text-slate-300 hover:bg-base-800 hover:text-white"
+                className="block rounded-lg px-3 py-2 text-base font-medium text-slate-600 hover:bg-black/5 hover:text-black"
               >
                 Pricing
               </a>
               <a
                 href="#blog"
                 onClick={closeMobileMenu}
-                className="block rounded-lg px-3 py-2 text-base font-medium text-slate-300 hover:bg-base-800 hover:text-white"
+                className="block rounded-lg px-3 py-2 text-base font-medium text-slate-600 hover:bg-black/5 hover:text-black"
               >
                 Blog
               </a>
               <a
                 href="#faq"
                 onClick={closeMobileMenu}
-                className="block rounded-lg px-3 py-2 text-base font-medium text-slate-300 hover:bg-base-800 hover:text-white"
+                className="block rounded-lg px-3 py-2 text-base font-medium text-slate-600 hover:bg-black/5 hover:text-black"
               >
                 FAQ
               </a>
               <a
                 href="/affiliates"
                 onClick={closeMobileMenu}
-                className="block rounded-lg px-3 py-2 text-base font-medium text-slate-300 hover:bg-base-800 hover:text-white"
+                className="block rounded-lg px-3 py-2 text-base font-medium text-slate-600 hover:bg-black/5 hover:text-black"
               >
                 Affiliates
               </a>
               <a
                 href="/auth"
                 onClick={closeMobileMenu}
-                className="block rounded-lg px-3 py-2 text-base font-medium text-slate-300 hover:bg-base-800 hover:text-white"
+                className="block rounded-lg px-3 py-2 text-base font-medium text-slate-600 hover:bg-black/5 hover:text-black"
               >
                 Login
               </a>
               <a
                 href="/waitlist-signup"
                 onClick={closeMobileMenu}
-                className="mt-2 block rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-4 py-2.5 text-center font-semibold text-white shadow-glow hover:opacity-95 transition-opacity"
+                className="mt-2 block rounded-full bg-black px-4 py-2.5 text-center font-semibold text-white hover:bg-black/90 transition-colors"
               >
                 Get Started
               </a>
@@ -283,497 +266,746 @@ const Index = () => {
       </header>
 
       <main id="main" className="relative">
-        {/* background glow */}
-        <div className="pointer-events-none absolute inset-0 bg-darkgradient"></div>
-
-        {/* Hero */}
-        <section className="relative overflow-hidden pb-12 pt-20 md:pb-24 md:pt-32">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 text-center">
-            <h1 className="mb-6 text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl md:text-6xl lg:text-7xl">
-              Find{" "}
-              <span className="inline-block relative min-w-[150px] sm:min-w-[200px]">
-                <span
-                  key={currentWordIndex}
-                  className="rotating-text bg-gradient-to-r from-accent-blue to-accent-violet bg-clip-text text-transparent"
-                >
-                  {ROTATING_WORDS[currentWordIndex]}
-                </span>
-              </span>
-              . <span className="block sm:inline">Pitch better.</span>{" "}
-              <span className="block sm:inline">Get press.</span>
-            </h1>
-            <p className="mx-auto mb-8 max-w-2xl text-sm text-slate-300 sm:text-base md:text-lg px-4">
-              AI-powered media outreach for brands and SaaS worldwide — verified
-              contacts, smart pitch templates, and fast lists in minutes.
-              Database growing daily.
-            </p>
-            <div className="mb-6 flex justify-center">
-              <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-500/20 to-emerald-400/20 px-4 py-2 backdrop-blur-sm border border-emerald-400/30">
-                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span className="text-sm sm:text-base font-semibold text-emerald-400">
-                  Beta Testers Wanted 🚀
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8 px-4">
-              <a
-                href="/waitlist-signup"
-                className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold text-white shadow-glow hover:opacity-95 transition-opacity w-full sm:w-auto"
-                data-testid="hero-get-started"
-              >
-                Get Started
-              </a>
-              <button
-                onClick={() => setShowPitchGen(!showPitchGen)}
-                className="inline-flex items-center justify-center rounded-xl border-2 border-white/20 bg-white/5 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold text-white hover:bg-white/10 transition-colors backdrop-blur-sm w-full sm:w-auto"
-                data-testid="hero-try-pitch"
-              >
-                Try the Pitch Generator
-              </button>
-            </div>
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs text-slate-400">
-              <span className="inline-flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>{" "}
-                Worldwide Coverage
-              </span>
-              <span>GDPR-conscious</span>
-              <span>Growing Daily</span>
-            </div>
-
-            {/* Countdown Timer */}
-            <div className="mx-auto max-w-md rounded-2xl border border-white/10 bg-base-800/50 p-4 sm:p-6 backdrop-blur-sm">
-              <div className="mb-2 text-xs sm:text-sm font-semibold uppercase tracking-wider text-slate-400">
-                Launch Countdown
-              </div>
-              <div className="flex justify-around gap-2 sm:gap-4">
-                <div className="text-center">
-                  <div className="text-2xl sm:text-4xl font-bold text-white">
-                    {timeLeft.days}
-                  </div>
-                  <div className="mt-1 text-xs text-slate-400">Days</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl sm:text-4xl font-bold text-white">
-                    {String(timeLeft.hours).padStart(2, "0")}
-                  </div>
-                  <div className="mt-1 text-xs text-slate-400">Hours</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl sm:text-4xl font-bold text-white">
-                    {String(timeLeft.minutes).padStart(2, "0")}
-                  </div>
-                  <div className="mt-1 text-xs text-slate-400">Minutes</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl sm:text-4xl font-bold text-white">
-                    {String(timeLeft.seconds).padStart(2, "0")}
-                  </div>
-                  <div className="mt-1 text-xs text-slate-400">Seconds</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* How it works */}
-        <section id="how" className="relative py-16 md:py-32">
+        {/* Hero Section */}
+        <section className="relative py-16 md:py-24 lg:py-32">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl text-center">
-              <h2 className="mb-3 text-2xl font-bold text-white sm:text-3xl md:text-4xl px-4">
-                How it works
-              </h2>
-              <p className="mx-auto mb-10 md:mb-12 max-w-2xl text-sm sm:text-base text-slate-400 px-4">
-                Three simple steps to coverage.
-              </p>
-            </div>
-            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="rounded-2xl border border-white/10 bg-base-700/50 p-6 shadow-glow">
-                <div className="text-sm text-slate-400">Step 1</div>
-                <h3 className="mt-1 font-semibold">Search</h3>
-                <p className="mt-2 text-slate-300">
-                  Find the right journalists & bloggers by beat, location, and
-                  outlet.
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              {/* Left content */}
+              <div className="text-center lg:text-left">
+                <h1
+                  className="text-4xl sm:text-5xl md:text-6xl font-normal leading-tight tracking-tight text-black mb-6"
+                  style={headingStyle}
+                >
+                  Get live requests from journalists
+                </h1>
+                <p className="text-lg md:text-xl text-slate-600 mb-8 max-w-xl mx-auto lg:mx-0">
+                  Discover how our platform makes PR simple and affordable for
+                  startups and small teams.
                 </p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-base-700/50 p-6 shadow-glow">
-                <div className="text-sm text-slate-400">Step 2</div>
-                <h3 className="mt-1 font-semibold">Refine</h3>
-                <p className="mt-2 text-slate-300">
-                  Auto-clean lists, remove duplicates, and preview emails before
-                  you export.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-base-700/50 p-6 shadow-glow">
-                <div className="text-sm text-slate-400">Step 3</div>
-                <h3 className="mt-1 font-semibold">Pitch</h3>
-                <p className="mt-2 text-slate-300">
-                  Generate on-point angles and subject lines that actually get
-                  opened.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Features */}
-        <section id="features" className="relative py-16 md:py-32">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6">
-            <h2 className="mb-3 text-center text-2xl font-bold text-white sm:text-3xl md:text-4xl px-4">
-              Why Contact Journalists?
-            </h2>
-            <p className="mx-auto mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base text-slate-400 px-4">
-              Everything you need to get your brand in front of the right
-              journalists
-            </p>
-            <div className="grid gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-3">
-              <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-base-800/50 p-6 md:p-8 backdrop-blur-sm transition-all hover:border-accent-blue/50 hover:shadow-glow-blue">
-                <div className="mb-3 md:mb-4 inline-flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet">
-                  <Sparkles className="h-5 w-5 md:h-6 md:w-6 text-white" />
-                </div>
-                <h3 className="mb-2 md:mb-3 text-lg md:text-xl font-semibold text-white">
-                  AI-Powered Search
-                </h3>
-                <p className="text-sm md:text-base text-slate-400">
-                  Find the perfect journalists for your story with intelligent
-                  AI matching
-                </p>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-base-800/50 p-6 md:p-8 backdrop-blur-sm transition-all hover:border-accent-violet/50 hover:shadow-glow-violet">
-                <div className="mb-3 md:mb-4 inline-flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-xl bg-gradient-to-r from-accent-violet to-accent-mint">
-                  <CheckCircle2 className="h-5 w-5 md:h-6 md:w-6 text-white" />
-                </div>
-                <h3 className="mb-2 md:mb-3 text-lg md:text-xl font-semibold text-white">
-                  Verified Contacts
-                </h3>
-                <p className="text-sm md:text-base text-slate-400">
-                  Access up-to-date, verified email addresses and contact
-                  information
-                </p>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-base-800/50 p-6 md:p-8 backdrop-blur-sm transition-all hover:border-accent-mint/50 hover:shadow-glow-mint">
-                <div className="mb-3 md:mb-4 inline-flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-xl bg-gradient-to-r from-accent-mint to-accent-blue">
-                  <Zap className="h-5 w-5 md:h-6 md:w-6 text-white" />
-                </div>
-                <h3 className="mb-2 md:mb-3 text-lg md:text-xl font-semibold text-white">
-                  Smart Pitch Templates
-                </h3>
-                <p className="text-sm md:text-base text-slate-400">
-                  AI-generated pitch templates tailored to each journalist's
-                  interests
-                </p>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-base-800/50 p-6 md:p-8 backdrop-blur-sm transition-all hover:border-accent-blue/50 hover:shadow-glow-blue">
-                <div className="mb-3 md:mb-4 inline-flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet">
-                  <ListChecks className="h-5 w-5 md:h-6 md:w-6 text-white" />
-                </div>
-                <h3 className="mb-2 md:mb-3 text-lg md:text-xl font-semibold text-white">
-                  Fast Lists
-                </h3>
-                <p className="text-sm md:text-base text-slate-400">
-                  Generate comprehensive media lists in minutes, not hours
-                </p>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-base-800/50 p-6 md:p-8 backdrop-blur-sm transition-all hover:border-accent-violet/50 hover:shadow-glow-violet">
-                <div className="mb-3 md:mb-4 inline-flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-xl bg-gradient-to-r from-accent-violet to-accent-mint">
-                  <Shield className="h-5 w-5 md:h-6 md:w-6 text-white" />
-                </div>
-                <h3 className="mb-2 md:mb-3 text-lg md:text-xl font-semibold text-white">
-                  GDPR Compliant
-                </h3>
-                <p className="text-sm md:text-base text-slate-400">
-                  Built in London with privacy and compliance at the core
-                </p>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-base-800/50 p-6 md:p-8 backdrop-blur-sm transition-all hover:border-accent-mint/50 hover:shadow-glow-mint">
-                <div className="mb-3 md:mb-4 inline-flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-xl bg-gradient-to-r from-accent-mint to-accent-blue">
-                  <MapPin className="h-5 w-5 md:h-6 md:w-6 text-white" />
-                </div>
-                <h3 className="mb-2 md:mb-3 text-lg md:text-xl font-semibold text-white">
-                  Worldwide Coverage
-                </h3>
-                <p className="text-sm md:text-base text-slate-400">
-                  Global database of journalists and media outlets, growing
-                  daily
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Media Finder */}
-        <section id="media-finder" className="relative py-16 md:py-32">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6">
-            <div className="mb-10 md:mb-12 text-center">
-              <div className="mb-3 md:mb-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-accent-blue/20 to-accent-violet/20 px-3 md:px-4 py-1.5 md:py-2 backdrop-blur-sm">
-                <div className="flex gap-1">
-                  <div className="h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-accent-blue animate-pulse"></div>
-                  <div className="h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-accent-violet animate-pulse [animation-delay:0.2s]"></div>
-                  <div className="h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-accent-mint animate-pulse [animation-delay:0.4s]"></div>
-                </div>
-                <span className="text-xs md:text-sm font-semibold text-white">
-                  Media Finder
-                </span>
-              </div>
-              <h2 className="mb-3 md:mb-4 text-2xl font-bold text-white sm:text-3xl md:text-4xl px-4">
-                Find Your Perfect Journalist
-              </h2>
-              <p className="mx-auto max-w-2xl text-sm sm:text-base text-slate-400 px-4">
-                Search our database of verified UK journalists and get instant
-                results
-              </p>
-            </div>
-            <div className="mx-auto max-w-4xl">
-              <div className="relative mb-6 md:mb-8 overflow-hidden rounded-2xl border border-white/10 bg-base-800/50 p-4 md:p-8 backdrop-blur-sm">
-                <div className="relative">
-                  <svg
-                    className="absolute left-3 md:left-4 top-1/2 h-4 w-4 md:h-5 md:w-5 -translate-y-1/2 text-slate-400"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                  <a
+                    href="/waitlist-signup"
+                    className={primaryButtonClass}
+                    data-testid="hero-start-trial"
                   >
-                    <circle cx="11" cy="11" r="7" />
-                    <path d="M21 21l-4.3-4.3" />
-                  </svg>
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Tech retail journalists in the UK"
-                    className="w-full rounded-xl border border-white/10 bg-base-900/50 py-3 md:py-4 pl-10 md:pl-12 pr-3 md:pr-32 text-sm md:text-base text-white placeholder-slate-500 focus:border-accent-blue focus:outline-none focus:ring-2 focus:ring-accent-blue/50"
-                    data-testid="media-finder-search"
+                    Start free trial
+                  </a>
+                  <a
+                    href="#pricing"
+                    className={secondaryButtonClass}
+                    data-testid="hero-see-pricing"
+                  >
+                    See pricing
+                  </a>
+                </div>
+              </div>
+
+              {/* Right content - Feature cards with image */}
+              <div className="relative pb-20 sm:pb-24 lg:pb-0">
+                <div className="rounded-2xl overflow-hidden shadow-2xl">
+                  <img
+                    src="/assets/Live Requests on a Macbook.png"
+                    alt="Live requests on a macbook"
+                    className="w-full h-auto"
                   />
-                  <button
-                    onClick={handleSearch}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-gradient-to-r from-accent-blue to-accent-violet px-4 md:px-6 py-1.5 md:py-2 text-sm md:text-base font-semibold text-white hover:opacity-90 transition-opacity"
-                    data-testid="media-finder-search-button"
-                  >
-                    Search
-                  </button>
                 </div>
-              </div>
-            </div>
-            {results.length > 0 && (
-              <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {results.map((result, index) => (
-                  <div
-                    key={index}
-                    className="rounded-xl border border-white/10 bg-base-800/50 p-4 backdrop-blur-sm"
-                  >
-                    <div className="flex items-center gap-3">
-                      <img
-                        alt="avatar"
-                        className="h-8 w-8 rounded-full"
-                        src={`https://i.pravatar.cc/32?img=${index + 1}`}
-                      />
-                      <div>
-                        <h3 className="font-semibold text-white">
-                          {result.name}
-                        </h3>
-                        <p className="text-xs text-slate-400">
-                          {result.outlet}
-                        </p>
-                      </div>
+                {/* Feature cards overlay */}
+                <div className="absolute bottom-0 left-0 right-0 translate-y-1/2 sm:translate-y-1/3 px-2 sm:px-4">
+                  <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                    <div className="bg-[#F5F5DC] border-2 border-black rounded-xl p-3 sm:p-4 shadow-lg">
+                      <span className="text-xl sm:text-2xl mb-1 sm:mb-2 block">⚡</span>
+                      <p className="font-semibold text-xs sm:text-sm text-black">
+                        Instant journalist requests
+                      </p>
                     </div>
-                    <p className="mt-3 text-sm text-slate-300">
-                      Beat: {result.beat}
-                    </p>
+                    <div className="bg-[#F5F5DC] border-2 border-black rounded-xl p-3 sm:p-4 shadow-lg">
+                      <span className="text-xl sm:text-2xl mb-1 sm:mb-2 block">📁</span>
+                      <p className="font-semibold text-xs sm:text-sm text-black">
+                        Access our database of journalists & bloggers
+                      </p>
+                    </div>
+                    <div className="bg-[#F5F5DC] border-2 border-black rounded-xl p-3 sm:p-4 shadow-lg">
+                      <span className="text-xl sm:text-2xl mb-1 sm:mb-2 block">✍️</span>
+                      <p className="font-semibold text-xs sm:text-sm text-black">
+                        AI Pitch Assitant
+                      </p>
+                    </div>
+                    <div className="bg-[#F5F5DC] border-2 border-black rounded-xl p-3 sm:p-4 shadow-lg">
+                      <span className="text-xl sm:text-2xl mb-1 sm:mb-2 block">📂</span>
+                      <p className="font-semibold text-xs sm:text-sm text-black">
+                        Saved media lists
+                      </p>
+                    </div>
                   </div>
-                ))}
+                </div>
               </div>
-            )}
+            </div>
           </div>
         </section>
 
-        {/* Pricing */}
-        <section id="pricing" className="relative py-16 md:py-32">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6">
-            <h2 className="mb-3 md:mb-4 text-center text-2xl font-bold text-white sm:text-3xl md:text-4xl px-4">
-              Simple, Transparent Pricing
-            </h2>
-            <p className="mx-auto mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base text-slate-400 px-4">
-              Choose the plan that fits your needs
+        {/* Logo Bar Section */}
+        <section className="py-16 sm:py-24 md:py-32">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <p className="text-center text-xs sm:text-sm font-medium tracking-wider text-slate-500 uppercase mb-8 sm:mb-12 px-4">
+              CONTRIBUTORS FROM THESE PUBLICATIONS (AND MORE!) POST REQUESTS
+              WITH US:
             </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-6">
+              {/* Men's Fitness */}
+              <div className="bg-[#F5F5DC] border-2 border-black rounded-xl p-3 sm:p-4 flex items-center justify-center">
+                <div
+                  className="flex items-center justify-center w-full"
+                  style={{ height: "40px" }}
+                >
+                  <img
+                    src="/assets/Men's Fitness Transparent.png"
+                    alt="Men's Fitness"
+                    className="max-h-full max-w-full h-auto w-auto object-contain"
+                  />
+                </div>
+              </div>
+              {/* Men's Health */}
+              <div className="bg-[#F5F5DC] border-2 border-black rounded-xl p-3 sm:p-4 flex items-center justify-center">
+                <div
+                  className="flex items-center justify-center w-full"
+                  style={{ height: "40px" }}
+                >
+                  <img
+                    src="/assets/Men_s_Health_logo_black.png"
+                    alt="Men's Health"
+                    className="max-h-full max-w-full h-auto w-auto object-contain"
+                  />
+                </div>
+              </div>
+              {/* BBC */}
+              <div className="bg-[#F5F5DC] border-2 border-black rounded-xl p-3 sm:p-4 flex items-center justify-center">
+                <div
+                  className="flex items-center justify-center w-full"
+                  style={{ height: "40px" }}
+                >
+                  <img
+                    src="/assets/bbc logo.png"
+                    alt="BBC"
+                    className="max-h-full max-w-full h-auto w-auto object-contain scale-[2.0] sm:scale-[2.8]"
+                  />
+                </div>
+              </div>
+              {/* The Guardian */}
+              <div className="bg-[#F5F5DC] border-2 border-black rounded-xl p-3 sm:p-4 flex items-center justify-center">
+                <div
+                  className="flex items-center justify-center w-full"
+                  style={{ height: "40px" }}
+                >
+                  <img
+                    src="/assets/theguardian logo.png"
+                    alt="The Guardian"
+                    className="max-h-full max-w-full h-auto w-auto object-contain"
+                  />
+                </div>
+              </div>
+              {/* marie claire */}
+              <div className="bg-[#F5F5DC] border-2 border-black rounded-xl p-3 sm:p-4 flex items-center justify-center">
+                <div
+                  className="flex items-center justify-center w-full"
+                  style={{ height: "40px" }}
+                >
+                  <img
+                    src="/assets/marie-claire-logo-transparent.png"
+                    alt="marie claire"
+                    className="max-h-full max-w-full h-auto w-auto object-contain scale-[1.8] sm:scale-[2.5]"
+                  />
+                </div>
+              </div>
+              {/* Forbes */}
+              <div className="bg-[#F5F5DC] border-2 border-black rounded-xl p-3 sm:p-4 flex items-center justify-center">
+                <div
+                  className="flex items-center justify-center w-full"
+                  style={{ height: "40px" }}
+                >
+                  <img
+                    src="/assets/forbes-black-solid.png"
+                    alt="Forbes"
+                    className="max-h-full max-w-full h-auto w-auto object-contain scale-[2.8] sm:scale-[4.0]"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            <div className="mt-6 flex items-center justify-center gap-3 text-sm">
-              <span className="text-slate-400">Monthly</span>
-              <button
-                id="toggleBilling"
-                onClick={toggleBilling}
-                className="relative inline-flex h-7 w-12 items-center rounded-full bg-white/10"
-                data-testid="button-billing-toggle"
+        {/* PR Tools Section */}
+        <section id="features" className="py-16 md:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2
+                className="text-3xl sm:text-4xl md:text-5xl font-normal text-black mb-4"
+                style={headingStyle}
               >
-                <span
-                  id="toggleDot"
-                  className={`inline-block h-5 w-5 rounded-full bg-white transition-transform ${
-                    isAnnual ? "translate-x-6" : "translate-x-1"
-                  }`}
-                ></span>
-              </button>
-              <span className="text-slate-400">
-                Annually{" "}
-                <span className="ml-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-emerald-400 text-xs">
-                  Save 2 months
-                </span>
-              </span>
+                PR tools for founders, made easy
+              </h2>
+              <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                Search journalists, spot live media needs, and write winning
+                pitches—no agency, no stress. Fast, simple, and affordable.
+              </p>
             </div>
 
-            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="rounded-2xl border border-white/10 bg-base-700/50 p-6 shadow-glow">
-                <h3 className="font-semibold">Starter</h3>
-                <p className="mt-1 text-slate-400">
-                  For freelancers and solo founders.
-                </p>
-                <div className="mt-4 text-3xl font-extrabold">
-                  <span className="price" data-testid="text-price-starter">
-                    {getPriceDisplay("£45", "£450")}
-                  </span>
-                  <span className="text-base font-medium text-slate-400">
-                    {isAnnual ? "/yr" : "/mo"}
-                  </span>
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Card 1 - Journalist search */}
+              <div className="text-center">
+                <div className="rounded-2xl overflow-hidden mb-6 shadow-lg">
+                  <img
+                    src="/assets/Find Journalists .png"
+                    alt="Search & find journalists fast"
+                    className="w-full h-auto"
+                  />
                 </div>
-                <ul className="mt-4 space-y-2 text-sm text-slate-300">
-                  <li>300 searches/mo</li>
-                  <li>1 user</li>
-                  <li>Pitch Generator (daily sample)</li>
-                </ul>
+                <p className="text-xs text-slate-500 uppercase tracking-wider mb-2">
+                  Journalist search
+                </p>
+                <h3 className="text-xl font-bold text-black mb-3">
+                  Find contacts in seconds
+                </h3>
+                <p className="text-slate-600 mb-4">
+                  Easily search and filter journalists by topic, outlet, or
+                  location. Skip the spreadsheets and connect with the right
+                  people fast.
+                </p>
                 <a
-                  href="#"
-                  className="mt-6 inline-flex w-full justify-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-4 py-2 font-semibold"
-                  data-testid="button-starter"
+                  href="/waitlist-signup"
+                  className="inline-flex items-center justify-center rounded-full bg-[#D8B4FE] px-5 py-2.5 text-sm font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150"
                 >
-                  Start Free
+                  Start Free Trial
                 </a>
               </div>
-              <div className="relative rounded-2xl border border-accent-blue/40 bg-base-700/60 p-6 shadow-glow ring-2 ring-accent-blue/60">
-                <span className="absolute -top-3 right-4 rounded-full bg-accent-blue/20 px-2 py-1 text-xs text-accent-blue">
-                  Most popular
-                </span>
-                <h3 className="font-semibold">Growth</h3>
-                <p className="mt-1 text-slate-400">
-                  For startups and growing agencies.
-                </p>
-                <div className="mt-4 text-3xl font-extrabold">
-                  <span className="price" data-testid="text-price-growth">
-                    {getPriceDisplay("£99", "£990")}
-                  </span>
-                  <span className="text-base font-medium text-slate-400">
-                    {isAnnual ? "/yr" : "/mo"}
-                  </span>
+
+              {/* Card 2 - Live requests */}
+              <div className="text-center">
+                <div className="rounded-2xl overflow-hidden mb-6 shadow-lg">
+                  <img
+                    src="/assets/New Media Requests on a desk.png"
+                    alt="Live Requests"
+                    className="w-full h-auto"
+                  />
                 </div>
-                <ul className="mt-4 space-y-2 text-sm text-slate-300">
-                  <li>1,500 searches/mo</li>
-                  <li>Up to 3 users</li>
-                  <li>Full Pitch Generator, saved lists</li>
-                  <li>Affiliate dashboard access</li>
-                </ul>
+                <p className="text-xs text-slate-500 uppercase tracking-wider mb-2">
+                  Live requests
+                </p>
+                <h3 className="text-xl font-bold text-black mb-3">
+                  Spot media opportunities live
+                </h3>
+                <p className="text-slate-600 mb-4">
+                  See what journalists need right now. Reply directly and get
+                  your story in front of the press.
+                </p>
                 <a
-                  href="#"
-                  className="mt-6 inline-flex w-full justify-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-4 py-2 font-semibold text-white"
-                  data-testid="button-growth"
+                  href="/waitlist-signup"
+                  className="inline-flex items-center justify-center rounded-full bg-[#D8B4FE] px-5 py-2.5 text-sm font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150"
                 >
-                  Start Free
+                  Start Free Trial
                 </a>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-base-700/50 p-6 shadow-glow">
-                <h3 className="font-semibold">Team</h3>
-                <p className="mt-1 text-slate-400">
-                  For established agencies and marketing departments.
-                </p>
-                <div className="mt-4 text-3xl font-extrabold">
-                  <span className="price" data-testid="text-price-team">
-                    {getPriceDisplay("£199", "£1990")}
-                  </span>
-                  <span className="text-base font-medium text-slate-400">
-                    {isAnnual ? "/yr" : "/mo"}
-                  </span>
+
+              {/* Card 3 - AI pitch writing */}
+              <div className="text-center">
+                <div className="rounded-2xl overflow-hidden mb-6 shadow-lg">
+                  <img
+                    src="/assets/Pitches That Get Results.png"
+                    alt="Pitches That Get Results"
+                    className="w-full h-auto"
+                  />
                 </div>
-                <ul className="mt-4 space-y-2 text-sm text-slate-300">
-                  <li>Unlimited searches</li>
-                  <li>Up to 10 users</li>
-                  <li>Priority support, early feature access</li>
-                  <li>Custom integrations</li>
-                </ul>
+                <p className="text-xs text-slate-500 uppercase tracking-wider mb-2">
+                  AI pitch writing
+                </p>
+                <h3 className="text-xl font-bold text-black mb-3">
+                  Instant, clear pitch drafts
+                </h3>
+                <p className="text-slate-600 mb-4">
+                  Let AI help you write strong, relevant pitches in moments.
+                  Save time and boost your chances of getting featured.
+                </p>
                 <a
-                  href="#"
-                  className="mt-6 inline-flex w-full justify-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-4 py-2 font-semibold"
-                  data-testid="button-team"
+                  href="/waitlist-signup"
+                  className="inline-flex items-center justify-center rounded-full bg-[#D8B4FE] px-5 py-2.5 text-sm font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150"
                 >
-                  Start Free
+                  Start Free Trial
                 </a>
               </div>
             </div>
-            <p className="mt-6 text-center text-sm text-slate-400">
-              <span className="inline-flex items-center gap-2 text-emerald-400 font-semibold">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
-                Beta Testers Wanted 🚀
-              </span>
-              <span className="block mt-2">
-                Founders' Launch Offer — lock your plan at today's price for
-                life. Need more?{" "}
-                <a
-                  className="underline decoration-dotted underline-offset-4 hover:text-white"
-                  href="#contact"
-                  data-testid="link-contact"
-                >
-                  Contact us
-                </a>{" "}
-                for custom solutions.
-              </span>
-            </p>
           </div>
         </section>
 
-        {/* Blog */}
-        <section id="blog" className="relative py-16 md:py-32">
+        {/* Pricing Section */}
+        <section id="pricing" className="py-16 md:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <p className="text-sm font-medium tracking-wider text-slate-500 uppercase mb-3">
+                AFFORDABLE PLANS FOR EVERY FOUNDER
+              </p>
+              <h2
+                className="text-3xl sm:text-4xl md:text-5xl font-normal text-black mb-4"
+                style={headingStyle}
+              >
+                Choose your plan
+              </h2>
+              <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                Explore our flexible pricing options to find the perfect fit for
+                your needs.
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto">
+              {/* Starter Plan */}
+              <div className="bg-[#F5F5DC] border-2 border-black rounded-2xl p-5 sm:p-8">
+                <h3 className="text-lg sm:text-xl font-bold text-black mb-2">Starter</h3>
+                <div className="mb-3 sm:mb-4">
+                  <span className="text-3xl sm:text-4xl font-bold text-black">£45</span>
+                  <span className="text-base sm:text-lg text-slate-600">/mo</span>
+                </div>
+                <p className="text-sm sm:text-base text-slate-600 mb-4 sm:mb-6">
+                  Ideal for Solopreneurs, Freelance PRs and small teams.
+                </p>
+
+                <p className="text-xs font-medium tracking-wider text-slate-500 uppercase mb-3 sm:mb-4">
+                  JUST WHAT YOU NEED
+                </p>
+
+                <ul className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
+                  <li className="flex items-start gap-2 sm:gap-3">
+                    <span className="text-green-600 mt-0.5">✓</span>
+                    <span className="text-sm sm:text-base text-slate-700">300 journalist searches</span>
+                  </li>
+                  <li className="flex items-start gap-2 sm:gap-3">
+                    <span className="text-green-600 mt-0.5">✓</span>
+                    <span className="text-sm sm:text-base text-slate-700">
+                      Unlimited live journalist requests in your niche
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2 sm:gap-3">
+                    <span className="text-green-600 mt-0.5">✓</span>
+                    <span className="text-sm sm:text-base text-slate-700">
+                      Basic AI-assisted pitch writing
+                    </span>
+                  </li>
+                </ul>
+
+                <a
+                  href="/waitlist-signup"
+                  className="block w-full text-center rounded-full bg-[#D8B4FE] px-6 py-3 font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150"
+                >
+                  Start Your Free Trial
+                </a>
+              </div>
+
+              {/* Pro Plan */}
+              <div className="bg-[#F5F5DC] border-2 border-green-500 rounded-2xl p-5 sm:p-8 relative">
+                <h3 className="text-lg sm:text-xl font-bold text-black mb-2">Pro</h3>
+                <div className="mb-3 sm:mb-4">
+                  <span className="text-3xl sm:text-4xl font-bold text-black">£99</span>
+                  <span className="text-base sm:text-lg text-slate-600">/mo</span>
+                </div>
+                <p className="text-sm sm:text-base text-slate-600 mb-4 sm:mb-6">
+                  Perfect for growing businesses.
+                </p>
+
+                <p className="text-xs font-medium tracking-wider text-slate-500 uppercase mb-3 sm:mb-4">
+                  PRO USERS SEE NEW REQUESTS FIRST
+                </p>
+
+                <ul className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
+                  <li className="flex items-start gap-2 sm:gap-3">
+                    <span className="text-green-600 mt-0.5">✓</span>
+                    <span className="text-sm sm:text-base text-slate-700">700 journalist searches</span>
+                  </li>
+                  <li className="flex items-start gap-2 sm:gap-3">
+                    <span className="text-green-600 mt-0.5">✓</span>
+                    <span className="text-sm sm:text-base text-slate-700">
+                      Unlimited live journalist requests in your niche
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2 sm:gap-3">
+                    <span className="text-green-600 mt-0.5">✓</span>
+                    <span className="text-sm sm:text-base text-slate-700">
+                      Advanced pitch templates
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2 sm:gap-3">
+                    <span className="text-green-600 mt-0.5">✓</span>
+                    <span className="text-sm sm:text-base text-slate-700">
+                      Priority access to live requests
+                    </span>
+                  </li>
+                </ul>
+
+                <a
+                  href="/waitlist-signup"
+                  className="block w-full text-center rounded-full bg-[#D8B4FE] px-6 py-3 font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150"
+                >
+                  Start Your Free Trial
+                </a>
+              </div>
+
+              {/* Done-For-You Plan */}
+              <div className="bg-[#F5F5DC] border-2 border-black rounded-2xl p-5 sm:p-8 sm:col-span-2 lg:col-span-1">
+                <h3 className="text-lg sm:text-xl font-bold text-black mb-2">
+                  Done-For-You Human Outreach
+                </h3>
+                <div className="mb-3 sm:mb-4">
+                  <span className="text-3xl sm:text-4xl font-bold text-black">£249</span>
+                </div>
+                <p className="text-sm sm:text-base text-slate-600 mb-4 sm:mb-6">
+                  For founders who want hands-off outreach
+                </p>
+
+                <p className="text-xs font-medium tracking-wider text-slate-500 uppercase mb-3 sm:mb-4">
+                  AN ACTUAL HUMAN (NOT AI) TAKES CARE OF PRESS OUTREACH
+                </p>
+
+                <ul className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
+                  <li className="flex items-start gap-2 sm:gap-3">
+                    <span className="text-green-600 mt-0.5">✓</span>
+                    <span className="text-sm sm:text-base text-slate-700">
+                      Unlimited journalist searches
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2 sm:gap-3">
+                    <span className="text-green-600 mt-0.5">✓</span>
+                    <span className="text-sm sm:text-base text-slate-700">
+                      Unlimited live journalist requests in your niche
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2 sm:gap-3">
+                    <span className="text-green-600 mt-0.5">✓</span>
+                    <span className="text-sm sm:text-base text-slate-700">
+                      Not AI: our team manually reaches out to relevant podcasts
+                      and newsletters
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2 sm:gap-3">
+                    <span className="text-green-600 mt-0.5">✓</span>
+                    <span className="text-sm sm:text-base text-slate-700">
+                      Minimum 100 personalised pitches per month
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2 sm:gap-3">
+                    <span className="text-green-600 mt-0.5">✓</span>
+                    <span className="text-sm sm:text-base text-slate-700">
+                      Clear tracking via a shared Google Sheet
+                    </span>
+                  </li>
+                </ul>
+
+                <a
+                  href="/waitlist-signup"
+                  className="block w-full text-center rounded-full bg-[#D8B4FE] px-6 py-3 font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150"
+                >
+                  Coming Soon!
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Feature Tabs Section */}
+        <section id="how" className="py-16 md:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2
+                className="text-3xl sm:text-4xl md:text-5xl font-normal text-black mb-4"
+                style={headingStyle}
+              >
+                Get press. Skip the hassle.
+              </h2>
+              <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                Search journalists, pitch fast, and track media requests—all in
+                one easy platform. No agencies. No overwhelm.
+              </p>
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center mb-6 sm:mb-8">
+              {/* Left - Image */}
+              <div className="rounded-2xl overflow-hidden shadow-xl order-2 lg:order-1">
+                <img
+                  src={featureTabContent[activeFeatureTab].image}
+                  alt={featureTabContent[activeFeatureTab].title}
+                  className="w-full h-auto"
+                />
+              </div>
+
+              {/* Right - Content */}
+              <div className="bg-[#F5F5DC] border-2 border-black rounded-2xl p-5 sm:p-8 order-1 lg:order-2">
+                <h3 className="text-xl sm:text-2xl font-bold text-black mb-3 sm:mb-4">
+                  {featureTabContent[activeFeatureTab].title}
+                </h3>
+                <p className="text-sm sm:text-base text-slate-600 mb-4 sm:mb-6">
+                  {featureTabContent[activeFeatureTab].description}
+                </p>
+                <a
+                  href={featureTabContent[activeFeatureTab].ctaLink}
+                  className={outlineButtonClass}
+                >
+                  {featureTabContent[activeFeatureTab].cta}
+                </a>
+              </div>
+            </div>
+
+            {/* Tabs */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4 border-t border-black/10 pt-6 sm:pt-8">
+              <button
+                onClick={() => setActiveFeatureTab("journalist-finder")}
+                className={`text-left p-3 sm:p-4 rounded-lg transition-colors ${
+                  activeFeatureTab === "journalist-finder"
+                    ? "bg-black/5 border-2 border-black/20"
+                    : "hover:bg-black/5 border-2 border-transparent"
+                }`}
+              >
+                <h4
+                  className={`font-bold text-sm sm:text-base mb-0.5 sm:mb-1 ${
+                    activeFeatureTab === "journalist-finder"
+                      ? "text-black"
+                      : "text-slate-500"
+                  }`}
+                >
+                  Journalist finder
+                </h4>
+                <p
+                  className={`text-xs sm:text-sm hidden sm:block ${
+                    activeFeatureTab === "journalist-finder"
+                      ? "text-slate-700"
+                      : "text-slate-400"
+                  }`}
+                >
+                  Find the right contacts in seconds.
+                </p>
+              </button>
+
+              <button
+                onClick={() => setActiveFeatureTab("media-requests")}
+                className={`text-left p-3 sm:p-4 rounded-lg transition-colors ${
+                  activeFeatureTab === "media-requests"
+                    ? "bg-black/5 border-2 border-black/20"
+                    : "hover:bg-black/5 border-2 border-transparent"
+                }`}
+              >
+                <h4
+                  className={`font-bold text-sm sm:text-base mb-0.5 sm:mb-1 ${
+                    activeFeatureTab === "media-requests"
+                      ? "text-black"
+                      : "text-slate-500"
+                  }`}
+                >
+                  Media requests
+                </h4>
+                <p
+                  className={`text-xs sm:text-sm hidden sm:block ${
+                    activeFeatureTab === "media-requests"
+                      ? "text-slate-700"
+                      : "text-slate-400"
+                  }`}
+                >
+                  Spot new press opportunities instantly.
+                </p>
+              </button>
+
+              <button
+                onClick={() => setActiveFeatureTab("ai-pitch")}
+                className={`text-left p-3 sm:p-4 rounded-lg transition-colors ${
+                  activeFeatureTab === "ai-pitch"
+                    ? "bg-black/5 border-2 border-black/20"
+                    : "hover:bg-black/5 border-2 border-transparent"
+                }`}
+              >
+                <h4
+                  className={`font-bold text-sm sm:text-base mb-0.5 sm:mb-1 ${
+                    activeFeatureTab === "ai-pitch"
+                      ? "text-black"
+                      : "text-slate-500"
+                  }`}
+                >
+                  AI pitch help
+                </h4>
+                <p
+                  className={`text-xs sm:text-sm hidden sm:block ${
+                    activeFeatureTab === "ai-pitch"
+                      ? "text-slate-700"
+                      : "text-slate-400"
+                  }`}
+                >
+                  Write strong, clear pitches fast.
+                </p>
+              </button>
+
+              <button
+                onClick={() => setActiveFeatureTab("easy-lists")}
+                className={`text-left p-3 sm:p-4 rounded-lg transition-colors ${
+                  activeFeatureTab === "easy-lists"
+                    ? "bg-black/5 border-2 border-black/20"
+                    : "hover:bg-black/5 border-2 border-transparent"
+                }`}
+              >
+                <h4
+                  className={`font-bold text-sm sm:text-base mb-0.5 sm:mb-1 ${
+                    activeFeatureTab === "easy-lists"
+                      ? "text-black"
+                      : "text-slate-500"
+                  }`}
+                >
+                  Easy lists
+                </h4>
+                <p
+                  className={`text-xs sm:text-sm hidden sm:block ${
+                    activeFeatureTab === "easy-lists"
+                      ? "text-slate-700"
+                      : "text-slate-400"
+                  }`}
+                >
+                  Save contacts and manage outreach simply.
+                </p>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-16 md:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
+              <div className="text-center lg:text-left">
+                <p className="text-xs sm:text-sm font-medium tracking-wider text-slate-500 uppercase mb-2 sm:mb-3">
+                  PR FOR FOUNDERS, MADE EASY
+                </p>
+                <h2
+                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-normal text-black mb-4 sm:mb-6"
+                  style={headingStyle}
+                >
+                  Get noticed. Grow faster.
+                </h2>
+                <p className="text-base sm:text-lg md:text-xl text-slate-600 mb-6 sm:mb-8">
+                  Connect with journalists, send pitches, and share your
+                  story—no agencies, no stress. Simple, fast, and built for you.
+                </p>
+                <a
+                  href="/waitlist-signup"
+                  className="inline-flex items-center justify-center rounded-full bg-[#D8B4FE] px-8 py-4 text-lg font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150 w-full md:w-auto"
+                >
+                  Try free
+                </a>
+                <p className="mt-4 text-sm text-slate-500">
+                  7-day free trial. Cancel anytime
+                </p>
+              </div>
+              <div className="rounded-2xl overflow-hidden shadow-xl">
+                <img
+                  src="/assets/Save Lists.png"
+                  alt="Save Lists feature"
+                  className="w-full h-auto"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Testimonials Section */}
+        <section className="py-16 md:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <p className="text-sm font-medium tracking-wider text-slate-500 uppercase mb-3">
+                TRUSTED BY FOUNDERS AND SMALL TEAMS
+              </p>
+              <h2
+                className="text-3xl sm:text-4xl md:text-5xl font-normal text-black"
+                style={headingStyle}
+              >
+                Press wins made simple
+              </h2>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 max-w-4xl mx-auto">
+              {[1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  className="bg-[#F5F5DC] border-2 border-black rounded-2xl p-5 sm:p-8"
+                >
+                  <h3 className="text-lg sm:text-xl font-bold text-black mb-3 sm:mb-4">
+                    Beta user feedback coming soon
+                  </h3>
+                  <div className="border-t border-dashed border-slate-400 pt-3 sm:pt-4 mt-3 sm:mt-4">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-200 overflow-hidden flex-shrink-0">
+                        <img
+                          src={`https://i.pravatar.cc/48?img=${i + 10}`}
+                          alt="User avatar"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <p className="text-slate-600 text-xs sm:text-sm">
+                        Feedback from real founders using ContactJournalists
+                        will appear here shortly.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Blog Section */}
+        <section id="blog" className="relative py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center mb-10 md:mb-12">
-              <h2 className="mb-3 text-2xl font-bold text-white sm:text-3xl md:text-4xl px-4">
+              <h2 className="mb-3 text-2xl font-bold text-black sm:text-3xl md:text-4xl px-4">
                 Blog
               </h2>
-              <p className="text-sm sm:text-base text-slate-400 px-4">
+              <p className="text-sm sm:text-base text-slate-600 px-4">
                 Insights and guides for better PR outreach
               </p>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {/* Featured Blog Post – How to Reach Food, Fitness, Beauty & Tech Journalists */}
-              <article className="md:col-span-2 lg:col-span-3 rounded-2xl border border-accent-mint/30 bg-base-800/50 p-6 md:p-8 backdrop-blur-sm hover:border-accent-mint/50 transition-all relative">
-                <div className="absolute -top-3 -right-3 bg-gradient-to-r from-accent-blue to-accent-mint px-3 py-1.5 rounded-full text-xs font-bold text-white uppercase tracking-wide shadow-lg">
-                  🆕 Latest Guide
+              <article className="md:col-span-2 lg:col-span-3 rounded-2xl border-2 border-green-500 bg-[#F5F5DC] p-4 sm:p-6 md:p-8 hover:shadow-lg transition-all relative">
+                <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 bg-gradient-to-r from-purple-500 to-green-500 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold text-white uppercase tracking-wide shadow-lg">
+                  Latest Guide
                 </div>
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-semibold text-accent-mint uppercase tracking-wide">
+                <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                  <span className="text-[10px] sm:text-xs font-semibold text-green-600 uppercase tracking-wide">
                     Featured Guide
                   </span>
-                  <span className="text-xs text-slate-500">•</span>
-                  <span className="text-xs text-slate-400">January 2026</span>
+                  <span className="text-[10px] sm:text-xs text-slate-500">•</span>
+                  <span className="text-[10px] sm:text-xs text-slate-500">January 2026</span>
                 </div>
 
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
-                  How to Reach <mark className="bg-accent-mint/20 text-accent-mint px-2 py-1 rounded">Food, Fitness, Beauty & Tech</mark> Journalists
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-black mb-3 sm:mb-4">
+                  How to Reach{" "}
+                  <mark className="bg-green-200 text-green-800 px-1 sm:px-2 py-0.5 sm:py-1 rounded text-base sm:text-lg md:text-2xl">
+                    Food, Fitness, Beauty & Tech
+                  </mark>{" "}
+                  Journalists
                 </h3>
 
-                <div className="flex flex-col md:flex-row gap-6">
-                  <img 
-                    src="/assets/fortuna-founder-feathers.png" 
-                    alt="Fortuna Burke, founder of ContactJournalists.com" 
-                    className="w-full md:w-48 h-48 object-cover rounded-xl flex-shrink-0"
+                <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
+                  <img
+                    src="/assets/fortuna-founder-feathers.png"
+                    alt="Fortuna Burke, founder of ContactJournalists.com"
+                    className="w-full md:w-48 h-40 sm:h-48 object-cover rounded-xl flex-shrink-0"
                   />
-                  <div className="prose prose-invert max-w-none flex-1">
-                    <p className="text-slate-300 mb-4">
-                      If you&apos;re trying to reach food, fitness, beauty, or tech journalists, the hardest part isn&apos;t writing a pitch — 
-                      it&apos;s finding the <mark className="bg-accent-blue/20 text-accent-blue px-1 rounded">right people, in the right places, at the right moment</mark>.
+                  <div className="flex-1">
+                    <p className="text-sm sm:text-base text-slate-600 mb-3 sm:mb-4">
+                      If you're trying to reach food, fitness, beauty, or tech
+                      journalists, the hardest part isn't writing a pitch — it's
+                      finding the{" "}
+                      <mark className="bg-purple-200 text-purple-800 px-1 rounded">
+                        right people, in the right places, at the right moment
+                      </mark>
+                      .
                     </p>
 
-                    <p className="text-slate-300 mb-4">
-                      This guide breaks down where journalists in each niche actually hang out now, how they prefer to be contacted, 
-                      and why journalist requests flip PR from &quot;guessing&quot; to &quot;responding&quot;.
+                    <p className="text-sm sm:text-base text-slate-600 mb-3 sm:mb-4">
+                      This guide breaks down where journalists in each niche
+                      actually hang out now, how they prefer to be contacted,
+                      and why journalist requests flip PR from "guessing" to
+                      "responding".
                     </p>
 
                     <a
@@ -783,7 +1015,7 @@ const Index = () => {
                         window.location.href =
                           "/blog/how-to-reach-food-fitness-beauty-tech-journalists";
                       }}
-                      className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity"
+                      className="inline-flex items-center gap-2 rounded-full bg-[#D8B4FE] px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150"
                     >
                       Read Full Guide
                       <svg
@@ -804,26 +1036,83 @@ const Index = () => {
                 </div>
               </article>
 
-              {/* 20 Places to Find Journalists */}
-              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
+              {/* How to Build a Media List - NEW */}
+              <article className="rounded-2xl border-2 border-purple-500 bg-[#F5F5DC] p-4 sm:p-6 hover:shadow-lg transition-all relative">
+                <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 bg-gradient-to-r from-purple-500 to-green-500 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold text-white uppercase tracking-wide shadow-lg">
+                  New
+                </div>
+                <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                  <span className="text-[10px] sm:text-xs font-semibold text-purple-600 uppercase tracking-wide">
                     Featured Guide
                   </span>
-                  <span className="text-xs text-slate-500">•</span>
-                  <span className="text-xs text-slate-400">January 2026</span>
+                  <span className="text-[10px] sm:text-xs text-slate-500">•</span>
+                  <span className="text-[10px] sm:text-xs text-slate-500">January 2026</span>
                 </div>
 
-                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
+                <h3 className="text-base sm:text-lg md:text-xl font-bold text-black mb-2 sm:mb-3">
+                  How to Build a Media List That Actually Gets Results
+                </h3>
+
+                <p className="text-xs sm:text-sm text-slate-600 mb-3 sm:mb-4">
+                  Most media lists fail quietly. Learn how to build a media list
+                  journalists actually respond to, based on real founder experience
+                  plus newsroom-backed research, not PR theory.
+                </p>
+
+                <div className="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-slate-500 mb-3 sm:mb-4">
+                  <time>January 2026</time>
+                  <span>•</span>
+                  <span>35 min read</span>
+                </div>
+
+                <a
+                  href="/blog/how-to-build-a-media-list-that-gets-results"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href =
+                      "/blog/how-to-build-a-media-list-that-gets-results";
+                  }}
+                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-500 to-green-500 px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white hover:opacity-90 transition-opacity"
+                >
+                  Read Full Guide
+                  <svg
+                    className="h-3 w-3 sm:h-4 sm:w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
+              </article>
+
+              {/* 20 Places to Find Journalists */}
+              <article className="rounded-2xl border-2 border-black bg-[#F5F5DC] p-4 sm:p-6 hover:shadow-lg transition-all">
+                <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                  <span className="text-[10px] sm:text-xs font-semibold text-purple-600 uppercase tracking-wide">
+                    Featured Guide
+                  </span>
+                  <span className="text-[10px] sm:text-xs text-slate-500">•</span>
+                  <span className="text-[10px] sm:text-xs text-slate-500">January 2026</span>
+                </div>
+
+                <h3 className="text-base sm:text-lg md:text-xl font-bold text-black mb-2 sm:mb-3">
                   20 Places to Find Journalists Covering Your Niche
                 </h3>
 
-                <p className="text-sm text-slate-300 mb-4">
-                  Most founders don&apos;t struggle with PR because their story is bad — they struggle because they&apos;re 
-                  guessing where journalists actually hang out. This guide breaks down 20 real places journalists use.
+                <p className="text-xs sm:text-sm text-slate-600 mb-3 sm:mb-4">
+                  Most founders don't struggle with PR because their story is
+                  bad — they struggle because they're guessing where journalists
+                  actually hang out. This guide breaks down 20 real places
+                  journalists use.
                 </p>
 
-                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
+                <div className="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-slate-500 mb-3 sm:mb-4">
                   <time>January 2026</time>
                   <span>•</span>
                   <span>22 min read</span>
@@ -836,11 +1125,11 @@ const Index = () => {
                     window.location.href =
                       "/blog/20-places-to-find-journalists-covering-your-niche";
                   }}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
+                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-purple-600 hover:text-green-600 transition-colors"
                 >
                   Read Full Guide
                   <svg
-                    className="h-4 w-4"
+                    className="h-3 w-3 sm:h-4 sm:w-4"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -856,25 +1145,26 @@ const Index = () => {
               </article>
 
               {/* PR Playbook for Solo Founders */}
-              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
+              <article className="rounded-2xl border-2 border-black bg-[#F5F5DC] p-4 sm:p-6 hover:shadow-lg transition-all">
+                <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                  <span className="text-[10px] sm:text-xs font-semibold text-purple-600 uppercase tracking-wide">
                     Featured Guide
                   </span>
-                  <span className="text-xs text-slate-500">•</span>
-                  <span className="text-xs text-slate-400">January 2026</span>
+                  <span className="text-[10px] sm:text-xs text-slate-500">•</span>
+                  <span className="text-[10px] sm:text-xs text-slate-500">January 2026</span>
                 </div>
 
-                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
+                <h3 className="text-base sm:text-lg md:text-xl font-bold text-black mb-2 sm:mb-3">
                   The PR Playbook for Solo Founders
                 </h3>
 
-                <p className="text-sm text-slate-300 mb-4">
-                  How to get press without an agency, a team, or burning out. Real strategies from a founder 
-                  who&apos;s been there—including celebrity outreach wins and journalist request timing.
+                <p className="text-xs sm:text-sm text-slate-600 mb-3 sm:mb-4">
+                  How to get press without an agency, a team, or burning out.
+                  Real strategies from a founder who's been there—including
+                  celebrity outreach wins and journalist request timing.
                 </p>
 
-                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
+                <div className="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-slate-500 mb-3 sm:mb-4">
                   <time>January 2026</time>
                   <span>•</span>
                   <span>25 min read</span>
@@ -884,14 +1174,13 @@ const Index = () => {
                   href="/blog/pr-playbook-for-solo-founders"
                   onClick={(e) => {
                     e.preventDefault();
-                    window.location.href =
-                      "/blog/pr-playbook-for-solo-founders";
+                    window.location.href = "/blog/pr-playbook-for-solo-founders";
                   }}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
+                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-purple-600 hover:text-green-600 transition-colors"
                 >
                   Read Full Playbook
                   <svg
-                    className="h-4 w-4"
+                    className="h-3 w-3 sm:h-4 sm:w-4"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -907,25 +1196,26 @@ const Index = () => {
               </article>
 
               {/* Featured Blog Post – Best Time to Email Journalists */}
-              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
+              <article className="rounded-2xl border-2 border-black bg-[#F5F5DC] p-4 sm:p-6 hover:shadow-lg transition-all">
+                <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                  <span className="text-[10px] sm:text-xs font-semibold text-purple-600 uppercase tracking-wide">
                     Featured Guide
                   </span>
-                  <span className="text-xs text-slate-500">•</span>
-                  <span className="text-xs text-slate-400">January 2026</span>
+                  <span className="text-[10px] sm:text-xs text-slate-500">•</span>
+                  <span className="text-[10px] sm:text-xs text-slate-500">January 2026</span>
                 </div>
 
-                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
+                <h3 className="text-base sm:text-lg md:text-xl font-bold text-black mb-2 sm:mb-3">
                   The Best Time of Day to Email Journalists (Backed by Data)
                 </h3>
 
-                <p className="text-sm text-slate-300 mb-4">
-                  There is a better time of day to email journalists. This data-backed guide explains when reporters 
-                  read emails, why mornings work best, and how to get press without guessing.
+                <p className="text-xs sm:text-sm text-slate-600 mb-3 sm:mb-4">
+                  There is a better time of day to email journalists. This
+                  data-backed guide explains when reporters read emails, why
+                  mornings work best, and how to get press without guessing.
                 </p>
 
-                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
+                <div className="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-slate-500 mb-3 sm:mb-4">
                   <time>January 2026</time>
                   <span>•</span>
                   <span>18 min read</span>
@@ -938,11 +1228,11 @@ const Index = () => {
                     window.location.href =
                       "/blog/best-time-of-day-to-email-journalists";
                   }}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
+                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-purple-600 hover:text-green-600 transition-colors"
                 >
                   Read Full Guide
                   <svg
-                    className="h-4 w-4"
+                    className="h-3 w-3 sm:h-4 sm:w-4"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -957,640 +1247,90 @@ const Index = () => {
                 </a>
               </article>
 
-              {/* Featured Blog Post – Why Following Up Matters */}
-              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
-                    Featured Guide
-                  </span>
-                  <span className="text-xs text-slate-500">•</span>
-                  <span className="text-xs text-slate-400">January 2026</span>
-                </div>
-
-                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
-                  Why Following Up Matters (And How Often to Do It)
-                </h3>
-
-                <p className="text-sm text-slate-300 mb-4">
-                  Following up is one of the most misunderstood parts of PR. This guide explains when 
-                  following up genuinely helps, when it quietly hurts, and how often to do it.
-                </p>
-
-                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
-                  <time>January 2026</time>
-                  <span>•</span>
-                  <span>22 min read</span>
-                </div>
-
-                <a
-                  href="/blog/why-following-up-matters-and-how-often-to-do-it"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href =
-                      "/blog/why-following-up-matters-and-how-often-to-do-it";
-                  }}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
-                >
-                  Read Full Guide
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </a>
-              </article>
-
-              {/* Featured Blog Post – How to Turn a Tweet Into a Press Feature */}
-              <article className="rounded-2xl border border-accent-violet/30 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-violet/50 transition-all relative">
-                <div className="absolute -top-3 -right-3 bg-gradient-to-r from-accent-violet to-accent-blue px-3 py-1.5 rounded-full text-xs font-bold text-white uppercase tracking-wide shadow-lg">
-                  🐦 Twitter PR
-                </div>
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-semibold text-accent-violet uppercase tracking-wide">
-                    Twitter PR Guide
-                  </span>
-                  <span className="text-xs text-slate-500">•</span>
-                  <span className="text-xs text-slate-400">January 27, 2026</span>
-                </div>
-
-                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
-                  How to Turn a Tweet Into a Press Feature
-                </h3>
-
-                <p className="text-sm text-slate-300 mb-4">
-                  Most founders think PR starts with writing a pitch. It doesn&apos;t. It starts with paying attention. 
-                  Learn how to spot journalist requests on Twitter and turn them into coverage.
-                </p>
-
-                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
-                  <time>January 27, 2026</time>
-                  <span>•</span>
-                  <span>15 min read</span>
-                </div>
-
-                <a
-                  href="/blog/how-to-turn-a-tweet-into-a-press-feature"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href =
-                      "/blog/how-to-turn-a-tweet-into-a-press-feature";
-                  }}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-violet hover:text-accent-mint transition-colors"
-                >
-                  Read Full Guide
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </a>
-              </article>
-
-              {/* Featured Blog Post – 11 Mistakes */}
-              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
-                    Featured Guide
-                  </span>
-                  <span className="text-xs text-slate-500">•</span>
-                  <span className="text-xs text-slate-400">January 2026</span>
-                </div>
-
-                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
-                  11 Mistakes Founders Make When Pitching Journalists
-                </h3>
-
-                <p className="text-sm text-slate-300 mb-4">
-                  Most founders don&apos;t fail at PR because they&apos;re bad at writing. They fail because 
-                  they&apos;re guessing. Learn the 11 mistakes that slow founders down the most.
-                </p>
-
-                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
-                  <time>January 2026</time>
-                  <span>•</span>
-                  <span>18 min read</span>
-                </div>
-
-                <a
-                  href="/blog/11-mistakes-founders-make-when-pitching-journalists"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href =
-                      "/blog/11-mistakes-founders-make-when-pitching-journalists";
-                  }}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
-                >
-                  Read Full Guide
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </a>
-              </article>
-
-              {/* How to Find the Right Reporter */}
-              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
-                    Featured Guide
-                  </span>
-                  <span className="text-xs text-slate-500">•</span>
-                  <span className="text-xs text-slate-400">January 2026</span>
-                </div>
-
-                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
-                  How to Find the Right Reporter for Your Story
-                </h3>
-
-                <p className="text-sm text-slate-300 mb-4">
-                  Most founders struggle to get press because they pitch the wrong journalists. 
-                  Learn how to find journalists who actually want your story and get press without a PR agency.
-                </p>
-
-                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
-                  <time>January 2026</time>
-                  <span>•</span>
-                  <span>20 min read</span>
-                </div>
-
-                <a
-                  href="/blog/how-to-find-the-right-reporter-for-your-story"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href =
-                      "/blog/how-to-find-the-right-reporter-for-your-story";
-                  }}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
-                >
-                  Read Full Guide
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </a>
-              </article>
-
-              {/* How Founders Can Use PR to Explode Early-Stage Growth */}
-              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
-                    Founder Growth
-                  </span>
-                  <span className="text-xs text-slate-500">•</span>
-                  <span className="text-xs text-slate-400">PR Strategy</span>
-                </div>
-
-                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
-                  How Founders Can Use PR to Explode Early-Stage Growth
-                </h3>
-
-                <p className="text-sm text-slate-300 mb-4">
-                  Learn how founders and solopreneurs can use PR to grow an early-stage business 
-                  without hiring a PR agency. Get press coverage, respond to journalist requests, 
-                  and build credibility that compounds over time.
-                </p>
-
-                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
-                  <time>January 8, 2026</time>
-                  <span>•</span>
-                  <span>30 min read</span>
-                </div>
-
-                <a
-                  href="/blog/how-founders-can-use-pr-to-explode-early-stage-growth"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href =
-                      "/blog/how-founders-can-use-pr-to-explode-early-stage-growth";
-                  }}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
-                >
-                  Read Full Guide
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </a>
-              </article>
-
-              {/* How To Pitch Journalists on Twitter Blog Post */}
-              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-semibold text-accent-violet uppercase tracking-wide">
-                    Twitter PR Guide
-                  </span>
-                  <span className="text-xs text-slate-500">•</span>
-                  <span className="text-xs text-slate-400">Founder Guide</span>
-                </div>
-
-                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
-                  How To Pitch Journalists on Twitter (Full Breakdown)
-                </h3>
-
-                <p className="text-sm text-slate-300 mb-4">
-                  Learn how to pitch journalists on Twitter. Real strategies from a founder who got press coverage through Twitter. Full breakdown of what works and what doesn't.
-                </p>
-
-                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
-                  <time>December 27, 2025</time>
-                  <span>•</span>
-                  <span>15 min read</span>
-                </div>
-
-                <a
-                  href="/blog/how-to-pitch-journalists-on-twitter"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href =
-                      "/blog/how-to-pitch-journalists-on-twitter";
-                  }}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
-                >
-                  Read Full Guide
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </a>
-              </article>
-
-              {/* Featured Blog Post – Ultimate Guide */}
-              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 md:p-8 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
-                    Featured Guide
-                  </span>
-                  <span className="text-xs text-slate-500">•</span>
-                  <span className="text-xs text-slate-400">Ultimate Guide</span>
-                </div>
-
-                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
-                  The Ultimate Guide to the Best Platforms for Contacting
-                  Journalists in 2026
-                </h3>
-
-                <p className="text-sm text-slate-300 mb-4">
-                  Deep dive into PR tools, media databases, and outreach
-                  platforms so you can choose the right way to reach journalists
-                  (without wasting budget or energy).
-                </p>
-
-                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
-                  <time>December 1, 2025</time>
-                  <span>•</span>
-                  <span>15 min read</span>
-                </div>
-
-                <a
-                  href="/blog/ultimate-guide-best-platforms-contacting-journalists-2026"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href =
-                      "/blog/ultimate-guide-best-platforms-contacting-journalists-2026";
-                  }}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
-                >
-                  Read Ultimate Guide
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </a>
-              </article>
-
-              {/* P&L Template Blog Post */}
-              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-semibold text-accent-mint uppercase tracking-wide">
-                    Free Resource
-                  </span>
-                  <span className="text-xs text-slate-500">•</span>
-                  <span className="text-xs text-slate-400">Founder Tools</span>
-                </div>
-
-                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
-                  Free Small Business P&L Template (Google Sheets + Excel)
-                </h3>
-
-                <p className="text-sm text-slate-300 mb-4">
-                  Track your revenue, expenses, and profit with ease. Simple,
-                  clean, currency-agnostic P&L template made for founders who
-                  don't have time to wrestle with spreadsheets.
-                </p>
-
-                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
-                  <time>November 15, 2025</time>
-                  <span>•</span>
-                  <span>8 min read</span>
-                </div>
-
-                <a
-                  href="/blog/free-small-business-pl-template-google-sheets-excel"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href =
-                      "/blog/free-small-business-pl-template-google-sheets-excel";
-                  }}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
-                  data-testid="link-blog-pl-template"
-                >
-                  Download Free Template
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </a>
-              </article>
-
-              {/* Press Pitch Examples Blog Post */}
-              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-semibold text-accent-violet uppercase tracking-wide">
-                    Pitch Templates
-                  </span>
-                  <span className="text-xs text-slate-500">•</span>
-                  <span className="text-xs text-slate-400">Founder Guide</span>
-                </div>
-
-                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
-                  7 Press Pitch Examples That Actually Get Replies
-                </h3>
-
-                <p className="text-sm text-slate-300 mb-4">
-                  Real press pitch templates that work in 2025. Copy, customize,
-                  and start getting journalist replies with these
-                  founder-friendly pitch examples and timing strategies.
-                </p>
-
-                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
-                  <time>Sunday, November 16, 2025</time>
-                  <span>•</span>
-                  <span>12 min read</span>
-                </div>
-
-                <a
-                  href="/blog/press-pitch-examples-that-get-replies"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href =
-                      "/blog/press-pitch-examples-that-get-replies";
-                  }}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
-                  data-testid="link-blog-press-pitch"
-                >
-                  Get Pitch Templates
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </a>
-              </article>
-
-              {/* The Fastest Ways to Get Press Coverage Without an Agency */}
-              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
-                    PR Playbook
-                  </span>
-                  <span className="text-xs text-slate-500">•</span>
-                  <span className="text-xs text-slate-400">2026 Edition</span>
-                </div>
-
-                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
-                  The Fastest Ways to Get Press Coverage Without an Agency
-                </h3>
-
-                <p className="text-sm text-slate-300 mb-4">
-                  A founder-led playbook on landing press fast—without retainers, 
-                  guesswork, or noisy outreach. Learn how to respond to live journalist 
-                  requests and turn momentum into coverage.
-                </p>
-
-                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
-                  <time>December 2025</time>
-                  <span>•</span>
-                  <span>18 min read</span>
-                </div>
-
-                <a
-                  href="/blog/the-fastest-ways-to-get-press-coverage-without-an-agency"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href =
-                      "/blog/the-fastest-ways-to-get-press-coverage-without-an-agency";
-                  }}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
-                >
-                  Read Full Guide
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </a>
-              </article>
-
-              {/* How to Get Press for Your Brand Without a PR Agency */}
-              <article className="rounded-2xl border border-white/10 bg-base-800/50 p-6 backdrop-blur-sm hover:border-accent-blue/50 transition-all">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-semibold text-accent-mint uppercase tracking-wide">
-                    Founder Guide
-                  </span>
-                  <span className="text-xs text-slate-500">•</span>
-                  <span className="text-xs text-slate-400">PR Strategy</span>
-                </div>
-
-                <h3 className="text-lg md:text-xl font-bold text-white mb-3">
-                  How to Get Press for Your Brand Without a PR Agency
-                </h3>
-
-                <p className="text-sm text-slate-300 mb-4">
-                  The complete guide to DIY PR for founders. Learn how to build media 
-                  relationships, craft compelling pitches, and get featured in top 
-                  publications without hiring expensive agencies.
-                </p>
-
-                <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
-                  <time>November 2025</time>
-                  <span>•</span>
-                  <span>15 min read</span>
-                </div>
-
-                <a
-                  href="/blog/how-to-get-press-for-your-brand-without-a-pr-agency"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href =
-                      "/blog/how-to-get-press-for-your-brand-without-a-pr-agency";
-                  }}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent-blue hover:text-accent-mint transition-colors"
-                >
-                  Read Full Guide
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </a>
-              </article>
-
-              {/* More Guides CTA - Full Width with Image */}
+              {/* More Guides CTA - Full Width */}
               <a
                 href="/guides"
                 onClick={(e) => {
                   e.preventDefault();
                   window.location.href = "/guides";
                 }}
-                className="md:col-span-2 lg:col-span-3 group relative overflow-hidden rounded-2xl border border-accent-violet/30 hover:border-accent-violet/60 transition-all"
+                className="md:col-span-2 lg:col-span-3 group relative overflow-hidden rounded-2xl border-2 border-purple-500 hover:border-purple-600 transition-all"
               >
                 <div className="absolute inset-0">
                   <img
                     src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1600&q=80"
                     alt="Newspaper and journalism"
-                    className="w-full h-full object-cover opacity-40 group-hover:opacity-50 group-hover:scale-105 transition-all duration-500"
+                    className="w-full h-full object-cover opacity-20 group-hover:opacity-30 group-hover:scale-105 transition-all duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-base-900 via-base-900/90 to-base-900/70"></div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-base-900 via-transparent to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#F5F5DC] via-[#F5F5DC]/90 to-[#F5F5DC]/70"></div>
                 </div>
-                
-                <div className="relative p-8 md:p-12 flex items-center justify-between">
+
+                <div className="relative p-5 sm:p-8 md:p-12 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
                   <div className="max-w-2xl">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="inline-flex items-center gap-2 rounded-full bg-accent-violet/20 border border-accent-violet/40 px-3 py-1 text-xs font-semibold text-accent-violet uppercase tracking-wide">
-                        <span className="text-base">📚</span>
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                      <span className="inline-flex items-center gap-1 sm:gap-2 rounded-full bg-purple-100 border border-purple-300 px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-semibold text-purple-700 uppercase tracking-wide">
                         Resource Hub
                       </span>
-                      <span className="text-xs text-slate-400">10 Guides Available</span>
+                      <span className="text-[10px] sm:text-xs text-slate-500">
+                        10 Guides Available
+                      </span>
                     </div>
-                    
-                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 group-hover:text-accent-violet transition-colors">
-                      Guides: How To Contact Journalists and Get Publicity for Your Start Up
+
+                    <h3 className="text-lg sm:text-2xl md:text-3xl font-bold text-black mb-2 sm:mb-3 group-hover:text-purple-700 transition-colors">
+                      Guides: How To Contact Journalists and Get Publicity for
+                      Your Start Up
                     </h3>
-                    
-                    <p className="text-slate-300 mb-4 max-w-xl">
-                      Explore our complete library of PR guides, pitch templates, and founder resources. 
-                      Everything you need to get press coverage—all in one place.
+
+                    <p className="text-sm sm:text-base text-slate-600 mb-3 sm:mb-4 max-w-xl">
+                      Explore our complete library of PR guides, pitch
+                      templates, and founder resources. Everything you need to
+                      get press coverage—all in one place.
                     </p>
-                    
-                    <span className="inline-flex items-center gap-2 text-accent-violet font-semibold group-hover:gap-3 transition-all">
+
+                    <span className="inline-flex items-center gap-2 text-sm sm:text-base text-purple-600 font-semibold group-hover:gap-3 transition-all">
                       Browse All Guides
-                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      <svg
+                        className="h-4 w-4 sm:h-5 sm:w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 7l5 5m0 0l-5 5m5-5H6"
+                        />
                       </svg>
                     </span>
                   </div>
-                  
+
                   <div className="hidden lg:flex items-center justify-center">
                     <div className="relative">
-                      <div className="absolute inset-0 bg-gradient-to-r from-accent-blue to-accent-violet rounded-full blur-2xl opacity-30 animate-pulse"></div>
-                      <div className="relative bg-gradient-to-br from-accent-violet/20 to-accent-blue/20 border border-white/10 rounded-2xl p-6 backdrop-blur">
+                      <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-green-500 rounded-full blur-2xl opacity-30 animate-pulse"></div>
+                      <div className="relative bg-white/50 border-2 border-black rounded-2xl p-6 backdrop-blur">
                         <div className="grid grid-cols-2 gap-3">
-                          <div className="bg-white/5 rounded-lg p-3 text-center">
-                            <div className="text-2xl font-bold text-white">10</div>
-                            <div className="text-xs text-slate-400">Guides</div>
+                          <div className="bg-white/80 rounded-lg p-3 text-center">
+                            <div className="text-2xl font-bold text-black">
+                              10
+                            </div>
+                            <div className="text-xs text-slate-500">Guides</div>
                           </div>
-                          <div className="bg-white/5 rounded-lg p-3 text-center">
-                            <div className="text-2xl font-bold text-white">115+</div>
-                            <div className="text-xs text-slate-400">Min Read</div>
+                          <div className="bg-white/80 rounded-lg p-3 text-center">
+                            <div className="text-2xl font-bold text-black">
+                              115+
+                            </div>
+                            <div className="text-xs text-slate-500">
+                              Min Read
+                            </div>
                           </div>
-                          <div className="bg-white/5 rounded-lg p-3 text-center col-span-2">
-                            <div className="text-lg font-bold text-accent-mint">Free</div>
-                            <div className="text-xs text-slate-400">All Resources</div>
+                          <div className="bg-white/80 rounded-lg p-3 text-center col-span-2">
+                            <div className="text-lg font-bold text-green-600">
+                              Free
+                            </div>
+                            <div className="text-xs text-slate-500">
+                              All Resources
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1602,129 +1342,96 @@ const Index = () => {
           </div>
         </section>
 
-        {/* FAQ */}
-        <section id="faq" className="relative py-16 md:py-32">
+        {/* FAQ Section */}
+        <section id="faq" className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-3xl">
-              <h2 className="mb-3 text-2xl font-bold text-white sm:text-3xl md:text-4xl text-center px-4">
-                FAQ
-              </h2>
-              <div className="mt-8 divide-y divide-white/5 border border-white/10 rounded-2xl overflow-hidden">
-                <details className="group open:bg-white/5">
-                  <summary className="flex cursor-pointer items-center justify-between px-5 py-4 text-left font-medium hover:bg-white/5">
-                    Where do the contacts come from?
-                    <span className="ml-4 text-slate-400 group-open:rotate-180 transition">
-                      <svg
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  </summary>
-                  <div className="px-5 pb-5 text-slate-300">
-                    We combine verified sources, public data, and user feedback
-                    loops to keep lists accurate and useful.
-                  </div>
-                </details>
-                <details className="group">
-                  <summary className="flex cursor-pointer items-center justify-between px-5 py-4 text-left font-medium hover:bg-white/5">
-                    Is this compliant with GDPR?
-                    <span className="ml-4 text-slate-400 group-open:rotate-180 transition">
-                      <svg
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  </summary>
-                  <div className="px-5 pb-5 text-slate-300">
-                    Yes. We respect inboxes and provide opt-out friendly
-                    exports. Always send relevant, non-spammy pitches.
-                  </div>
-                </details>
-                <details className="group">
-                  <summary className="flex cursor-pointer items-center justify-between px-5 py-4 text-left font-medium hover:bg-white/5">
-                    Do you cover bloggers as well as journalists?
-                    <span className="ml-4 text-slate-400 group-open:rotate-180 transition">
-                      <svg
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  </summary>
-                  <div className="px-5 pb-5 text-slate-300">
-                    Absolutely. We include bloggers, podcasters, and influencers
-                    with an editorial focus.
-                  </div>
-                </details>
-                <details className="group">
-                  <summary className="flex cursor-pointer items-center justify-between px-5 py-4 text-left font-medium hover:bg-white/5">
+            <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-start">
+              <div className="text-center lg:text-left">
+                <h2
+                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-normal text-black mb-3 sm:mb-4"
+                  style={headingStyle}
+                >
+                  PR made simple, answers made easy
+                </h2>
+                <p className="text-base sm:text-lg text-slate-600 mb-6 sm:mb-8">
+                  Find quick help on using our platform, plans, and getting
+                  started. We keep PR clear and stress-free.
+                </p>
+                <a
+                  href="/waitlist-signup"
+                  className={outlineButtonClass}
+                >
+                  Start free
+                </a>
+              </div>
+
+              <div className="space-y-4 sm:space-y-6">
+                <div className="border-b border-black/10 pb-4 sm:pb-6">
+                  <h3 className="font-bold text-sm sm:text-base text-black mb-1.5 sm:mb-2">
+                    How do I reach journalists?
+                  </h3>
+                  <p className="text-sm sm:text-base text-slate-600">
+                    Search by topic, outlet, or location. See current contacts
+                    and live requests instantly.
+                  </p>
+                </div>
+
+                <div className="border-b border-black/10 pb-4 sm:pb-6">
+                  <h3 className="font-bold text-sm sm:text-base text-black mb-1.5 sm:mb-2">
+                    Is there a free trial?
+                  </h3>
+                  <p className="text-sm sm:text-base text-slate-600">
+                    Yes! Try every feature free for 7 days. Cancel anytime
+                  </p>
+                </div>
+
+                <div className="border-b border-black/10 pb-4 sm:pb-6">
+                  <h3 className="font-bold text-sm sm:text-base text-black mb-1.5 sm:mb-2">
+                    What comes with each plan?
+                  </h3>
+                  <p className="text-sm sm:text-base text-slate-600">
+                    Every plan has searches, unlimited live requests, and AI
+                    pitch help. Please scroll up to check out a detailed
+                    breakdown under pricing
+                  </p>
+                </div>
+
+                <div className="border-b border-black/10 pb-4 sm:pb-6">
+                  <h3 className="font-bold text-sm sm:text-base text-black mb-1.5 sm:mb-2">
                     Can I cancel anytime?
-                    <span className="ml-4 text-slate-400 group-open:rotate-180 transition">
-                      <svg
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  </summary>
-                  <div className="px-5 pb-5 text-slate-300">
-                    Yes. No contracts or commitments. Just cancel from your
-                    account settings whenever you're done.
-                  </div>
-                </details>
+                  </h3>
+                  <p className="text-sm sm:text-base text-slate-600">
+                    Yes, you can change or cancel anytime from your dashboard.
+                    No hidden fees.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         {/* Footer */}
-        <footer className="relative border-t border-white/5 bg-base-800/60">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              <div>
+        <footer className="relative border-t border-black/10 bg-[#F5F5DC]">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+            <div className="grid gap-6 sm:gap-8 grid-cols-2 lg:grid-cols-3">
+              <div className="col-span-2 lg:col-span-1">
                 <a
                   href="#"
-                  className="flex items-center gap-2 font-extrabold text-lg tracking-tight"
+                  className="flex items-center gap-2 font-extrabold text-base sm:text-lg tracking-tight text-black"
                 >
-                  <span className="inline-block h-2.5 w-2.5 rounded-sm bg-gradient-to-br from-accent-blue to-accent-violet"></span>
-                  Contact<span className="text-slate-400">Journalists</span>
+                  <span className="inline-block h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-sm bg-gradient-to-br from-purple-500 to-violet-600"></span>
+                  Contact<span className="text-slate-500">Journalists</span>
                 </a>
-                <p className="mt-3 text-sm text-slate-400">
+                <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-slate-600">
                   AI-powered media outreach for brands worldwide.
                 </p>
               </div>
               <div>
-                <h4 className="font-semibold text-sm">Product</h4>
-                <ul className="mt-3 space-y-2 text-sm text-slate-400">
+                <h4 className="font-semibold text-xs sm:text-sm text-black">Product</h4>
+                <ul className="mt-2 sm:mt-3 space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-slate-600">
                   <li>
                     <a
-                      className="hover:text-white"
+                      className="hover:text-black"
                       href="#features"
                       data-testid="link-footer-features"
                     >
@@ -1733,7 +1440,7 @@ const Index = () => {
                   </li>
                   <li>
                     <a
-                      className="hover:text-white"
+                      className="hover:text-black"
                       href="#pricing"
                       data-testid="link-footer-pricing"
                     >
@@ -1742,7 +1449,7 @@ const Index = () => {
                   </li>
                   <li>
                     <a
-                      className="hover:text-white"
+                      className="hover:text-black"
                       href="#blog"
                       data-testid="link-footer-blog"
                     >
@@ -1751,7 +1458,7 @@ const Index = () => {
                   </li>
                   <li>
                     <a
-                      className="hover:text-white"
+                      className="hover:text-black"
                       href="/affiliates"
                       data-testid="link-footer-affiliates"
                     >
@@ -1761,11 +1468,11 @@ const Index = () => {
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-sm">Company</h4>
-                <ul className="mt-3 space-y-2 text-sm text-slate-400">
+                <h4 className="font-semibold text-xs sm:text-sm text-black">Company</h4>
+                <ul className="mt-2 sm:mt-3 space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-slate-600">
                   <li>
                     <a
-                      className="hover:text-white"
+                      className="hover:text-black"
                       href="#about"
                       data-testid="link-footer-about"
                     >
@@ -1774,7 +1481,7 @@ const Index = () => {
                   </li>
                   <li>
                     <a
-                      className="hover:text-white"
+                      className="hover:text-black"
                       href="#contact"
                       data-testid="link-footer-contact"
                     >
@@ -1783,7 +1490,7 @@ const Index = () => {
                   </li>
                   <li>
                     <a
-                      className="hover:text-white"
+                      className="hover:text-black"
                       href="#privacy"
                       data-testid="link-footer-privacy"
                     >
@@ -1792,7 +1499,7 @@ const Index = () => {
                   </li>
                   <li>
                     <a
-                      className="hover:text-white"
+                      className="hover:text-black"
                       href="#terms"
                       data-testid="link-footer-terms"
                     >
@@ -1802,12 +1509,12 @@ const Index = () => {
                 </ul>
               </div>
             </div>
-            <div className="mt-8 border-t border-white/5 pt-8 text-center text-sm text-slate-400">
-              <p className="mb-2">
+            <div className="mt-6 sm:mt-8 border-t border-black/5 pt-6 sm:pt-8 text-center text-xs sm:text-sm text-slate-600">
+              <p className="mb-1.5 sm:mb-2">
                 Questions? Ping us a message at{" "}
                 <a
                   href="mailto:hello@contactjournalists.com"
-                  className="text-accent-blue hover:underline"
+                  className="text-purple-600 hover:underline break-all"
                 >
                   hello@contactjournalists.com
                 </a>
