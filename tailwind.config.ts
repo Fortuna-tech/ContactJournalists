@@ -10,6 +10,23 @@ export default {
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
+  // Safelist: blogTheme arbitrary values that contain special chars (defensive for prod builds)
+  safelist: [
+    // Beige background
+    "bg-[#F5F5DC]",
+    "supports-[backdrop-filter]:bg-[#F5F5DC]/90",
+    // Purple accent
+    "bg-[#D8B4FE]",
+    // Tactile shadows (used in cards, buttons, code blocks)
+    "shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]",
+    "shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]",
+    "shadow-[0px_0px_0px_0px_rgba(0,0,0,1)]",
+    "hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]",
+    "hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]",
+    "active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)]",
+    // Prose code block shadow
+    "prose-pre:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]",
+  ],
   prefix: "",
   theme: {
     container: {

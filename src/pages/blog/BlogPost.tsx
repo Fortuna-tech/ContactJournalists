@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { supabase } from "@/lib/supabaseClient";
 import { ArrowLeft } from "lucide-react";
+import { blogTheme } from "@/styles/blogTheme";
+import BlogLayout from "@/layouts/BlogLayout";
 
 interface BlogPostData {
   id: string;
@@ -57,25 +59,29 @@ export default function BlogPost() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-base-900 flex items-center justify-center">
-        <p className="text-slate-400">Loading...</p>
-      </div>
+      <BlogLayout>
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <p className="text-slate-600">Loading...</p>
+        </div>
+      </BlogLayout>
     );
   }
 
   if (error || !blog) {
     return (
-      <div className="min-h-screen bg-base-900 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-400 mb-4">{error || "Blog post not found"}</p>
-          <a
-            href="/#blog"
-            className="text-accent-blue hover:underline"
-          >
-            Back to Blog
-          </a>
+      <BlogLayout>
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <div className="text-center">
+            <p className="text-red-600 mb-4">{error || "Blog post not found"}</p>
+            <a
+              href="/#blog"
+              className={blogTheme.link}
+            >
+              Back to Blog
+            </a>
+          </div>
         </div>
-      </div>
+      </BlogLayout>
     );
   }
 
@@ -88,7 +94,7 @@ export default function BlogPost() {
     : null;
 
   return (
-    <div className="min-h-screen bg-base-900 text-slate-200">
+    <BlogLayout>
       <Helmet>
         <title>{blog.title} | ContactJournalists.com</title>
         {blog.meta_description && (
@@ -101,47 +107,60 @@ export default function BlogPost() {
         <meta property="og:type" content="article" />
       </Helmet>
 
-      <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-base-900/70 border-b border-white/5">
-        <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-          <a
-            href="/"
-            className="flex items-center gap-2 font-extrabold text-lg tracking-tight"
-          >
-            <span className="inline-block h-2.5 w-2.5 rounded-sm bg-gradient-to-br from-accent-blue to-accent-violet"></span>
-            Contact<span className="text-slate-400">Journalists</span>
+      <header className={blogTheme.header}>
+        <nav className={blogTheme.headerNav}>
+          <a href="/" className={blogTheme.logo}>
+            <span className={blogTheme.logoIcon}></span>
+            Contact<span className={blogTheme.logoText}>Journalists</span>
           </a>
-          <a
-            href="/#blog"
-            className="flex items-center gap-2 text-sm text-slate-300 hover:text-white"
-          >
+          <a href="/#blog" className={blogTheme.navLink}>
             <ArrowLeft className="h-4 w-4" />
             Back to Blog
           </a>
         </nav>
       </header>
 
-      <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-        <article>
-          <header className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-6">
+      <div className={blogTheme.container}>
+        <article className={blogTheme.card + " " + blogTheme.cardPad}>
+          <header className={blogTheme.articleHeaderBorder}>
+            <h1
+              className={blogTheme.h1}
+              style={blogTheme.h1Style}
+            >
               {blog.title}
             </h1>
             {publishDate && (
-              <div className="flex items-center gap-4 text-sm text-slate-400 border-b border-white/10 pb-6">
+              <div className={blogTheme.metaRow}>
                 <time>{publishDate}</time>
-                <span>•</span>
+                <span className={blogTheme.metaDivider}>•</span>
                 <span>By Fortuna, Founder</span>
               </div>
             )}
           </header>
 
           <div
-            className="prose prose-invert prose-lg max-w-none"
+            className={blogTheme.prose}
             dangerouslySetInnerHTML={{ __html: blog.content || "" }}
           />
         </article>
       </div>
-    </div>
+
+      <footer className={blogTheme.footer}>
+        <div className={blogTheme.footerInner}>
+          <div className="text-center">
+            <p className={blogTheme.footerText + " mb-2"}>
+              Questions? Ping us a message at{" "}
+              <a
+                href="mailto:hello@contactjournalists.com"
+                className={blogTheme.footerLink}
+              >
+                hello@contactjournalists.com
+              </a>
+            </p>
+            <p className={blogTheme.footerText}>© 2026 ContactJournalists.com. Built in London with ☕️</p>
+          </div>
+        </div>
+      </footer>
+    </BlogLayout>
   );
 }
-

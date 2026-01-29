@@ -1,9 +1,11 @@
 import { Helmet } from "react-helmet-async";
 import { founderMistakesBlogContent, founderMistakesBlogMeta } from "@/lib/founder-mistakes-blog-content";
+import { blogTheme } from "@/styles/blogTheme";
+import BlogLayout from "@/layouts/BlogLayout";
 
 const FounderMistakesBlog = () => {
   return (
-    <div className="min-h-screen bg-base-900 text-slate-200">
+    <BlogLayout>
       <Helmet>
         <title>{founderMistakesBlogMeta.title} | ContactJournalists.com</title>
         <meta name="description" content={founderMistakesBlogMeta.metaDescription} />
@@ -103,62 +105,52 @@ const FounderMistakesBlog = () => {
         </script>
       </Helmet>
 
-      <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-base-900/70 border-b border-white/5">
-        <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-          <a
-            href="/"
-            className="flex items-center gap-2 font-extrabold text-lg tracking-tight"
-          >
-            <span className="inline-block h-2.5 w-2.5 rounded-sm bg-gradient-to-br from-accent-blue to-accent-violet"></span>
-            Contact<span className="text-slate-400">Journalists</span>
+      <header className={blogTheme.header}>
+        <nav className={blogTheme.headerNav}>
+          <a href="/" className={blogTheme.logo}>
+            <span className={blogTheme.logoIcon}></span>
+            Contact<span className={blogTheme.logoText}>Journalists</span>
           </a>
-          <a
-            href="/#blog"
-            className="flex items-center gap-2 text-sm text-slate-300 hover:text-white"
-          >
+          <a href="/#blog" className={blogTheme.navLink}>
             Back to Blog
           </a>
         </nav>
       </header>
 
-      <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-        <article>
-          <header className="mb-8 border-b border-white/10 pb-6">
-            <div className="flex items-center gap-4 text-sm text-slate-400 mb-4">
+      <div className={blogTheme.container}>
+        <article className={blogTheme.card + " " + blogTheme.cardPad}>
+          <header className={blogTheme.articleHeaderBorder}>
+            <div className={blogTheme.metaRow}>
               <time>January 13, 2026</time>
-              <span>•</span>
+              <span className={blogTheme.metaDivider}>•</span>
               <span>By Fortuna, Founder</span>
-              <span>•</span>
+              <span className={blogTheme.metaDivider}>•</span>
               <span>18 min read</span>
             </div>
           </header>
 
           <div 
-            className="prose prose-invert prose-lg max-w-none"
+            className={blogTheme.prose}
             dangerouslySetInnerHTML={{ __html: founderMistakesBlogContent }}
           />
         </article>
       </div>
 
-      <footer className="border-t border-white/5 bg-base-800/60">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center text-sm text-slate-400">
-            <p className="mb-2">
+      <footer className={blogTheme.footer}>
+        <div className={blogTheme.footerInner}>
+          <div className="text-center">
+            <p className={blogTheme.footerText + " mb-2"}>
               Questions? Ping us a message at{" "}
-              <a
-                href="mailto:hello@contactjournalists.com"
-                className="text-accent-blue hover:underline"
-              >
+              <a href="mailto:hello@contactjournalists.com" className={blogTheme.footerLink}>
                 hello@contactjournalists.com
               </a>
             </p>
-            <p>© 2026 ContactJournalists.com. Built in London with ☕️</p>
+            <p className={blogTheme.footerText}>© 2026 ContactJournalists.com. Built in London with ☕️</p>
           </div>
         </div>
       </footer>
-    </div>
+    </BlogLayout>
   );
 };
 
 export default FounderMistakesBlog;
-

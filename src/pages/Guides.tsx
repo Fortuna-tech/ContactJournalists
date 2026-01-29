@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { blogTheme } from "@/styles/blogTheme";
+import BlogLayout from "@/layouts/BlogLayout";
 
 const CATEGORIES = [
   { id: "all", label: "All Guides", icon: "📚" },
@@ -169,7 +171,7 @@ const Guides = () => {
   const featuredGuides = GUIDES.filter((g) => g.featured);
 
   return (
-    <div className="min-h-screen bg-base-900 text-slate-200">
+    <BlogLayout>
       <Helmet>
         <title>PR Guides for Founders | ContactJournalists.com</title>
         <meta
@@ -179,19 +181,13 @@ const Guides = () => {
       </Helmet>
 
       {/* Header */}
-      <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-base-900/70 border-b border-white/5">
-        <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-          <a
-            href="/"
-            className="flex items-center gap-2 font-extrabold text-lg tracking-tight"
-          >
-            <span className="inline-block h-2.5 w-2.5 rounded-sm bg-gradient-to-br from-accent-blue to-accent-violet"></span>
-            Contact<span className="text-slate-400">Journalists</span>
+      <header className={blogTheme.header}>
+        <nav className={blogTheme.headerNav}>
+          <a href="/" className={blogTheme.logo}>
+            <span className={blogTheme.logoIcon}></span>
+            Contact<span className={blogTheme.logoText}>Journalists</span>
           </a>
-          <a
-            href="/"
-            className="flex items-center gap-2 text-sm text-slate-300 hover:text-white transition-colors"
-          >
+          <a href="/" className={blogTheme.navLink}>
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
@@ -201,36 +197,26 @@ const Guides = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/20 via-transparent to-accent-violet/20"></div>
-          <div className="absolute top-0 left-0 w-full h-full" style={{
-            backgroundImage: `radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-                              radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 50%)`
-          }}></div>
-        </div>
-
-        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <section className="relative overflow-hidden py-16 lg:py-24">
+        <div className={blogTheme.containerWide}>
           <div className="text-center">
-            <span className="inline-flex items-center gap-2 rounded-full bg-accent-blue/10 border border-accent-blue/30 px-4 py-1.5 text-sm font-medium text-accent-blue mb-6">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-blue opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-accent-blue"></span>
-              </span>
+            <span className={blogTheme.badge + " mb-6"}>
               Free Resources for Founders
             </span>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 tracking-tight">
+            <h1
+              className="text-4xl md:text-5xl lg:text-6xl text-black mb-6 tracking-tight"
+              style={blogTheme.h1Style}
+            >
               Guides: How To{" "}
-              <span className="bg-gradient-to-r from-accent-blue via-accent-violet to-accent-mint bg-clip-text text-transparent">
+              <span className="text-purple-600">
                 Contact Journalists
               </span>
               <br />
               and Get Publicity for Your Start Up
             </h1>
 
-            <p className="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto mb-10">
+            <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto mb-10">
               Everything you need to know about PR, pitching, and getting press coverage—without hiring an expensive agency. Written by founders who&apos;ve done it.
             </p>
 
@@ -245,7 +231,7 @@ const Guides = () => {
                   placeholder="Search guides..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-accent-blue/50 focus:border-accent-blue/50 transition-all"
+                  className={blogTheme.searchInput}
                 />
               </div>
             </div>
@@ -254,17 +240,17 @@ const Guides = () => {
       </section>
 
       {/* Category Pills */}
-      <section className="border-b border-white/5 sticky top-16 z-40 bg-base-900/95 backdrop-blur">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="border-b border-black/10 sticky top-16 z-40 bg-[#F5F5DC]/95 backdrop-blur">
+        <div className={blogTheme.containerWide}>
           <div className="flex gap-2 py-4 overflow-x-auto scrollbar-hide">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+                className={`${blogTheme.categoryPill} ${
                   activeCategory === cat.id
-                    ? "bg-accent-blue text-white shadow-lg shadow-accent-blue/25"
-                    : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white"
+                    ? blogTheme.categoryPillActive
+                    : blogTheme.categoryPillInactive
                 }`}
               >
                 <span>{cat.icon}</span>
@@ -277,34 +263,34 @@ const Guides = () => {
 
       {/* Featured Guides */}
       {activeCategory === "all" && !searchQuery && (
-        <section className="py-12 border-b border-white/5">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="py-12 border-b border-black/10">
+          <div className={blogTheme.containerWide}>
             <div className="flex items-center gap-3 mb-8">
               <span className="text-2xl">⭐</span>
-              <h2 className="text-2xl font-bold text-white">Featured Guides</h2>
+              <h2 className="text-2xl font-bold text-black">Featured Guides</h2>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
-              {featuredGuides.map((guide) => (
+              {featuredGuides.slice(0, 6).map((guide) => (
                 <a
                   key={guide.id}
                   href={`/blog/${guide.slug}`}
-                  className="group relative rounded-2xl border border-accent-blue/30 bg-gradient-to-br from-accent-blue/10 to-accent-violet/10 p-6 hover:border-accent-blue/50 transition-all hover:shadow-lg hover:shadow-accent-blue/10"
+                  className={`${blogTheme.guideCardFeatured} relative`}
                 >
                   {guide.isNew && (
-                    <div className="absolute -top-2 -right-2 bg-gradient-to-r from-accent-mint to-accent-blue px-2 py-1 rounded-full text-xs font-bold text-white uppercase">
+                    <div className="absolute -top-2 -right-2 bg-green-500 px-2 py-1 rounded-full text-xs font-bold text-white uppercase">
                       New
                     </div>
                   )}
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xs font-semibold text-accent-blue uppercase tracking-wide">
+                    <span className={blogTheme.badgeCategory}>
                       {CATEGORIES.find((c) => c.id === guide.category)?.label}
                     </span>
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-accent-blue transition-colors">
+                  <h3 className="text-lg font-bold text-black mb-2 group-hover:text-purple-600 transition-colors">
                     {guide.title}
                   </h3>
-                  <p className="text-sm text-slate-400 mb-4 line-clamp-2">
+                  <p className="text-sm text-slate-600 mb-4 line-clamp-2">
                     {guide.description}
                   </p>
                   <div className="flex items-center gap-3 text-xs text-slate-500">
@@ -321,9 +307,9 @@ const Guides = () => {
 
       {/* All Guides Grid */}
       <section className="py-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className={blogTheme.containerWide}>
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold text-white">
+            <h2 className="text-2xl font-bold text-black">
               {activeCategory === "all" ? "All Guides" : CATEGORIES.find((c) => c.id === activeCategory)?.label}
               <span className="ml-2 text-slate-500 text-lg font-normal">({filteredGuides.length})</span>
             </h2>
@@ -332,8 +318,8 @@ const Guides = () => {
           {filteredGuides.length === 0 ? (
             <div className="text-center py-16">
               <div className="text-5xl mb-4">🔍</div>
-              <h3 className="text-xl font-semibold text-white mb-2">No guides found</h3>
-              <p className="text-slate-400">Try adjusting your search or filter</p>
+              <h3 className="text-xl font-semibold text-black mb-2">No guides found</h3>
+              <p className="text-slate-600">Try adjusting your search or filter</p>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -341,22 +327,22 @@ const Guides = () => {
                 <a
                   key={guide.id}
                   href={`/blog/${guide.slug}`}
-                  className="group rounded-2xl border border-white/10 bg-base-800/50 p-6 hover:border-accent-blue/50 transition-all hover:bg-base-800"
+                  className={blogTheme.guideCard}
                 >
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xs font-semibold text-accent-violet uppercase tracking-wide">
+                    <span className={blogTheme.badgeCategory}>
                       {CATEGORIES.find((c) => c.id === guide.category)?.label}
                     </span>
                     {guide.isNew && (
-                      <span className="bg-accent-mint/20 text-accent-mint text-xs px-2 py-0.5 rounded-full font-medium">
+                      <span className={blogTheme.badgeNew}>
                         New
                       </span>
                     )}
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-accent-blue transition-colors">
+                  <h3 className="text-lg font-bold text-black mb-2 hover:text-purple-600 transition-colors">
                     {guide.title}
                   </h3>
-                  <p className="text-sm text-slate-400 mb-4 line-clamp-2">
+                  <p className="text-sm text-slate-600 mb-4 line-clamp-2">
                     {guide.description}
                   </p>
                   <div className="flex items-center justify-between">
@@ -365,7 +351,7 @@ const Guides = () => {
                       <span>•</span>
                       <span>{guide.readTime} read</span>
                     </div>
-                    <svg className="h-5 w-5 text-slate-500 group-hover:text-accent-blue group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="h-5 w-5 text-slate-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
@@ -377,20 +363,23 @@ const Guides = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 border-t border-white/5">
+      <section className="py-16 border-t border-black/10">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
+          <h2
+            className="text-3xl font-normal text-black mb-4"
+            style={blogTheme.h2Style}
+          >
             Ready to Get Press Coverage?
           </h2>
-          <p className="text-lg text-slate-400 mb-8">
+          <p className="text-lg text-slate-600 mb-8">
             Stop guessing which journalists to pitch. Get access to live press requests and a database of 50,000+ media contacts.
           </p>
           <a
-            href="/"
-            className="inline-flex items-center gap-3 rounded-xl bg-white px-8 py-4 text-lg font-bold text-black shadow-glow transition-all hover:bg-slate-100 hover:scale-105 active:scale-95"
+            href="/waitlist-signup"
+            className={blogTheme.primaryBtn}
           >
             Start Your 7-Day Free Trial
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </a>
@@ -398,22 +387,21 @@ const Guides = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 py-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <footer className={blogTheme.footer}>
+        <div className={blogTheme.containerWide + " py-8"}>
           <div className="flex items-center justify-between">
-            <a href="/" className="flex items-center gap-2 font-extrabold text-lg tracking-tight">
-              <span className="inline-block h-2.5 w-2.5 rounded-sm bg-gradient-to-br from-accent-blue to-accent-violet"></span>
-              Contact<span className="text-slate-400">Journalists</span>
+            <a href="/" className={blogTheme.logo}>
+              <span className={blogTheme.logoIcon}></span>
+              Contact<span className={blogTheme.logoText}>Journalists</span>
             </a>
-            <p className="text-sm text-slate-500">
+            <p className={blogTheme.footerText}>
               © {new Date().getFullYear()} ContactJournalists.com
             </p>
           </div>
         </div>
       </footer>
-    </div>
+    </BlogLayout>
   );
 };
 
 export default Guides;
-
