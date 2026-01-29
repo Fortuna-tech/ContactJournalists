@@ -450,7 +450,6 @@ export default function SimpleBlogScheduler() {
             </div>
           </DialogContent>
         </Dialog>
-      </div>
     </div>
   );
 }
