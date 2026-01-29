@@ -30,6 +30,7 @@ import {
   Image,
   AlertTriangle,
 } from "lucide-react";
+import { adminTheme } from "@/styles/adminTheme";
 
 type ImportState = "upload" | "mapping" | "importing" | "complete";
 type ImportPhase = "profiles" | "images";
@@ -267,11 +268,15 @@ export default function CsvImportPage() {
   const hasEmailScreenshot = mappings.includes("email_screenshot");
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold mb-2">CSV Import</h1>
-      <p className="text-muted-foreground mb-8">
-        Bulk import journalist profiles from a CSV file
-      </p>
+    <div className={adminTheme.container}>
+      <div className={adminTheme.pageHeader}>
+        <h1 className={adminTheme.pageTitle} style={adminTheme.pageTitleStyle}>
+          CSV Import
+        </h1>
+        <p className={adminTheme.pageSubtitle}>
+          Bulk import journalist profiles from a CSV file
+        </p>
+      </div>
 
       {error && (
         <Alert variant="destructive" className="mb-6">

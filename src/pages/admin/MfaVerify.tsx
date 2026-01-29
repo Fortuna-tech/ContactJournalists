@@ -22,6 +22,7 @@ import {
   getAAL,
 } from "@/lib/mfa";
 import { ShieldCheck, Loader2, LogOut } from "lucide-react";
+import { adminTheme } from "@/styles/adminTheme";
 
 const MfaVerify = () => {
   const navigate = useNavigate();
@@ -118,18 +119,18 @@ const MfaVerify = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className={adminTheme.page + " flex items-center justify-center"} style={adminTheme.bodyStyle}>
         <div className="text-center space-y-4">
-          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
-          <p className="text-muted-foreground">Preparing verification...</p>
+          <div className={adminTheme.loadingSpinner + " mx-auto"}></div>
+          <p className="text-slate-500">Preparing verification...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
+    <div className={adminTheme.page + " flex items-center justify-center p-4"} style={adminTheme.bodyStyle}>
+      <div className={adminTheme.cardWithShadow + " w-full max-w-md"}>
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
             <ShieldCheck className="h-7 w-7 text-primary" />
@@ -188,7 +189,7 @@ const MfaVerify = () => {
             </Button>
           </div>
         </CardContent>
-      </Card>
+      </div>
     </div>
   );
 };

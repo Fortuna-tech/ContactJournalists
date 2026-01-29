@@ -37,6 +37,7 @@ import AdminStoryRequestForm, {
   StoryRequestFormValues,
   queryToFormValues,
 } from "@/components/admin/AdminStoryRequestForm";
+import { adminTheme } from "@/styles/adminTheme";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -250,14 +251,16 @@ export default function StoryRequestBroadcasts() {
   };
 
   return (
-    <div className="p-8 space-y-8">
+    <div className={adminTheme.container + " space-y-8"}>
       <div className="flex items-center gap-4">
         <Link to="/admin">
-          <Button variant="ghost" size="icon">
+          <button className={adminTheme.iconBtn}>
             <ArrowLeft className="h-4 w-4" />
-          </Button>
+          </button>
         </Link>
-        <h1 className="text-3xl font-bold">Story Request Broadcasts</h1>
+        <h1 className={adminTheme.pageTitle} style={adminTheme.pageTitleStyle}>
+          Story Request Broadcasts
+        </h1>
       </div>
 
       {/* Bulk Form Section */}

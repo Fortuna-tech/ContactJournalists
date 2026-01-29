@@ -4,6 +4,7 @@ import { AdminDashboardSidebar } from "@/components/sidebars/AdminDashboardSideb
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { hasTOTPFactor, getAAL } from "@/lib/mfa";
+import { adminTheme, loadAdminFonts } from "@/styles/adminTheme";
 
 type AdminState =
   | "loading"
@@ -15,6 +16,11 @@ type AdminState =
 
 const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
   const [adminState, setAdminState] = useState<AdminState>("loading");
+
+  // Load fonts
+  useEffect(() => {
+    return loadAdminFonts();
+  }, []);
 
   useEffect(() => {
     const checkAdminAccess = async () => {
@@ -68,8 +74,8 @@ const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
   // Loading state
   if (adminState === "loading") {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className={adminTheme.page + " flex items-center justify-center"} style={adminTheme.bodyStyle}>
+        <div className={adminTheme.loadingSpinner}></div>
       </div>
     );
   }
@@ -95,12 +101,14 @@ const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
   }
 
   return (
-    <SidebarProvider>
-      <AdminDashboardSidebar />
-      <main className="w-full flex flex-col min-h-screen">
-        <div className="flex-1">{children || <Outlet />}</div>
-      </main>
-    </SidebarProvider>
+    <div className={adminTheme.page} style={adminTheme.bodyStyle}>
+      <SidebarProvider>
+        <AdminDashboardSidebar />
+        <main className="w-full flex flex-col min-h-screen">
+          <div className={adminTheme.content}>{children || <Outlet />}</div>
+        </main>
+      </SidebarProvider>
+    </div>
   );
 };
 

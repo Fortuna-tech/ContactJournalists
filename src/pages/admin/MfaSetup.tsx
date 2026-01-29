@@ -22,6 +22,7 @@ import {
   type EnrollmentData,
 } from "@/lib/mfa";
 import { Shield, Copy, Check, Loader2 } from "lucide-react";
+import { adminTheme } from "@/styles/adminTheme";
 
 const MfaSetup = () => {
   const navigate = useNavigate();
@@ -108,10 +109,10 @@ const MfaSetup = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className={adminTheme.page + " flex items-center justify-center"} style={adminTheme.bodyStyle}>
         <div className="text-center space-y-4">
-          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
-          <p className="text-muted-foreground">Setting up MFA...</p>
+          <div className={adminTheme.loadingSpinner + " mx-auto"}></div>
+          <p className="text-slate-500">Setting up MFA...</p>
         </div>
       </div>
     );
@@ -119,27 +120,25 @@ const MfaSetup = () => {
 
   if (!enrollmentData) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Card className="w-full max-w-md mx-4">
-          <CardHeader className="text-center">
-            <CardTitle className="text-destructive">Setup Failed</CardTitle>
-            <CardDescription>
+      <div className={adminTheme.page + " flex items-center justify-center"} style={adminTheme.bodyStyle}>
+        <div className={adminTheme.card + " " + adminTheme.cardPad + " w-full max-w-md mx-4"}>
+          <div className="text-center mb-4">
+            <h2 className="text-xl font-semibold text-red-600">Setup Failed</h2>
+            <p className="text-slate-500 mt-2">
               Unable to start MFA enrollment. Please try again.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button className="w-full" onClick={() => window.location.reload()}>
-              Retry
-            </Button>
-          </CardContent>
-        </Card>
+            </p>
+          </div>
+          <button className={adminTheme.primaryBtn + " w-full"} onClick={() => window.location.reload()}>
+            Retry
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-lg">
+    <div className={adminTheme.page + " flex items-center justify-center p-4"} style={adminTheme.bodyStyle}>
+      <div className={adminTheme.cardWithShadow + " w-full max-w-lg"}>
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
             <Shield className="h-7 w-7 text-primary" />
@@ -234,7 +233,7 @@ const MfaSetup = () => {
             </p>
           </div>
         </CardContent>
-      </Card>
+      </div>
     </div>
   );
 };

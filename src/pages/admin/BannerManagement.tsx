@@ -40,6 +40,7 @@ import {
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabaseClient";
+import { adminTheme } from "@/styles/adminTheme";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -176,14 +177,16 @@ export default function BannerManagement() {
   };
 
   return (
-    <div className="p-8 space-y-8">
+    <div className={adminTheme.container + " space-y-8"}>
       <div className="flex items-center gap-4">
         <Link to="/admin">
-          <Button variant="ghost" size="icon">
+          <button className={adminTheme.iconBtn}>
             <ArrowLeft className="h-4 w-4" />
-          </Button>
+          </button>
         </Link>
-        <h1 className="text-3xl font-bold">Banner Management</h1>
+        <h1 className={adminTheme.pageTitle} style={adminTheme.pageTitleStyle}>
+          Banner Management
+        </h1>
       </div>
 
       {/* Form Section - Rendered above the list */}

@@ -38,6 +38,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { format } from "date-fns";
+import { adminTheme } from "@/styles/adminTheme";
 
 export default function JournalistsPage() {
   const queryClient = useQueryClient();
@@ -155,26 +156,28 @@ export default function JournalistsPage() {
   };
 
   return (
-    <div className="p-8">
+    <div className={adminTheme.container}>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold">Journalists</h1>
-          <p className="text-muted-foreground">
+          <h1 className={adminTheme.pageTitle} style={adminTheme.pageTitleStyle}>
+            Journalists
+          </h1>
+          <p className={adminTheme.pageSubtitle}>
             {totalCount} total journalist{totalCount !== 1 ? "s" : ""}
           </p>
         </div>
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="icon" onClick={() => refetch()}>
+          <button className={adminTheme.iconBtn} onClick={() => refetch()}>
             <RefreshCw className="h-4 w-4" />
-          </Button>
+          </button>
           <JournalistForm
             onSubmit={handleCreate}
             title="Add New Journalist"
             trigger={
-              <Button>
+              <button className={adminTheme.primaryBtn}>
                 <Plus className="h-4 w-4 mr-2" />
                 Add Journalist
-              </Button>
+              </button>
             }
           />
         </div>
@@ -182,20 +185,20 @@ export default function JournalistsPage() {
 
       {/* Search */}
       <div className="relative max-w-md mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+        <input
           placeholder="Search by name, email, or publication..."
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
             setPage(1);
           }}
-          className="pl-10"
+          className={adminTheme.input + " " + adminTheme.inputWithIcon}
         />
       </div>
 
       {/* Table */}
-      <div className="border rounded-lg">
+      <div className={adminTheme.tableWrapper}>
         <Table>
           <TableHeader>
             <TableRow>

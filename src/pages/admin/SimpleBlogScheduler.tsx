@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { prForFoundersBlogContent, prForFoundersBlogMeta } from "@/lib/pr-for-founders-blog-content";
+import { adminTheme } from "@/styles/adminTheme";
 
 interface BlogPost {
   id: string;
@@ -219,44 +220,40 @@ export default function SimpleBlogScheduler() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-base-900 text-slate-200 flex items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
-              Blog Scheduler
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handlePasswordSubmit} className="space-y-4">
-              <div>
-                <Label htmlFor="password">Admin Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter password"
-                />
-                {passwordError && (
-                  <p className="text-red-400 text-sm mt-1">{passwordError}</p>
-                )}
-              </div>
-              <Button type="submit" className="w-full">
-                Access Scheduler
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+      <div className={adminTheme.page + " flex items-center justify-center"} style={adminTheme.bodyStyle}>
+        <div className={adminTheme.cardWithShadow + " " + adminTheme.cardPad + " w-full max-w-md"}>
+          <div className="flex items-center gap-2 mb-6">
+            <Calendar className="h-5 w-5 text-purple-600" />
+            <h2 className={adminTheme.cardTitle}>Blog Scheduler</h2>
+          </div>
+          <form onSubmit={handlePasswordSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="password" className={adminTheme.inputLabel}>Admin Password</label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password"
+                className={adminTheme.input}
+              />
+              {passwordError && (
+                <p className="text-red-600 text-sm mt-1">{passwordError}</p>
+              )}
+            </div>
+            <button type="submit" className={adminTheme.primaryBtn + " w-full"}>
+              Access Scheduler
+            </button>
+          </form>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-base-900 text-slate-200">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold flex items-center gap-2">
+    <div className={adminTheme.container}>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className={adminTheme.pageTitle + " flex items-center gap-2"} style={adminTheme.pageTitleStyle}>
             <Calendar className="h-8 w-8" />
             Blog Scheduler
           </h1>

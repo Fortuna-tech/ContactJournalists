@@ -10,7 +10,7 @@ export default {
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
-  // Safelist: blogTheme arbitrary values that contain special chars (defensive for prod builds)
+  // Safelist: blog + admin theme arbitrary values that contain special chars (defensive for prod builds)
   safelist: [
     // Beige background
     "bg-[#F5F5DC]",

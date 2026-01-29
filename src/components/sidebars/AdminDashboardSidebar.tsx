@@ -16,6 +16,7 @@ import {
   Megaphone,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { adminTheme } from "@/styles/adminTheme";
 
 const items = [
   {
@@ -57,24 +58,24 @@ export function AdminDashboardSidebar() {
   };
 
   return (
-    <Sidebar className="bg-background border-none mt-10">
-      <SidebarContent className="pl-4">
+    <Sidebar className={adminTheme.sidebar}>
+      <SidebarContent className="pt-6">
         <SidebarGroup>
-          <div className="flex items-center gap-2 px-4 py-2 mb-4">
-            <Shield className="h-5 w-5 text-primary" />
-            <span className="text-lg font-semibold">Admin</span>
+          <div className={adminTheme.sidebarHeader}>
+            <Shield className={adminTheme.sidebarIcon} />
+            <span className={adminTheme.sidebarTitle}>Admin</span>
           </div>
           <SidebarGroupContent>
-            <SidebarMenu className="gap-2">
+            <SidebarMenu className="gap-1 mt-4">
               {items.map((item) => (
-                <SidebarMenuItem
-                  className="py-1 pl-4 text- w-auto hover:bg-muted rounded-full hover:text-primary"
-                  key={item.title}
-                >
+                <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={isActive(item)}>
-                    <Link to={item.url}>
-                      <item.icon />
-                      <span className="text-lg font-light tracking-tight">
+                    <Link 
+                      to={item.url}
+                      className={isActive(item) ? adminTheme.sidebarItemActive : adminTheme.sidebarItem}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      <span className={adminTheme.sidebarItemText}>
                         {item.title}
                       </span>
                     </Link>
