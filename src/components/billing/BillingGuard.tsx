@@ -31,11 +31,11 @@ const BillingGuard = ({ children }: BillingGuardProps) => {
   const hasActivePlan = data && status && ACTIVE_STATUSES.includes(status);
 
   if (!hasActivePlan) {
+    const redirectPath = encodeURIComponent(location.pathname);
     return (
       <Navigate
-        to="/onboarding?step=plan"
+        to={`/pricing?reason=subscribe&next=${redirectPath}`}
         replace
-        state={{ from: location.pathname }}
       />
     );
   }

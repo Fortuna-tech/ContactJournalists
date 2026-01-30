@@ -41,6 +41,7 @@ import ReachJournalistsByNicheBlog from "./pages/blog/ReachJournalistsByNicheBlo
 import BlogPost from "./pages/blog/BlogPost";
 import Guides from "./pages/Guides";
 import WaitlisSignup from "./pages/WaitlisSignup";
+import Pricing from "./pages/Pricing";
 
 // Admin Pages
 import AdminLayout from "@/layouts/AdminLayout";
@@ -74,6 +75,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/guides" element={<Guides />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/pricing" element={<Pricing />} />
             <Route path="/waitlist-signup" element={<WaitlisSignup />} />
             <Route
               path="/blog/how-to-get-press-for-your-brand-without-a-pr-agency"

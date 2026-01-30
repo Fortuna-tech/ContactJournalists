@@ -192,7 +192,7 @@ const Index = () => {
             <li>
               <a
                 className="ml-2 inline-flex items-center rounded-full bg-black px-4 py-2 font-semibold text-white hover:bg-black/90 transition-colors"
-                href="/auth"
+                href="/pricing"
                 data-testid="button-get-started"
               >
                 Get Started
@@ -254,7 +254,7 @@ const Index = () => {
                 Login
               </a>
               <a
-                href="/auth"
+                href="/pricing"
                 onClick={closeMobileMenu}
                 className="mt-2 block rounded-full bg-black px-4 py-2.5 text-center font-semibold text-white hover:bg-black/90 transition-colors"
               >
@@ -284,7 +284,7 @@ const Index = () => {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                   <a
-                    href="/auth"
+                    href="/pricing"
                     className={primaryButtonClass}
                     data-testid="hero-start-trial"
                   >
@@ -471,7 +471,7 @@ const Index = () => {
                   people fast.
                 </p>
                 <a
-                  href="/auth"
+                  href="/pricing"
                   className="inline-flex items-center justify-center rounded-full bg-[#D8B4FE] px-5 py-2.5 text-sm font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150"
                 >
                   Start Free Trial
@@ -498,7 +498,7 @@ const Index = () => {
                   your story in front of the press.
                 </p>
                 <a
-                  href="/auth"
+                  href="/pricing"
                   className="inline-flex items-center justify-center rounded-full bg-[#D8B4FE] px-5 py-2.5 text-sm font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150"
                 >
                   Start Free Trial
@@ -525,7 +525,7 @@ const Index = () => {
                   Save time and boost your chances of getting featured.
                 </p>
                 <a
-                  href="/auth"
+                  href="/pricing"
                   className="inline-flex items-center justify-center rounded-full bg-[#D8B4FE] px-5 py-2.5 text-sm font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150"
                 >
                   Start Free Trial
@@ -590,7 +590,7 @@ const Index = () => {
                 </ul>
 
                 <a
-                  href="/auth"
+                  href="/pricing"
                   className="block w-full text-center rounded-full bg-[#D8B4FE] px-6 py-3 font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150"
                 >
                   Start Your Free Trial
@@ -638,7 +638,7 @@ const Index = () => {
                 </ul>
 
                 <a
-                  href="/auth"
+                  href="/pricing"
                   className="block w-full text-center rounded-full bg-[#D8B4FE] px-6 py-3 font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150"
                 >
                   Start Your Free Trial
@@ -696,7 +696,7 @@ const Index = () => {
                 </ul>
 
                 <a
-                  href="/auth"
+                  href="/pricing"
                   className="block w-full text-center rounded-full bg-[#D8B4FE] px-6 py-3 font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150"
                 >
                   Coming Soon!
@@ -885,7 +885,7 @@ const Index = () => {
                   story—no agencies, no stress. Simple, fast, and built for you.
                 </p>
                 <a
-                  href="/auth"
+                  href="/pricing"
                   className="inline-flex items-center justify-center rounded-full bg-[#D8B4FE] px-8 py-4 text-lg font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150 w-full md:w-auto"
                 >
                   Try free
@@ -1358,7 +1358,7 @@ const Index = () => {
                   started. We keep PR clear and stress-free.
                 </p>
                 <a
-                  href="/auth"
+                  href="/pricing"
                   className={outlineButtonClass}
                 >
                   Start free

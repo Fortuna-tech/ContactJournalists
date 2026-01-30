@@ -159,7 +159,7 @@ export const followingUpBlogContent = `
       <p class="text-slate-300 mb-4">
         It shows you who's actually looking for stories right now, lets you reply instantly to live journalist requests in your niche, and saves you hours of manual research and second-guessing.
       </p>
-      <a href="/auth" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
+      <a href="/pricing" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
         Start Your 7-Day Free Trial
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -274,7 +274,7 @@ export const followingUpBlogContent = `
           <span>stop wasting time pitching people who were never a fit</span>
         </li>
       </ul>
-      <a href="/auth" class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-black hover:bg-slate-100 transition-colors">
+      <a href="/pricing" class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-black hover:bg-slate-100 transition-colors">
         Start Your 7-Day Free Trial
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -360,7 +360,7 @@ export const followingUpBlogContent = `
       <p class="text-slate-300 mb-4">
         Instead of guessing who might be relevant or following up on pitches that were never quite right, you can see journalists actively requesting stories in your niche, reply instantly while the opportunity is still live, and avoid spending hours chasing coverage that was never a fit in the first place.
       </p>
-      <a href="/auth" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
+      <a href="/pricing" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
         Try Free for 7 Days
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -484,7 +484,7 @@ export const followingUpBlogContent = `
       <p class="text-slate-300 mb-4">
         With <a href="https://contactjournalists.com" class="text-accent-blue hover:underline">contactjournalists.com</a>, you can track your pitches and follow-ups directly in your dashboard, so you're not relying on memory, inbox searches, or half-written notes to decide what to do next.
       </p>
-      <a href="/auth" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
+      <a href="/pricing" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
         Start Your Free Trial
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -553,7 +553,7 @@ export const followingUpBlogContent = `
       <p class="text-slate-300 mb-4">
         Because you're not just sending pitches, you can keep track of who you've worked with, who's responded before, and who might be worth going back to when you have something genuinely relevant. That context makes post-coverage follow-ups feel natural instead of awkward.
       </p>
-      <a href="/auth" class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-black hover:bg-slate-100 transition-colors">
+      <a href="/pricing" class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-black hover:bg-slate-100 transition-colors">
         Start Building Journalist Relationships
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -592,7 +592,7 @@ export const followingUpBlogContent = `
       <p class="text-white/90 mb-6">
         See live journalist requests, reply instantly, and track everything in one place.
       </p>
-      <a href="/auth" class="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 font-bold text-black hover:bg-slate-100 transition-colors">
+      <a href="/pricing" class="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 font-bold text-black hover:bg-slate-100 transition-colors">
         Start Your 7-Day Free Trial
         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -667,7 +667,7 @@ export const followingUpBlogContent = `
       <p class="text-white/90 mb-6">
         Reply instantly to live journalist requests that already match your niche, instead of pitching into the void and hoping for the best.
       </p>
-      <a href="/auth" class="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 font-bold text-black hover:bg-slate-100 transition-colors">
+      <a href="/pricing" class="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 font-bold text-black hover:bg-slate-100 transition-colors">
         Try ContactJournalists Free for 7 Days
         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />

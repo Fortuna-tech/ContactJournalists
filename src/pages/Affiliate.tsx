@@ -178,7 +178,7 @@ export default function Affiliate() {
             <li>
               <a
                 className="ml-2 inline-flex items-center rounded-full bg-black px-4 py-2 font-semibold text-white hover:bg-black/90 transition-colors"
-                href="/auth"
+                href="/pricing"
               >
                 Get Started
               </a>
@@ -218,7 +218,7 @@ export default function Affiliate() {
                 FAQ
               </a>
               <a
-                href="/auth"
+                href="/pricing"
                 onClick={closeMobileMenu}
                 className="mt-2 block rounded-full bg-black px-4 py-2.5 text-center font-semibold text-white hover:bg-black/90 transition-colors"
               >

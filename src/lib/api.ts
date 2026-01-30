@@ -42,7 +42,7 @@ export const createCheckoutSession = async (
         customerEmail: user.email,
         successUrl: `${window.location.origin}/feed?session_id={CHECKOUT_SESSION_ID}`,
         cancelUrl:
-          cancelUrl || `${window.location.origin}/onboarding?step=plan`,
+          cancelUrl || `${window.location.origin}/pricing?reason=subscribe`,
       }),
     }
   );

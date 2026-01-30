@@ -88,7 +88,7 @@ export const founderMistakesBlogContent = `
       What people don't see is how slow, messy, and mentally draining it was to get there.
     </p>
     <p class="text-slate-300 mb-4">
-      That experience is exactly why ContactJournalists.com exists! <a href="/auth" class="text-accent-blue hover:underline">Take a look around and start responding to journalist's requests now</a>.
+      That experience is exactly why ContactJournalists.com exists! <a href="/pricing" class="text-accent-blue hover:underline">Take a look around and start responding to journalist's requests now</a>.
     </p>
   </section>
 
@@ -165,7 +165,7 @@ export const founderMistakesBlogContent = `
         For more on this check out: <a href="/blog/press-pitch-examples-that-get-replies" class="text-accent-blue hover:underline">Press Pitch Examples That Get Replies</a>
       </p>
       <p class="text-slate-300">
-        ContactJournalists.com brings live journalist requests and current coverage into one place, saving founders hours of manual research. <a href="/auth" class="text-accent-blue hover:underline">Start Your 7 Day Free Trial today</a>.
+        ContactJournalists.com brings live journalist requests and current coverage into one place, saving founders hours of manual research. <a href="/pricing" class="text-accent-blue hover:underline">Start Your 7 Day Free Trial today</a>.
       </p>
     </article>
 
@@ -188,7 +188,7 @@ export const founderMistakesBlogContent = `
       </p>
       <p class="text-slate-300">
         <strong>Why ContactJournalists.com saves time:</strong><br />
-        Live press requests show you exactly what journalists are asking for, so you respond to demand instead of guessing angles that just may not land. <a href="/auth" class="text-accent-blue hover:underline">Check out our 7 day free trial and take a look around</a>.
+        Live press requests show you exactly what journalists are asking for, so you respond to demand instead of guessing angles that just may not land. <a href="/pricing" class="text-accent-blue hover:underline">Check out our 7 day free trial and take a look around</a>.
       </p>
     </article>
 
@@ -235,7 +235,7 @@ export const founderMistakesBlogContent = `
         <a href="https://muckrack.com/state-of-journalism" class="text-accent-blue hover:underline" target="_blank" rel="noopener">https://muckrack.com/state-of-journalism</a>
       </p>
       <p class="text-slate-300">
-        If you want to see how journalists ask for information in practice, there's a <a href="/auth" class="text-accent-blue hover:underline">7-day free trial on ContactJournalists.com</a> you can explore when you're ready.
+        If you want to see how journalists ask for information in practice, there's a <a href="/pricing" class="text-accent-blue hover:underline">7-day free trial on ContactJournalists.com</a> you can explore when you're ready.
       </p>
     </article>
 
@@ -276,7 +276,7 @@ export const founderMistakesBlogContent = `
         <a href="https://www.theguardian.com/media/greenslade/2014/jan/09/pr-industry-press-releases" class="text-accent-blue hover:underline" target="_blank" rel="noopener">https://www.theguardian.com/media/greenslade/2014/jan/09/pr-industry-press-releases</a>
       </p>
       <p class="text-slate-300">
-        Regularly reading real journalist requests is one of the fastest ways to unlearn this habit, and you can do that during the <a href="/auth" class="text-accent-blue hover:underline">7-day free trial on ContactJournalists.com</a> if it's helpful.
+        Regularly reading real journalist requests is one of the fastest ways to unlearn this habit, and you can do that during the <a href="/pricing" class="text-accent-blue hover:underline">7-day free trial on ContactJournalists.com</a> if it's helpful.
       </p>
     </article>
 
@@ -315,7 +315,7 @@ export const founderMistakesBlogContent = `
         PR is timing, not persistence. A polite follow-up can help if timing was off, but excessive chasing rarely changes a journalist's mind.
       </p>
       <p class="text-slate-300">
-        When relevance and timing are right, follow-ups often become unnecessary, and seeing that dynamic play out in real time is something founders notice quickly when using the <a href="/auth" class="text-accent-blue hover:underline">7-day free trial on ContactJournalists.com</a>.
+        When relevance and timing are right, follow-ups often become unnecessary, and seeing that dynamic play out in real time is something founders notice quickly when using the <a href="/pricing" class="text-accent-blue hover:underline">7-day free trial on ContactJournalists.com</a>.
       </p>
     </article>
 
@@ -357,7 +357,7 @@ export const founderMistakesBlogContent = `
         <a href="https://www.nielsen.com/insights/2015/global-trust-in-advertising-report/" class="text-accent-blue hover:underline" target="_blank" rel="noopener">https://www.nielsen.com/insights/2015/global-trust-in-advertising-report/</a>
       </p>
       <p class="text-slate-300">
-        PR becomes far more manageable when it's treated as a system rather than a side project, and the <a href="/auth" class="text-accent-blue hover:underline">7-day free trial on ContactJournalists.com</a> exists for founders who want to explore that at their own pace.
+        PR becomes far more manageable when it's treated as a system rather than a side project, and the <a href="/pricing" class="text-accent-blue hover:underline">7-day free trial on ContactJournalists.com</a> exists for founders who want to explore that at their own pace.
       </p>
     </article>
   </section>
@@ -393,7 +393,7 @@ export const founderMistakesBlogContent = `
         you're probably not bad at PR, you're just trying to do it without enough visibility.
       </p>
       <p class="text-slate-300">
-        And when you want PR to feel less scattered and more intentional, there's a <a href="/auth" class="text-accent-blue hover:underline">7-day free trial waiting for you at ContactJournalists.com</a>.
+        And when you want PR to feel less scattered and more intentional, there's a <a href="/pricing" class="text-accent-blue hover:underline">7-day free trial waiting for you at ContactJournalists.com</a>.
       </p>
     </div>
     
@@ -533,7 +533,7 @@ export const founderMistakesBlogContent = `
     <p class="text-slate-300 mb-6">
       Join founders who've made PR feel manageable, not chaotic.
     </p>
-    <a href="/auth" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-8 py-4 text-lg font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
+    <a href="/pricing" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-8 py-4 text-lg font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
       Start Your 7-Day Free Trial
     </a>
   </div>

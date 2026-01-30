@@ -85,7 +85,7 @@ const fullBlogContent = {
       <p class="text-slate-200 mb-4">
         Want to find journalists who are actually looking for your story right now?
       </p>
-      <a href="/auth" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
+      <a href="/pricing" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
         👉 Start your 7-day free trial of ContactJournalists.com
       </a>
     </div>
@@ -115,7 +115,7 @@ const fullBlogContent = {
       <p class="text-slate-200 mb-4">
         ContactJournalists.com shows you live press requests from journalists actively seeking sources. No cold pitching required.
       </p>
-      <a href="/auth" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
+      <a href="/pricing" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
         👉 See journalist requests right now
       </a>
     </div>
@@ -139,7 +139,7 @@ const fullBlogContent = {
       <p class="text-slate-200 mb-4">
         Twitter is where journalists actually ask for sources. This guide covers everything I learned from pitching on Twitter for 7 years.
       </p>
-      <a href="/auth" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
+      <a href="/pricing" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
         👉 Start your 7-day free trial now
       </a>
     </div>
@@ -193,7 +193,7 @@ const fullBlogContent = {
       <p class="text-slate-200 mb-4">
         For most founders, ContactJournalists.com offers the best ROI. Try the 7-day free trial.
       </p>
-      <a href="/auth" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
+      <a href="/pricing" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
         👉 Start your free trial
       </a>
     </div>
@@ -232,7 +232,7 @@ const fullBlogContent = {
       <p class="text-slate-200 mb-4">
         While you wait for your template, check out ContactJournalists.com for press coverage.
       </p>
-      <a href="/auth" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
+      <a href="/pricing" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
         👉 Start your 7-day free trial
       </a>
     </div>
@@ -274,7 +274,7 @@ const fullBlogContent = {
       <p class="text-slate-200 mb-4">
         The easiest way to get press is to respond to journalists who are already looking for sources.
       </p>
-      <a href="/auth" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
+      <a href="/pricing" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
         👉 Try ContactJournalists.com free for 7 days
       </a>
     </div>
@@ -321,7 +321,7 @@ const blogContent = {
     <p class="text-slate-300 mb-6">
       ContactJournalists.com sends you real-time alerts when journalists are looking for sources. Get the timing right, and watch your reply rates soar.
     </p>
-    <a href="/auth" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
+    <a href="/pricing" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
       Try It Free
     </a>
   </div>
@@ -456,7 +456,7 @@ const blogContent = {
     <p class="text-slate-200 mb-4">
       Ready to start getting replies to your press pitches?
     </p>
-    <a href="/auth" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
+    <a href="/pricing" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
       👉 Start your 7-day free trial of ContactJournalists.com
     </a>
   </div>
@@ -492,7 +492,7 @@ const blogContent = {
     <p class="text-slate-200 mb-4">
       ContactJournalists.com shows you live press requests from journalists actively seeking sources. No cold pitching required.
     </p>
-    <a href="/auth" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
+    <a href="/pricing" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
       👉 See journalist requests right now
     </a>
   </div>
@@ -618,7 +618,7 @@ const blogContent = {
     <p className="text-slate-200 mb-4">
       Twitter is where journalists actually ask for sources. This guide covers everything I learned from pitching on Twitter for 7 years.
     </p>
-    <a href="/auth" className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
+    <a href="/pricing" className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
       👉 Start your 7-day free trial now
     </a>
   </div>
@@ -678,7 +678,7 @@ const blogContent = {
     <p class="text-slate-200 mb-4">
       For most founders, ContactJournalists.com offers the best ROI. Try the 7-day free trial.
     </p>
-    <a href="/auth" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
+    <a href="/pricing" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
       👉 Start your free trial
     </a>
   </div>
@@ -723,7 +723,7 @@ const blogContent = {
     <p class="text-slate-200 mb-4">
       While you wait for your template, check out ContactJournalists.com for press coverage.
     </p>
-    <a href="/auth" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
+    <a href="/pricing" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important;">
       👉 Start your 7-day free trial
     </a>
   </div>
@@ -901,7 +901,7 @@ const blogContent = {
                 No more wasted time on cold pitches. Just real opportunities
                 when journalists are actually looking for your story.
               </p>
-              <a href="/auth" className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
+              <a href="/pricing" className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
                 Join the Waitlist
               </a>
             </div>
@@ -958,7 +958,7 @@ const blogContent = {
                 ContactJournalists.com waitlist and get early access to the
                 platform that's changing how small businesses get press.
               </p>
-              <a href="/auth" className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
+              <a href="/pricing" className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
                 Get Early Access
               </a>
             </div>

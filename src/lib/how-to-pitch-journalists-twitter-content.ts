@@ -73,7 +73,7 @@ export const howToPitchJournalistsTwitterContent = `
       </li>
     </ul>
     <p class="text-slate-300 mt-4">
-      👉 <a href="/auth" class="text-accent-blue hover:underline font-semibold">Start your 7-day free trial</a> and see journalist requests the moment they appear.
+      👉 <a href="/pricing" class="text-accent-blue hover:underline font-semibold">Start your 7-day free trial</a> and see journalist requests the moment they appear.
     </p>
   </div>
 
@@ -308,7 +308,7 @@ export const howToPitchJournalistsTwitterContent = `
       This is exactly why <a href="https://contactjournalists.com" class="text-accent-blue hover:underline">ContactJournalists.com</a> surfaces these requests in real time.
     </p>
     <p class="text-slate-300 mb-6">
-      👉 If you want to see journalist requests before they disappear, <a href="/auth" class="text-accent-blue hover:underline font-semibold">start your 7-day free trial</a> and watch them arrive in one dashboard.
+      👉 If you want to see journalist requests before they disappear, <a href="/pricing" class="text-accent-blue hover:underline font-semibold">start your 7-day free trial</a> and watch them arrive in one dashboard.
     </p>
 
     <h3 class="text-2xl font-bold text-white mb-4">3. Soft Signals (The Ones Most Founders Miss)</h3>
@@ -546,7 +546,7 @@ export const howToPitchJournalistsTwitterContent = `
       </li>
     </ul>
     <p class="text-slate-300 mb-4">
-      👉 If PR feels scattered, the database alone is worth the <a href="/auth" class="text-accent-blue hover:underline font-semibold">7-day free trial</a>.
+      👉 If PR feels scattered, the database alone is worth the <a href="/pricing" class="text-accent-blue hover:underline font-semibold">7-day free trial</a>.
     </p>
   </section>
 
@@ -587,7 +587,7 @@ export const howToPitchJournalistsTwitterContent = `
       It just removes friction.
     </p>
     <p class="text-slate-300 mb-4">
-      👉 If replying quickly is your biggest blocker, try the AI responder during your <a href="/auth" class="text-accent-blue hover:underline font-semibold">free trial</a> and feel the difference immediately.
+      👉 If replying quickly is your biggest blocker, try the AI responder during your <a href="/pricing" class="text-accent-blue hover:underline font-semibold">free trial</a> and feel the difference immediately.
     </p>
   </section>
 
@@ -665,7 +665,7 @@ export const howToPitchJournalistsTwitterContent = `
     <div class="bg-gradient-to-r from-accent-blue to-accent-violet rounded-2xl p-8 text-center">
       <h3 class="text-2xl font-bold text-white mb-4">Ready to turn tweets into press coverage?</h3>
       <p class="text-white/90 mb-6">Start your 7-day free trial today and see journalist requests the moment they appear.</p>
-      <a href="/auth" class="inline-flex items-center gap-2 bg-white text-accent-blue px-8 py-4 rounded-xl font-bold hover:bg-white/90 transition-colors">
+      <a href="/pricing" class="inline-flex items-center gap-2 bg-white text-accent-blue px-8 py-4 rounded-xl font-bold hover:bg-white/90 transition-colors">
         Start Free Trial
         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />

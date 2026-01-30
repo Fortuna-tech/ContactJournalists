@@ -377,7 +377,7 @@ const Guides = () => {
             Stop guessing which journalists to pitch. Get access to live press requests and a database of 50,000+ media contacts.
           </p>
           <a
-            href="/auth"
+            href="/pricing"
             className={blogTheme.primaryBtn}
           >
             Start Your 7-Day Free Trial

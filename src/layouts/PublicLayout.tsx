@@ -105,7 +105,7 @@ const PublicLayout = ({ children }: PublicLayoutProps) => {
             <li>
               <Link
                 className="ml-2 inline-flex items-center rounded-full bg-black px-4 py-2 font-semibold text-white hover:bg-black/90 transition-colors"
-                to="/auth"
+                to="/pricing"
               >
                 Get Started
               </Link>
@@ -167,7 +167,7 @@ const PublicLayout = ({ children }: PublicLayoutProps) => {
                 Login
               </Link>
               <Link
-                to="/auth"
+                to="/pricing"
                 onClick={closeMobileMenu}
                 className="mt-2 block rounded-full bg-black px-4 py-2.5 text-center font-semibold text-white hover:bg-black/90 transition-colors"
               >

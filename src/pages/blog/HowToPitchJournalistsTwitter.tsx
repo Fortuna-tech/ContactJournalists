@@ -89,7 +89,7 @@ const HowToPitchJournalistsTwitter = () => {
                 If you don't want to learn this the hard way like I did, this is exactly why I built ContactJournalists.com. It shows you journalist requests as they're happening, so you can respond while the opportunity is still there, not hours later when the thread is already dead. There's also a 7-day free trial, so you can try it properly without committing to anything.
               </p>
               <a
-                href="/auth"
+                href="/pricing"
                 className={blogTheme.primaryBtn}
               >
                 Start your 7-day free trial
@@ -131,7 +131,7 @@ const HowToPitchJournalistsTwitter = () => {
                   It's one of the reasons I eventually built ContactJournalists.com. After years of doing this manually, I knew how easy it was to miss good opportunities simply because you weren't looking at the right moment.
                 </p>
                 <a
-                  href="/auth"
+                  href="/pricing"
                   className={blogTheme.primaryBtn}
                 >
                   Start your 7-day free trial
@@ -188,7 +188,7 @@ const HowToPitchJournalistsTwitter = () => {
                   That's why I built ContactJournalists.com around live updates. Instead of hoping you happen to be online when a journalist posts, you see requests as they come in.
                 </p>
                 <a
-                  href="/auth"
+                  href="/pricing"
                   className={blogTheme.primaryBtn}
                 >
                   Start your 7-day free trial
@@ -241,7 +241,7 @@ const HowToPitchJournalistsTwitter = () => {
                   If you're curious, try it properly. There's a 7-day free trial, and that's intentional.
                 </p>
                 <a
-                  href="/auth"
+                  href="/pricing"
                   className={blogTheme.primaryBtn}
                 >
                   Start Your 7-Day Free Trial

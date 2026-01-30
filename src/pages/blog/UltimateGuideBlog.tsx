@@ -134,7 +134,7 @@ const UltimateGuideBlog = () => {
                     <li>• AI pitch templates included</li>
                   </ul>
                   <a
-                    href="/auth"
+                    href="/pricing"
                     className={blogTheme.link + " text-sm font-semibold"}
                   >
                     Get Started →
@@ -276,7 +276,7 @@ const UltimateGuideBlog = () => {
                 using the right tools and strategies.
               </p>
               <a
-                href="/auth"
+                href="/pricing"
                 className={blogTheme.primaryBtn}
               >
                 Start Your Free Trial

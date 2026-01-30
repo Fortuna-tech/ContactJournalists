@@ -88,7 +88,7 @@ export async function createPRForFoundersBlog() {
     <p class="text-slate-200 mb-4">
       PR stops being overwhelming when timing is handled for you, relevance is obvious, and you're responding to real demand, not shouting into the void.
     </p>
-    <a href="/auth" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important; background-color: #ffffff !important;">
+    <a href="/pricing" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold hover:opacity-95 transition-opacity" style="color: #000000 !important; background-color: #ffffff !important;">
       👉 Start your 7-day free trial of ContactJournalists.com now. We know you'll love it.
     </a>
   </div>
@@ -341,7 +341,7 @@ export async function createPRForFoundersBlog() {
 
     <div class="bg-accent-violet/10 border border-accent-violet/30 rounded-lg p-6 my-8">
       <p class="text-slate-200 mb-4">
-        Want to save yourself a lot of stress? Try <a href="/auth" class="text-accent-blue hover:text-accent-violet font-semibold">ContactJournalists.com 7 day free trial</a> and let us do the hard work for you!
+        Want to save yourself a lot of stress? Try <a href="/pricing" class="text-accent-blue hover:text-accent-violet font-semibold">ContactJournalists.com 7 day free trial</a> and let us do the hard work for you!
       </p>
     </div>
 
@@ -407,7 +407,7 @@ export async function createPRForFoundersBlog() {
     </p>
 
     <p class="text-slate-300 mb-6">
-      Solve those three things, and PR becomes one of the most powerful growth levers available to an early-stage business. <a href="/auth" class="text-accent-blue hover:text-accent-violet font-semibold">Start your 7 Day Free Trial Now!</a>
+      Solve those three things, and PR becomes one of the most powerful growth levers available to an early-stage business. <a href="/pricing" class="text-accent-blue hover:text-accent-violet font-semibold">Start your 7 Day Free Trial Now!</a>
     </p>
 
     <h3 class="text-2xl font-semibold text-white mb-4">What This Guide Is (and Isn't)</h3>
@@ -775,7 +775,7 @@ export async function createPRForFoundersBlog() {
 
     <div class="bg-accent-blue/10 border border-accent-blue/30 rounded-lg p-6 my-8">
       <p class="text-slate-200 mb-4">
-        If you want to try this properly without overthinking it, <a href="/auth" class="text-accent-blue hover:text-accent-violet font-semibold">start your 7-day free trial of ContactJournalists.com</a>. We're confident you'll love it.
+        If you want to try this properly without overthinking it, <a href="/pricing" class="text-accent-blue hover:text-accent-violet font-semibold">start your 7-day free trial of ContactJournalists.com</a>. We're confident you'll love it.
       </p>
     </div>
 
@@ -936,7 +936,7 @@ export async function createPRForFoundersBlog() {
 
     <div class="bg-accent-violet/10 border border-accent-violet/30 rounded-lg p-6 my-8">
       <p class="text-slate-200 mb-4">
-        <a href="/auth" class="text-accent-blue hover:text-accent-violet font-semibold">Start your 7 day free trial today!</a>
+        <a href="/pricing" class="text-accent-blue hover:text-accent-violet font-semibold">Start your 7 day free trial today!</a>
       </p>
     </div>
 
@@ -1159,7 +1159,7 @@ export async function createPRForFoundersBlog() {
         You just need a way to access the right opportunities at the right time.
       </p>
       <p class="text-slate-200 mb-4">
-        👉 <a href="/auth" class="text-accent-blue hover:text-accent-violet font-semibold">Start your 7-day free trial of ContactJournalists.com now</a>. It's built by a founder who's been exactly where you are. We know you'll love it.
+        👉 <a href="/pricing" class="text-accent-blue hover:text-accent-violet font-semibold">Start your 7-day free trial of ContactJournalists.com now</a>. It's built by a founder who's been exactly where you are. We know you'll love it.
       </p>
     </div>
   </section>
@@ -1388,7 +1388,7 @@ export async function createPRForFoundersBlog() {
         If you want PR that compounds instead of disappearing:
       </p>
       <p class="mb-6">
-        👉 <a href="/auth" class="font-semibold underline inline-block bg-white text-black px-6 py-3 rounded-lg hover:opacity-95 transition-opacity" style="color: #000000 !important; background-color: #ffffff !important;">Start your 7-day free trial of ContactJournalists.com</a>
+        👉 <a href="/pricing" class="font-semibold underline inline-block bg-white text-black px-6 py-3 rounded-lg hover:opacity-95 transition-opacity" style="color: #000000 !important; background-color: #ffffff !important;">Start your 7-day free trial of ContactJournalists.com</a>
       </p>
       <p class="mb-6" style="color: #ffffff !important;">
         It's built for founders who want evergreen visibility, not short-term noise.
@@ -1488,7 +1488,7 @@ export async function createPRForFoundersBlog() {
 
     <h3 class="text-2xl font-semibold text-white mb-4">What's the best way to contact journalists?</h3>
     <p class="text-slate-300 mb-6">
-      The best way to contact journalists is when they've already asked to be contacted. That's what ContactJournalists.com are here for. <a href="/auth" class="text-accent-blue hover:text-accent-violet font-semibold">Start you 7 day free trial now</a>.
+      The best way to contact journalists is when they've already asked to be contacted. That's what ContactJournalists.com are here for. <a href="/pricing" class="text-accent-blue hover:text-accent-violet font-semibold">Start you 7 day free trial now</a>.
     </p>
     <p class="text-slate-300 mb-6">
       Cold emailing journalists you don't know, with no context, is the hardest and least effective route.
@@ -1511,7 +1511,7 @@ export async function createPRForFoundersBlog() {
 
     <div class="bg-accent-blue/10 border border-accent-blue/30 rounded-lg p-6 my-8">
       <p class="text-slate-200 mb-4 text-center text-lg">
-        See you on the inside of <a href="/auth" class="text-accent-blue hover:text-accent-violet font-semibold">contactjournalists.com</a> - we can't wait to help you!
+        See you on the inside of <a href="/pricing" class="text-accent-blue hover:text-accent-violet font-semibold">contactjournalists.com</a> - we can't wait to help you!
       </p>
     </div>
   </section>
