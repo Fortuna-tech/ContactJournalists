@@ -57,7 +57,7 @@ const PressWithoutAgencyBlog = () => {
                 <strong>ContactJournalists.com</strong> gives you direct access to journalists already writing stories and requesting sources right now. You can pitch relevant journalists, stay organised, and cancel anytime.
               </p>
               <a
-                href="/waitlist-signup"
+                href="/auth"
                 className={blogTheme.primaryBtn}
               >
                 👉 Start your 7-day free trial now
@@ -98,7 +98,7 @@ const PressWithoutAgencyBlog = () => {
                 👉 Start your 7-day free trial and see how doable press actually is.
               </p>
               <a
-                href="/waitlist-signup"
+                href="/auth"
                 className={blogTheme.primaryBtn}
               >
                 Start your 7-day free trial
@@ -155,7 +155,7 @@ const PressWithoutAgencyBlog = () => {
                   </a>
                 </p>
                 <a
-                  href="/waitlist-signup"
+                  href="/auth"
                   className={blogTheme.primaryBtn}
                 >
                   Start your 7-day free trial today
@@ -186,7 +186,7 @@ const PressWithoutAgencyBlog = () => {
                   ContactJournalists.com helps you find the right journalists, respond to live opportunities, and keep your outreach organised in one place.
                 </p>
                 <a
-                  href="/waitlist-signup"
+                  href="/auth"
                   className={blogTheme.primaryBtn}
                 >
                   👉 Start your 7-day free trial now
@@ -223,7 +223,7 @@ const PressWithoutAgencyBlog = () => {
                   shows you journalist requests as they happen, so you can respond immediately.
                 </p>
                 <a
-                  href="/waitlist-signup"
+                  href="/auth"
                   className={blogTheme.primaryBtn}
                 >
                   Start your 7-day free trial and experience how fast press can actually move
@@ -267,7 +267,7 @@ const PressWithoutAgencyBlog = () => {
                   👉 Start your 7-day free trial of ContactJournalists.com and get in front of journalists who are actively writing right now.
                 </p>
                 <a
-                  href="/waitlist-signup"
+                  href="/auth"
                   className={blogTheme.primaryBtn}
                 >
                   Start Your Free Trial

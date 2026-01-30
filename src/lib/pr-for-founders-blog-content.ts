@@ -15,7 +15,7 @@ export const prForFoundersBlogContent = `
       This guide explains how founders and solopreneurs can use PR to grow an early-stage business without hiring a PR agency. It covers how to get press coverage, respond to journalist requests, build credibility, and create evergreen visibility that compounds over time. Whether you're bootstrapped, time-poor, or overwhelmed by traditional PR, this guide breaks down what actually works.
     </p>
     <p class="text-slate-300 mb-4">
-      If you're a founder or solopreneur trying to get press without a PR agency, <a href="/waitlist-signup" class="text-accent-blue hover:underline">ContactJournalists.com</a> is built for you.
+      If you're a founder or solopreneur trying to get press without a PR agency, <a href="/auth" class="text-accent-blue hover:underline">ContactJournalists.com</a> is built for you.
     </p>
   </div>
 
@@ -43,7 +43,7 @@ export const prForFoundersBlogContent = `
 
   <div class="bg-accent-violet/10 border border-accent-violet/30 rounded-lg p-6 my-8">
     <p class="text-slate-300 mb-4">
-      <a href="/waitlist-signup" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
+      <a href="/auth" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
         👉 Start your 7-day free trial of ContactJournalists.com now. We know you'll love it.
       </a>
     </p>
@@ -274,7 +274,7 @@ export const prForFoundersBlogContent = `
 
   <div class="bg-accent-blue/10 border border-accent-blue/30 rounded-lg p-6 my-8">
     <p class="text-slate-300 mb-4">
-      Want to save yourself a lot of stress? Try <a href="/waitlist-signup" class="text-accent-blue hover:underline">ContactJournalists.com 7 day free trial</a> and let us do the hard work for you!
+      Want to save yourself a lot of stress? Try <a href="/auth" class="text-accent-blue hover:underline">ContactJournalists.com 7 day free trial</a> and let us do the hard work for you!
     </p>
   </div>
 
@@ -346,7 +346,7 @@ export const prForFoundersBlogContent = `
   </p>
 
   <p class="text-slate-300 mb-6">
-    Solve those three things, and PR becomes one of the most powerful growth levers available to an early-stage business. <a href="/waitlist-signup" class="text-accent-blue hover:underline">Start your 7 Day Free Trial Now!</a>
+    Solve those three things, and PR becomes one of the most powerful growth levers available to an early-stage business. <a href="/auth" class="text-accent-blue hover:underline">Start your 7 Day Free Trial Now!</a>
   </p>
 
   <h3>What This Guide Is (and Isn't)</h3>
@@ -705,7 +705,7 @@ export const prForFoundersBlogContent = `
 
   <div class="bg-accent-violet/10 border border-accent-violet/30 rounded-lg p-6 my-8">
     <p class="text-slate-300 mb-4">
-      If you want to try this properly without overthinking it, <a href="/waitlist-signup" class="text-accent-blue hover:underline">start your 7-day free trial of ContactJournalists.com</a>. We're confident you'll love it.
+      If you want to try this properly without overthinking it, <a href="/auth" class="text-accent-blue hover:underline">start your 7-day free trial of ContactJournalists.com</a>. We're confident you'll love it.
     </p>
   </div>
 
@@ -890,7 +890,7 @@ export const prForFoundersBlogContent = `
 
   <div class="bg-accent-blue/10 border border-accent-blue/30 rounded-lg p-6 my-8">
     <p class="text-slate-300 mb-4">
-      <a href="/waitlist-signup" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
+      <a href="/auth" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
         Start your 7 day free trial today!
       </a>
     </p>
@@ -1129,7 +1129,7 @@ export const prForFoundersBlogContent = `
 
   <div class="bg-accent-violet/10 border border-accent-violet/30 rounded-lg p-6 my-8">
     <p class="text-slate-300 mb-4">
-      <a href="/waitlist-signup" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
+      <a href="/auth" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
         👉 Start your 7-day free trial of ContactJournalists.com now. It's built by a founder who's been exactly where you are. We know you'll love it.
       </a>
     </p>
@@ -1366,7 +1366,7 @@ export const prForFoundersBlogContent = `
       If you want PR that compounds instead of disappearing:
     </p>
     <p class="text-slate-300 mb-4">
-      <a href="/waitlist-signup" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
+      <a href="/auth" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity">
         👉 Start your 7-day free trial of ContactJournalists.com. It's built for founders who want evergreen visibility, not short-term noise. We're confident you'll love it.
       </a>
     </p>
@@ -1478,7 +1478,7 @@ export const prForFoundersBlogContent = `
 
   <h3>What's the best way to contact journalists?</h3>
   <p class="text-slate-300 mb-6">
-    The best way to contact journalists is when they've already asked to be contacted. That's what ContactJournalists.com are here for. <a href="/waitlist-signup" class="text-accent-blue hover:underline">Start you 7 day free trial now</a>.
+    The best way to contact journalists is when they've already asked to be contacted. That's what ContactJournalists.com are here for. <a href="/auth" class="text-accent-blue hover:underline">Start you 7 day free trial now</a>.
   </p>
 
   <p class="text-slate-300 mb-6">

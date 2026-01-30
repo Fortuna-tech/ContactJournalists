@@ -106,7 +106,7 @@ const FindJournalists = () => {
         </div>
 
         <p className="text-sm text-muted-foreground mb-4">
-          Popular topics journalists often cover include: AI, ADHD, Mental Health, Parenting, Motherhood, Fatherhood, Marketing, Startups, Wellness, Fashion, Beauty.
+          <span className="font-medium">Keywords:</span> Topics journalists regularly cover: AI, ADHD, Mental Health, Parenting, Motherhood, Fatherhood, Marketing, Startups, Wellness, Fashion, Beauty.
         </p>
 
         <div className="flex flex-wrap gap-2 items-center text-sm text-muted-foreground mb-4">

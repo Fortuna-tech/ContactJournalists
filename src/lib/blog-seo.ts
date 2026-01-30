@@ -582,7 +582,7 @@ function scoreInternalLinks(
 
   // ≥1 link to money page: 4
   const hasMoneyPageLink =
-    content.includes("/waitlist-signup") ||
+    content.includes("/auth") ||
     content.includes("/#pricing") ||
     content.includes("contactjournalists.com") ||
     internalLinks.some((link) => link.includes("contactjournalists"));
