@@ -54,6 +54,13 @@ import BlogForm from "@/pages/admin/BlogForm";
 import MfaSetup from "@/pages/admin/MfaSetup";
 import MfaVerify from "@/pages/admin/MfaVerify";
 
+// Legal Pages
+import PrivacyPolicy from "@/pages/legal/PrivacyPolicy";
+import PrivacyAndData from "@/pages/legal/PrivacyAndData";
+import CookiePolicy from "@/pages/legal/CookiePolicy";
+import TermsOfService from "@/pages/legal/TermsOfService";
+import RequestRemoval from "@/pages/legal/RequestRemoval";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -184,6 +191,13 @@ const App = () => (
               path="/admin/blog-dashboard-a7f3b9c2d1e4f5a6/edit/:id"
               element={<BlogForm />}
             />
+
+            {/* Legal Routes */}
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/privacy-and-data" element={<PrivacyAndData />} />
+            <Route path="/cookie-policy" element={<CookiePolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/request-removal" element={<RequestRemoval />} />
 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

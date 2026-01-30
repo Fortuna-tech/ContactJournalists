@@ -1,4 +1,6 @@
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
+import { FOOTER_LINKS } from "@/components/Footer";
 import { founderMistakesBlogContent, founderMistakesBlogMeta } from "@/lib/founder-mistakes-blog-content";
 import { blogTheme } from "@/styles/blogTheme";
 import BlogLayout from "@/layouts/BlogLayout";
@@ -138,6 +140,18 @@ const FounderMistakesBlog = () => {
 
       <footer className={blogTheme.footer}>
         <div className={blogTheme.footerInner}>
+          <div className="flex flex-wrap justify-center gap-1 text-sm text-slate-600 mb-4">
+            {FOOTER_LINKS.map((link, index) => (
+              <span key={link.href} className="flex items-center">
+                <Link className="hover:text-black hover:underline" to={link.href}>
+                  {link.label}
+                </Link>
+                {index < FOOTER_LINKS.length - 1 && (
+                  <span className="mx-2 text-slate-400">|</span>
+                )}
+              </span>
+            ))}
+          </div>
           <div className="text-center">
             <p className={blogTheme.footerText + " mb-2"}>
               Questions? Ping us a message at{" "}

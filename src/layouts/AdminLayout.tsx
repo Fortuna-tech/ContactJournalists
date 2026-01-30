@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { hasTOTPFactor, getAAL } from "@/lib/mfa";
 import { adminTheme, loadAdminFonts } from "@/styles/adminTheme";
+import Footer from "@/components/Footer";
 
 type AdminState =
   | "loading"
@@ -105,7 +106,12 @@ const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
       <SidebarProvider>
         <AdminDashboardSidebar />
         <main className="w-full flex flex-col min-h-screen">
-          <div className={adminTheme.content}>{children || <Outlet />}</div>
+          {/* Friendly greeting - purely presentational */}
+          <div className="px-6 sm:px-8 pt-4 pb-0">
+            <p className={adminTheme.greeting}>Hi Fortuna! 💕✨🚗</p>
+          </div>
+          <div className={adminTheme.content + " flex-1 pt-2"}>{children || <Outlet />}</div>
+          <Footer />
         </main>
       </SidebarProvider>
     </div>

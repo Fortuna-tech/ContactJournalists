@@ -1,7 +1,9 @@
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 import { reachJournalistsByNicheContent, reachJournalistsByNicheMeta } from "@/lib/reach-journalists-by-niche-content";
 import { blogTheme } from "@/styles/blogTheme";
 import BlogLayout from "@/layouts/BlogLayout";
+import { FOOTER_LINKS } from "@/components/Footer";
 
 const ReachJournalistsByNicheBlog = () => {
   return (
@@ -58,10 +60,19 @@ const ReachJournalistsByNicheBlog = () => {
             <p className={blogTheme.footerText + " max-w-md"}>
               The fastest way for founders to find and reach journalists covering their niche.
             </p>
-            <div className="flex gap-6 text-sm text-slate-600">
-              <a href="/guides" className="hover:text-black transition-colors">Guides</a>
-              <a href="/affiliates" className="hover:text-black transition-colors">Affiliates</a>
+            <div className="flex flex-wrap justify-center gap-1 text-sm text-slate-600 mb-4">
+              {FOOTER_LINKS.map((link, index) => (
+                <span key={link.href} className="flex items-center">
+                  <Link className="hover:text-black hover:underline" to={link.href}>
+                    {link.label}
+                  </Link>
+                  {index < FOOTER_LINKS.length - 1 && (
+                    <span className="mx-2 text-slate-400">|</span>
+                  )}
+                </span>
+              ))}
             </div>
+            <p className={blogTheme.footerText}>© 2026 ContactJournalists.com. Built in London with ☕️</p>
           </div>
         </div>
       </footer>

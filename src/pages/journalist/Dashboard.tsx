@@ -101,7 +101,7 @@ export default function Dashboard() {
       <section>
         <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card>
+          <Card className="site-card">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Plus className="h-5 w-5 text-primary" />
@@ -112,13 +112,13 @@ export default function Dashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button asChild className="w-full">
+              <Button asChild className="w-full site-btn-primary">
                 <Link to="/journalist/requests/new">Create Request</Link>
               </Button>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="site-card">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
                 <FileText className="h-5 w-5 text-primary" />
@@ -129,13 +129,13 @@ export default function Dashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button asChild variant="outline" className="w-full">
+              <Button asChild variant="outline" className="w-full site-btn-secondary">
                 <Link to="/journalist/requests">My Requests</Link>
               </Button>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="site-card">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Bookmark className="h-5 w-5 text-primary" />
@@ -146,7 +146,7 @@ export default function Dashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button asChild variant="outline" className="w-full">
+              <Button asChild variant="outline" className="w-full site-btn-secondary">
                 <Link to="/journalist/saved-sources">View Saved</Link>
               </Button>
             </CardContent>
@@ -158,7 +158,7 @@ export default function Dashboard() {
       <section>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Active Story Requests</h2>
-          <Button asChild variant="link">
+          <Button asChild variant="link" className="text-black hover:text-purple-600">
             <Link to="/journalist/requests">View All</Link>
           </Button>
         </div>
@@ -175,11 +175,11 @@ export default function Dashboard() {
               />
             ))}
             {queries.length === 0 && (
-              <div className="col-span-full text-center py-12 bg-muted/20 rounded-lg">
+              <div className="col-span-full text-center py-12 bg-white/50 rounded-2xl border-2 border-black">
                 <p className="text-muted-foreground mb-4">
                   No active requests.
                 </p>
-                <Button asChild>
+                <Button asChild className="site-btn-primary">
                   <Link to="/journalist/requests/new">
                     Create your first request
                   </Link>
@@ -208,7 +208,7 @@ export default function Dashboard() {
               />
             ))}
             {suggestedSources.length === 0 && (
-              <div className="col-span-full text-center py-8 text-muted-foreground">
+              <div className="col-span-full text-center py-8 text-muted-foreground bg-white/50 rounded-2xl border-2 border-black">
                 No suggestions available at the moment. Try updating your
                 categories in settings.
               </div>

@@ -78,20 +78,20 @@ export function DashboardBanner() {
       {visibleBanners.map((banner) => (
         <div
           key={banner.id}
-          className="relative bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/20 rounded-lg p-4"
+          className="relative bg-purple-50/80 border-2 border-purple-200 rounded-2xl p-4"
         >
           <button
             onClick={() => handleDismiss(banner.id)}
-            className="absolute top-2 right-2 p-1 rounded-full hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors"
+            className="absolute top-3 right-3 p-1 rounded-full hover:bg-purple-100 text-slate-500 hover:text-black transition-colors"
             aria-label="Dismiss banner"
           >
             <X className="h-4 w-4" />
           </button>
 
           <div className="pr-8">
-            <h3 className="font-semibold text-foreground">{banner.title}</h3>
+            <h3 className="font-semibold text-black">{banner.title}</h3>
             {banner.description && (
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="text-sm text-slate-600 mt-1">
                 {banner.description}
               </p>
             )}
@@ -99,7 +99,7 @@ export function DashboardBanner() {
               <Button
                 asChild
                 variant="link"
-                className="p-0 h-auto mt-2 text-primary"
+                className="p-0 h-auto mt-2 text-purple-600 hover:text-purple-700"
               >
                 <a
                   href={banner.cta_link}

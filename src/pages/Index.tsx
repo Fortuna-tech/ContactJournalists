@@ -1468,42 +1468,51 @@ const Index = () => {
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-xs sm:text-sm text-black">Company</h4>
+                <h4 className="font-semibold text-xs sm:text-sm text-black">Legal</h4>
                 <ul className="mt-2 sm:mt-3 space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-slate-600">
                   <li>
                     <a
                       className="hover:text-black"
-                      href="#about"
-                      data-testid="link-footer-about"
+                      href="/privacy-policy"
+                      data-testid="link-footer-privacy-policy"
                     >
-                      About
+                      Privacy policy
                     </a>
                   </li>
                   <li>
                     <a
                       className="hover:text-black"
-                      href="#contact"
-                      data-testid="link-footer-contact"
+                      href="/privacy-and-data"
+                      data-testid="link-footer-privacy-and-data"
                     >
-                      Contact
+                      Privacy & data
                     </a>
                   </li>
                   <li>
                     <a
                       className="hover:text-black"
-                      href="#privacy"
-                      data-testid="link-footer-privacy"
+                      href="/cookie-policy"
+                      data-testid="link-footer-cookie-policy"
                     >
-                      Privacy
+                      Cookie policy
                     </a>
                   </li>
                   <li>
                     <a
                       className="hover:text-black"
-                      href="#terms"
-                      data-testid="link-footer-terms"
+                      href="/terms-of-service"
+                      data-testid="link-footer-terms-of-service"
                     >
-                      Terms
+                      Terms of service
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="hover:text-black"
+                      href="/request-removal"
+                      data-testid="link-footer-request-removal"
+                    >
+                      Request removal
                     </a>
                   </li>
                 </ul>
@@ -1519,7 +1528,7 @@ const Index = () => {
                   hello@contactjournalists.com
                 </a>
               </p>
-              <p>© 2025 ContactJournalists.com. Built in London with ☕️</p>
+              <p>© 2026 ContactJournalists.com. Built in London with ☕️</p>
             </div>
           </div>
         </footer>

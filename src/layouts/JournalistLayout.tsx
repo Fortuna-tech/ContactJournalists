@@ -1,38 +1,32 @@
 import { Outlet } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { JournalistDashboardSidebar } from "@/components/sidebars";
+import { useEffect } from "react";
+import Footer from "@/components/Footer";
 
 const JournalistLayout = ({ children }: { children?: React.ReactNode }) => {
+  // Load Caprasimo + DM Sans fonts for journalist dashboard theme
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.href =
+      "https://fonts.googleapis.com/css2?family=Caprasimo&family=DM+Sans:wght@400;500;600;700&display=swap";
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, []);
+
   return (
-    <SidebarProvider>
-      <JournalistDashboardSidebar />
-      <main className="w-full flex flex-col min-h-screen">
-        <div className="flex-1">{children || <Outlet />}</div>
-        <footer className="p-6 mt-auto text-sm text-muted-foreground">
-          <div className="container mx-auto flex flex-wrap gap-6 justify-center md:justify-between">
-            <div className="flex gap-6">
-              <a href="#" className="hover:underline">
-                Terms
-              </a>
-              <a href="#" className="hover:underline">
-                Privacy
-              </a>
-              <a href="#" className="hover:underline">
-                Data Processing Notice
-              </a>
-            </div>
-            <div className="flex gap-6">
-              <a href="#" className="hover:underline">
-                Right to Erasure
-              </a>
-              <a href="#" className="hover:underline">
-                Contact Support
-              </a>
-            </div>
-          </div>
-        </footer>
-      </main>
-    </SidebarProvider>
+    <div className="journalist-theme min-h-screen bg-[#F5F5DC]">
+      <SidebarProvider>
+        <JournalistDashboardSidebar />
+        <main className="w-full flex flex-col min-h-screen">
+          <div className="flex-1">{children || <Outlet />}</div>
+          <Footer />
+        </main>
+      </SidebarProvider>
+    </div>
   );
 };
 

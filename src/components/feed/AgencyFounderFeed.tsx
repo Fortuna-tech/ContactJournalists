@@ -105,21 +105,21 @@ const AgencyFounderFeed = () => {
   ).map(([id, title]) => ({ id, title }));
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-4 sm:p-8">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Dashboard Banners */}
         <DashboardBanner />
 
         {authorId && (
-          <div className="bg-muted/50 p-4 rounded-lg flex items-center justify-between mb-6">
-            <p className="text-sm font-medium">
+          <div className="bg-white/50 p-4 rounded-2xl border-2 border-black flex items-center justify-between mb-6">
+            <p className="text-sm font-medium text-black">
               Viewing queries from selected journalist
             </p>
             <Button
               variant="ghost"
               size="sm"
               onClick={handleClearAuthorFilter}
-              className="h-auto p-2"
+              className="site-btn-ghost h-auto"
             >
               <X className="h-4 w-4 mr-2" />
               Clear Filter
@@ -132,7 +132,11 @@ const AgencyFounderFeed = () => {
           <Badge
             variant={categoryFilter === null ? "default" : "outline"}
             onClick={() => setCategoryFilter(null)}
-            className="rounded-full cursor-pointer"
+            className={`rounded-full cursor-pointer px-4 py-1.5 text-sm font-medium transition-all ${
+              categoryFilter === null
+                ? "site-pill-active"
+                : "site-pill-inactive"
+            }`}
           >
             All
           </Badge>
@@ -141,7 +145,11 @@ const AgencyFounderFeed = () => {
               key={category.id}
               variant={categoryFilter === category.id ? "default" : "outline"}
               onClick={() => setCategoryFilter(category.id)}
-              className="rounded-full cursor-pointer px-2 py-1"
+              className={`rounded-full cursor-pointer px-4 py-1.5 text-sm font-medium transition-all ${
+                categoryFilter === category.id
+                  ? "site-pill-active"
+                  : "site-pill-inactive"
+              }`}
             >
               {category.title}
             </Badge>
@@ -158,20 +166,26 @@ const AgencyFounderFeed = () => {
             return (
               <Card
                 key={query.id}
-                className="p-6 cursor-pointer hover:border-primary transition-colors"
+                className="p-4 sm:p-6 cursor-pointer bg-[#F5F5DC] border-2 border-black rounded-2xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] transition-all duration-150"
                 onClick={() => !hasUserPitched && setSelectedQuery(query)}
               >
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-xl font-semibold">{query.title}</h3>
-                      <Badge variant="outline">{query.categoryTitle}</Badge>
-                      {hasUserPitched && <Badge>Pitched</Badge>}
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
+                      <h3 className="text-lg sm:text-xl text-black">{query.title}</h3>
+                      <Badge variant="outline" className="rounded-full border-2 border-black/20 text-slate-600 text-xs">
+                        {query.categoryTitle}
+                      </Badge>
+                      {hasUserPitched && (
+                        <Badge className="rounded-full bg-purple-100 border border-purple-200 text-purple-700 text-xs">
+                          Pitched
+                        </Badge>
+                      )}
                     </div>
-                    <p className="text-muted-foreground mb-4">
+                    <p className="text-slate-600 mb-4 text-sm sm:text-base">
                       {query.description}
                     </p>
-                    <div className="flex gap-4 text-sm text-muted-foreground">
+                    <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-slate-500">
                       <span>{query.pitchCount} pitches</span>
                       <span>
                         Posted {new Date(query.datePosted).toLocaleDateString()}
@@ -179,15 +193,15 @@ const AgencyFounderFeed = () => {
                     </div>
                     {myPitch && (
                       <div
-                        className="mt-6 rounded-xl bg-muted/60 p-4 border border-border/60"
+                        className="mt-6 rounded-2xl bg-white/60 p-4 border-2 border-black/20"
                         onClick={(event) => event.stopPropagation()}
                       >
-                        <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-muted-foreground font-semibold">
-                          <span className="h-2 w-2 rounded-full bg-primary" />
+                        <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-slate-500 font-semibold">
+                          <span className="h-2 w-2 rounded-full bg-[#D8B4FE]" />
                           My pitch
                         </div>
                         <p
-                          className="mt-3 text-sm leading-relaxed text-foreground"
+                          className="mt-3 text-sm leading-relaxed text-black"
                           style={
                             isExpanded
                               ? undefined
@@ -201,7 +215,7 @@ const AgencyFounderFeed = () => {
                         >
                           {myPitch.content}
                         </p>
-                        <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+                        <div className="mt-3 flex items-center justify-between text-xs text-slate-500">
                           <span>
                             Submitted{" "}
                             {new Date(myPitch.createdAt).toLocaleString()}
@@ -210,7 +224,7 @@ const AgencyFounderFeed = () => {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-7 px-2 text-xs"
+                              className="site-btn-ghost h-7 px-2 text-xs"
                               onClick={(event) => {
                                 event.stopPropagation();
                                 setExpandedPitches((prev) => ({
@@ -232,8 +246,8 @@ const AgencyFounderFeed = () => {
           })}
 
           {filteredQueries.length === 0 && (
-            <Card className="p-12 text-center">
-              <p className="text-muted-foreground">
+            <Card className="p-8 sm:p-12 text-center bg-[#F5F5DC] border-2 border-black rounded-2xl">
+              <p className="text-slate-500">
                 No queries available in this category
               </p>
             </Card>
@@ -246,14 +260,14 @@ const AgencyFounderFeed = () => {
         open={!!selectedQuery}
         onOpenChange={() => setSelectedQuery(null)}
       >
-        <DialogContent>
+        <DialogContent className="bg-[#F5F5DC] border-2 border-black rounded-2xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] max-w-lg mx-4 sm:mx-auto">
           <DialogHeader>
-            <DialogTitle>Submit Your Pitch</DialogTitle>
+            <DialogTitle className="text-xl text-black">Submit Your Pitch</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <h4 className="font-semibold mb-2">{selectedQuery?.title}</h4>
-              <p className="text-sm text-muted-foreground">
+              <h4 className="font-semibold mb-2 text-black">{selectedQuery?.title}</h4>
+              <p className="text-sm text-slate-600">
                 {selectedQuery?.description}
               </p>
             </div>
@@ -270,10 +284,11 @@ const AgencyFounderFeed = () => {
                 onChange={(e) => setPitchContent(e.target.value)}
                 required
                 rows={6}
+                className="bg-white/50 border-2 border-black rounded-2xl focus:border-purple-500 focus:ring-purple-500/50 text-black placeholder:text-slate-500 caret-black"
               />
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full site-btn-primary"
                 disabled={submitPitchMutation.isPending}
               >
                 {submitPitchMutation.isPending

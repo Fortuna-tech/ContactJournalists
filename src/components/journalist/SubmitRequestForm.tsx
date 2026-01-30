@@ -278,7 +278,7 @@ export function SubmitRequestForm() {
           </FormDescription>
         </FormItem> */}
 
-        <Button type="submit" disabled={isLoading}>
+        <Button type="submit" disabled={isLoading} className="site-btn-primary">
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Submit Request
         </Button>

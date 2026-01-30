@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
+import { FOOTER_LINKS } from "@/components/Footer";
 
 export default function Affiliate() {
   const [refStarter, setRefStarter] = useState(5);
@@ -8,6 +10,20 @@ export default function Affiliate() {
   const [showAnnual, setShowAnnual] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Load Google Fonts
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.href =
+      "https://fonts.googleapis.com/css2?family=Caprasimo&family=DM+Sans:wght@400;500;600;700&display=swap";
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
+
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, []);
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -79,121 +95,175 @@ export default function Affiliate() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-base-900 text-slate-200">
-      {/* Decorative background */}
-      <div className="pointer-events-none fixed inset-0 bg-darkgradient"></div>
+  // Heading style for Caprasimo font
+  const headingStyle = { fontFamily: "'Caprasimo', cursive" };
+  // Body style for DM Sans font
+  const bodyStyle = { fontFamily: "'DM Sans', sans-serif" };
 
+  // Button classes matching homepage
+  const primaryButtonClass =
+    "inline-flex items-center justify-center rounded-full bg-[#D8B4FE] px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F5DC] transition-all duration-150";
+  const secondaryButtonClass =
+    "inline-flex items-center justify-center rounded-full bg-[#F5F5DC] px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F5DC] transition-all duration-150";
+
+  // Preset button class
+  const presetButtonClass =
+    "rounded-full bg-white/50 px-3 py-1 text-xs font-medium text-slate-600 border border-black/20 hover:bg-white hover:text-black transition-all";
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+  };
+
+  return (
+    <div
+      className="min-h-screen bg-[#F5F5DC] text-slate-800 antialiased selection:bg-purple-200 selection:text-purple-900"
+      style={bodyStyle}
+    >
       {/* Header */}
-      <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-base-900/70 border-b border-white/5">
+      <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-[#F5F5DC]/90 border-b border-black/5">
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
           <a
             href="/"
-            className="flex items-center gap-2 font-extrabold text-lg tracking-tight"
+            className="flex items-center gap-2 font-extrabold text-lg tracking-tight text-black"
           >
-            <span className="inline-block h-2.5 w-2.5 rounded-sm bg-gradient-to-br from-accent-blue to-accent-violet"></span>
-            Contact<span className="text-slate-400">Journalists</span>
+            <span className="inline-block h-2.5 w-2.5 rounded-sm bg-gradient-to-br from-purple-500 to-violet-600"></span>
+            Contact<span className="text-slate-500">Journalists</span>
           </a>
+          <button
+            onClick={toggleMobileMenu}
+            className="md:hidden p-2 rounded hover:bg-black/5"
+            aria-expanded={mobileMenuOpen}
+            aria-label="Open menu"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
           <ul className="hidden md:flex items-center gap-6 text-sm">
             <li>
-              <a
-                className="hover:text-white/90 text-slate-300"
-                href="/#features"
-              >
+              <a className="hover:text-black text-slate-600" href="/#features">
                 Features
               </a>
             </li>
             <li>
-              <a className="hover:text-white/90 text-slate-300" href="/#how">
+              <a className="hover:text-black text-slate-600" href="/#how">
                 How it Works
               </a>
             </li>
             <li>
-              <a
-                className="hover:text-white/90 text-slate-300"
-                href="/#pricing"
-              >
+              <a className="hover:text-black text-slate-600" href="/#pricing">
                 Pricing
               </a>
             </li>
             <li>
-              <a className="hover:text-white/90 text-slate-300" href="/#faq">
+              <a className="hover:text-black text-slate-600" href="/#faq">
                 FAQ
               </a>
             </li>
             <li>
               <a
-                className="ml-2 inline-flex items-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-4 py-2 font-semibold text-white shadow-glow hover:opacity-95"
-                href="/#pricing"
+                className="ml-2 inline-flex items-center rounded-full bg-black px-4 py-2 font-semibold text-white hover:bg-black/90 transition-colors"
+                href="/waitlist-signup"
               >
                 Get Started
               </a>
             </li>
           </ul>
         </nav>
+        {/* Mobile menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden absolute top-full left-0 right-0 bg-[#F5F5DC] border-b border-black/5 shadow-xl">
+            <div className="space-y-1 px-2 pb-3 pt-2">
+              <a
+                href="/#features"
+                onClick={closeMobileMenu}
+                className="block rounded-lg px-3 py-2 text-base font-medium text-slate-600 hover:bg-black/5 hover:text-black"
+              >
+                Features
+              </a>
+              <a
+                href="/#how"
+                onClick={closeMobileMenu}
+                className="block rounded-lg px-3 py-2 text-base font-medium text-slate-600 hover:bg-black/5 hover:text-black"
+              >
+                How it Works
+              </a>
+              <a
+                href="/#pricing"
+                onClick={closeMobileMenu}
+                className="block rounded-lg px-3 py-2 text-base font-medium text-slate-600 hover:bg-black/5 hover:text-black"
+              >
+                Pricing
+              </a>
+              <a
+                href="/#faq"
+                onClick={closeMobileMenu}
+                className="block rounded-lg px-3 py-2 text-base font-medium text-slate-600 hover:bg-black/5 hover:text-black"
+              >
+                FAQ
+              </a>
+              <a
+                href="/waitlist-signup"
+                onClick={closeMobileMenu}
+                className="mt-2 block rounded-full bg-black px-4 py-2.5 text-center font-semibold text-white hover:bg-black/90 transition-colors"
+              >
+                Get Started
+              </a>
+            </div>
+          </div>
+        )}
       </header>
 
       <main id="main" className="relative">
         {/* HERO */}
-        <section className="relative overflow-hidden">
-          {/* subtle SVG vectors */}
-          <svg
-            className="absolute -top-24 -right-24 w-[520px] h-[520px] opacity-30 animate-floaty"
-            viewBox="0 0 200 200"
-            fill="none"
-            aria-hidden="true"
-          >
-            <defs>
-              <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
-                <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.9" />
-                <stop offset="100%" stopColor="#8B5CF6" stopOpacity="0.6" />
-              </linearGradient>
-            </defs>
-            <path
-              d="M80 10C120 20 160 60 170 100s-10 70-60 80-90-10-100-50S40 0 80 10Z"
-              fill="url(#g1)"
-            />
-          </svg>
-
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 lg:pt-24 pb-8 sm:pb-12">
-            <div className="grid lg:grid-cols-12 gap-6 lg:gap-10 items-center">
-              <div className="lg:col-span-7">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight break-words">
-                  Earn 20%{" "}
-                  <span className="relative inline-block">
-                    Recurring
-                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-accent-blue to-accent-violet animate-[slideIn_1s_ease-out]"></span>
-                  </span>{" "}
-                  Commission with{" "}
-                  <span className="whitespace-nowrap">
-                    ContactJournalists.com
-                  </span>
+        <section className="relative py-16 md:py-24 lg:py-32">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              {/* Left content */}
+              <div className="text-center lg:text-left">
+                <div className="inline-flex items-center gap-2 rounded-full bg-purple-100 border border-purple-200 px-3 py-1 text-xs font-semibold text-purple-700 uppercase tracking-wide mb-6">
+                  Affiliate Program
+                </div>
+                <h1
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal leading-tight tracking-tight text-black mb-6"
+                  style={headingStyle}
+                >
+                  Earn 20% Recurring Commission
                 </h1>
-                <p className="mt-4 text-sm sm:text-base lg:text-lg text-slate-300">
-                  Earn{" "}
-                  <span className="font-semibold text-white">
+                <p className="text-lg md:text-xl text-slate-600 mb-8 max-w-xl mx-auto lg:mx-0">
+                  Help founders get press coverage and earn{" "}
+                  <span className="font-semibold text-black">
                     20% recurring commission
                   </span>{" "}
-                  helping brands get press — with verified contacts, AI pitch
+                  on every referral — with verified contacts, AI pitch
                   templates, and export-ready lists.
                 </p>
-                <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row flex-wrap gap-3">
-                  <a
-                    href="#apply"
-                    className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-5 py-3 font-semibold text-sm sm:text-base text-white shadow-glow hover:opacity-95"
-                  >
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                  <a href="#apply" className={primaryButtonClass}>
                     Apply Now
                   </a>
-                  <a
-                    href="#how"
-                    className="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-semibold text-sm sm:text-base text-slate-200 hover:bg-white/10"
-                  >
+                  <a href="#how" className={secondaryButtonClass}>
                     How It Works
                   </a>
                 </div>
-                <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-slate-400">
+                <div className="mt-8 flex flex-wrap items-center gap-4 justify-center lg:justify-start text-sm text-slate-500">
                   <span className="inline-flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>{" "}
+                    <span className="h-2 w-2 rounded-full bg-green-500"></span>{" "}
                     Built in The UK
                   </span>
                   <span>GDPR-respectful</span>
@@ -201,144 +271,135 @@ export default function Affiliate() {
                 </div>
               </div>
 
-              {/* Card: Commission Calculator */}
-              <div className="lg:col-span-5">
-                <div className="relative rounded-2xl border border-white/10 bg-base-700/60 shadow-glow p-4 sm:p-6 animate-glow">
-                  <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-400">
-                    <div className="flex gap-1">
-                      <span className="h-2 w-2 rounded-full bg-red-500/70"></span>
-                      <span className="h-2 w-2 rounded-full bg-yellow-400/70"></span>
-                      <span className="h-2 w-2 rounded-full bg-emerald-400/70"></span>
-                    </div>
-                    <span className="truncate">Affiliate Earnings Preview</span>
+              {/* Right: Commission Calculator Preview Card */}
+              <div className="bg-[#F5F5DC] border-2 border-black rounded-2xl p-6 sm:p-8 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                <div className="flex items-center gap-2 text-sm text-slate-500 mb-4">
+                  <div className="flex gap-1">
+                    <span className="h-2.5 w-2.5 rounded-full bg-red-400"></span>
+                    <span className="h-2.5 w-2.5 rounded-full bg-yellow-400"></span>
+                    <span className="h-2.5 w-2.5 rounded-full bg-green-400"></span>
                   </div>
-                  <div className="mt-4 space-y-3 text-xs sm:text-sm">
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="text-xs sm:text-sm">
-                        Growth plan (£99/mo)
-                      </span>
-                      <span className="font-semibold whitespace-nowrap text-xs sm:text-sm">
-                        £19.80/mo
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="text-xs sm:text-sm">
-                        Team plan (£199/mo)
-                      </span>
-                      <span className="font-semibold whitespace-nowrap text-xs sm:text-sm">
-                        £39.80/mo
-                      </span>
-                    </div>
-                    <div className="mt-3 rounded-lg border border-white/10 bg-black/30 p-3 text-slate-300 text-xs sm:text-sm">
-                      <p className="mb-1">
-                        Refer 10 Growth users →{" "}
-                        <span className="font-semibold text-white">
-                          £198/mo
-                        </span>{" "}
-                        recurring
-                      </p>
-                      <p>
-                        Refer 10 Team users →{" "}
-                        <span className="font-semibold text-white">
-                          £398/mo
-                        </span>{" "}
-                        recurring
-                      </p>
-                    </div>
-                  </div>
-                  <a
-                    href="#apply"
-                    className="mt-5 inline-flex w-full justify-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-4 py-2 font-semibold text-sm"
-                  >
-                    Start Earning
-                  </a>
+                  <span>Affiliate Earnings Preview</span>
                 </div>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600">Growth plan (£99/mo)</span>
+                    <span className="font-semibold text-black">£19.80/mo</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600">Team plan (£199/mo)</span>
+                    <span className="font-semibold text-black">£39.80/mo</span>
+                  </div>
+                  <div className="rounded-xl border-2 border-black/10 bg-white/50 p-4">
+                    <p className="mb-1 text-slate-600">
+                      Refer 10 Growth users →{" "}
+                      <span className="font-semibold text-black">£198/mo</span>{" "}
+                      recurring
+                    </p>
+                    <p className="text-slate-600">
+                      Refer 10 Team users →{" "}
+                      <span className="font-semibold text-black">£398/mo</span>{" "}
+                      recurring
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href="#apply"
+                  className={`${primaryButtonClass} w-full justify-center mt-6`}
+                >
+                  Start Earning
+                </a>
               </div>
             </div>
           </div>
         </section>
 
         {/* WHY JOIN */}
-        <section id="why" className="relative">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-            <div className="max-w-2xl">
-              <h2 className="text-2xl sm:text-3xl font-bold">Why join now</h2>
-              <p className="mt-3 text-sm sm:text-base text-slate-300">
+        <section id="why" className="py-16 md:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2
+                className="text-2xl sm:text-3xl md:text-4xl font-normal text-black mb-4"
+                style={headingStyle}
+              >
+                Why join now
+              </h2>
+              <p className="text-lg text-slate-600 max-w-2xl mx-auto">
                 Be an early partner in a fast-growing SaaS platform. Your
                 audience gets a tool that works. You get predictable, recurring
                 income.
               </p>
             </div>
-            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="rounded-2xl border border-white/10 bg-base-700/50 p-6">
-                <div className="mb-3 text-accent-blue">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="bg-[#F5F5DC] border-2 border-black rounded-2xl p-6">
+                <div className="mb-4 inline-flex items-center justify-center h-12 w-12 rounded-full bg-purple-100 text-purple-600">
                   <svg
                     className="h-6 w-6"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="1.5"
+                    strokeWidth="2"
                   >
                     <path d="M12 3v18M3 12h18" />
                   </svg>
                 </div>
-                <h3 className="font-semibold">20% recurring</h3>
-                <p className="mt-2 text-slate-300">
+                <h3 className="font-bold text-black mb-2">20% recurring</h3>
+                <p className="text-slate-600 text-sm">
                   Earn every month your referrals stay subscribed. No caps, no
                   expiry.
                 </p>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-base-700/50 p-6">
-                <div className="mb-3 text-accent-blue">
+              <div className="bg-[#F5F5DC] border-2 border-black rounded-2xl p-6">
+                <div className="mb-4 inline-flex items-center justify-center h-12 w-12 rounded-full bg-green-100 text-green-600">
                   <svg
                     className="h-6 w-6"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="1.5"
+                    strokeWidth="2"
                   >
                     <path d="M3 12l6 6L21 6" />
                   </svg>
                 </div>
-                <h3 className="font-semibold">High conversion</h3>
-                <p className="mt-2 text-slate-300">
+                <h3 className="font-bold text-black mb-2">High conversion</h3>
+                <p className="text-slate-600 text-sm">
                   Real value: verified contacts, AI pitch templates,
                   export-ready lists.
                 </p>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-base-700/50 p-6">
-                <div className="mb-3 text-accent-blue">
+              <div className="bg-[#F5F5DC] border-2 border-black rounded-2xl p-6">
+                <div className="mb-4 inline-flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 text-blue-600">
                   <svg
                     className="h-6 w-6"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="1.5"
+                    strokeWidth="2"
                   >
                     <circle cx="12" cy="12" r="9" />
                     <path d="M12 7v5l3 3" />
                   </svg>
                 </div>
-                <h3 className="font-semibold">Fast setup</h3>
-                <p className="mt-2 text-slate-300">
+                <h3 className="font-bold text-black mb-2">Fast setup</h3>
+                <p className="text-slate-600 text-sm">
                   Unique link, ready-made assets, and a dashboard with live
                   stats.
                 </p>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-base-700/50 p-6">
-                <div className="mb-3 text-accent-blue">
+              <div className="bg-[#F5F5DC] border-2 border-black rounded-2xl p-6">
+                <div className="mb-4 inline-flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 text-yellow-600">
                   <svg
                     className="h-6 w-6"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="1.5"
+                    strokeWidth="2"
                   >
                     <path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 3 2-7L2 9h7z" />
                   </svg>
                 </div>
-                <h3 className="font-semibold">Founder support</h3>
-                <p className="mt-2 text-slate-300">
+                <h3 className="font-bold text-black mb-2">Founder support</h3>
+                <p className="text-slate-600 text-sm">
                   Get priority help, feature input, and co-marketing for top
                   partners.
                 </p>
@@ -348,36 +409,36 @@ export default function Affiliate() {
         </section>
 
         {/* EARNINGS CALCULATOR */}
-        <section id="earnings" className="relative">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-            <div className="max-w-2xl">
-              <h2 className="text-2xl sm:text-3xl font-bold">
+        <section id="earnings" className="py-16 md:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2
+                className="text-2xl sm:text-3xl md:text-4xl font-normal text-black mb-4"
+                style={headingStyle}
+              >
                 Affiliate earnings calculator
               </h2>
-              <p className="mt-3 text-sm sm:text-base text-slate-300">
+              <p className="text-lg text-slate-600 max-w-2xl mx-auto">
                 See what you'll earn with{" "}
-                <span className="font-semibold text-white">
+                <span className="font-semibold text-black">
                   20% recurring commission
                 </span>
                 . Adjust your expected active referrals by plan.
               </p>
             </div>
 
-            <div className="mt-6 sm:mt-8 grid gap-4 sm:gap-6 lg:grid-cols-12">
+            <div className="grid gap-6 lg:grid-cols-12">
               {/* Controls */}
-              <div className="lg:col-span-7 rounded-2xl border border-white/10 bg-base-700/60 p-4 sm:p-6 shadow-glow">
+              <div className="lg:col-span-7 bg-[#F5F5DC] border-2 border-black rounded-2xl p-6 sm:p-8">
                 {/* Starter */}
-                <div className="mb-6">
-                  <div className="flex items-center justify-between">
-                    <label htmlFor="refStarter" className="block font-medium">
+                <div className="mb-8">
+                  <div className="flex items-center justify-between mb-3">
+                    <label htmlFor="refStarter" className="font-semibold text-black">
                       Starter (£45/mo)
                     </label>
-                    <div className="text-sm text-slate-400">
+                    <div className="text-sm text-slate-500">
                       Active referrals:{" "}
-                      <span
-                        id="valStarter"
-                        className="text-slate-200 font-semibold"
-                      >
+                      <span className="text-black font-semibold">
                         {refStarter}
                       </span>
                     </div>
@@ -389,30 +450,30 @@ export default function Affiliate() {
                     max="200"
                     value={refStarter}
                     onChange={(e) => setRefStarter(Number(e.target.value))}
-                    className="w-full mt-3 h-2 rounded-lg appearance-none bg-white/10 accent-current"
+                    className="w-full h-2 rounded-full appearance-none bg-black/10 accent-purple-500 cursor-pointer"
                   />
-                  <div className="mt-2 flex gap-2 text-xs">
+                  <div className="mt-3 flex gap-2">
                     <button
                       onClick={() => handlePreset("starter", "1")}
-                      className="preset badge"
+                      className={presetButtonClass}
                     >
                       +1
                     </button>
                     <button
                       onClick={() => handlePreset("starter", "5")}
-                      className="preset badge"
+                      className={presetButtonClass}
                     >
                       +5
                     </button>
                     <button
                       onClick={() => handlePreset("starter", "10")}
-                      className="preset badge"
+                      className={presetButtonClass}
                     >
                       +10
                     </button>
                     <button
                       onClick={() => handlePreset("starter", "reset")}
-                      className="preset badge"
+                      className={presetButtonClass}
                     >
                       Reset
                     </button>
@@ -420,20 +481,17 @@ export default function Affiliate() {
                 </div>
 
                 {/* Growth */}
-                <div className="mb-6">
-                  <div className="flex items-center justify-between">
-                    <label htmlFor="refGrowth" className="block font-medium">
+                <div className="mb-8">
+                  <div className="flex items-center justify-between mb-3">
+                    <label htmlFor="refGrowth" className="font-semibold text-black flex items-center gap-2">
                       Growth (£99/mo){" "}
-                      <span className="ml-2 rounded-full bg-accent-blue/20 px-2 py-0.5 text-xs text-accent-blue">
+                      <span className="rounded-full bg-green-100 border border-green-200 px-2 py-0.5 text-xs font-bold text-green-700">
                         Most popular
                       </span>
                     </label>
-                    <div className="text-sm text-slate-400">
+                    <div className="text-sm text-slate-500">
                       Active referrals:{" "}
-                      <span
-                        id="valGrowth"
-                        className="text-slate-200 font-semibold"
-                      >
+                      <span className="text-black font-semibold">
                         {refGrowth}
                       </span>
                     </div>
@@ -445,30 +503,30 @@ export default function Affiliate() {
                     max="200"
                     value={refGrowth}
                     onChange={(e) => setRefGrowth(Number(e.target.value))}
-                    className="w-full mt-3 h-2 rounded-lg appearance-none bg-white/10 accent-current"
+                    className="w-full h-2 rounded-full appearance-none bg-black/10 accent-purple-500 cursor-pointer"
                   />
-                  <div className="mt-2 flex gap-2 text-xs">
+                  <div className="mt-3 flex gap-2">
                     <button
                       onClick={() => handlePreset("growth", "1")}
-                      className="preset badge"
+                      className={presetButtonClass}
                     >
                       +1
                     </button>
                     <button
                       onClick={() => handlePreset("growth", "5")}
-                      className="preset badge"
+                      className={presetButtonClass}
                     >
                       +5
                     </button>
                     <button
                       onClick={() => handlePreset("growth", "10")}
-                      className="preset badge"
+                      className={presetButtonClass}
                     >
                       +10
                     </button>
                     <button
                       onClick={() => handlePreset("growth", "reset")}
-                      className="preset badge"
+                      className={presetButtonClass}
                     >
                       Reset
                     </button>
@@ -476,17 +534,14 @@ export default function Affiliate() {
                 </div>
 
                 {/* Team */}
-                <div className="mb-6">
-                  <div className="flex items-center justify-between">
-                    <label htmlFor="refTeam" className="block font-medium">
+                <div className="mb-8">
+                  <div className="flex items-center justify-between mb-3">
+                    <label htmlFor="refTeam" className="font-semibold text-black">
                       Team (£199/mo)
                     </label>
-                    <div className="text-sm text-slate-400">
+                    <div className="text-sm text-slate-500">
                       Active referrals:{" "}
-                      <span
-                        id="valTeam"
-                        className="text-slate-200 font-semibold"
-                      >
+                      <span className="text-black font-semibold">
                         {refTeam}
                       </span>
                     </div>
@@ -498,30 +553,30 @@ export default function Affiliate() {
                     max="200"
                     value={refTeam}
                     onChange={(e) => setRefTeam(Number(e.target.value))}
-                    className="w-full mt-3 h-2 rounded-lg appearance-none bg-white/10 accent-current"
+                    className="w-full h-2 rounded-full appearance-none bg-black/10 accent-purple-500 cursor-pointer"
                   />
-                  <div className="mt-2 flex gap-2 text-xs">
+                  <div className="mt-3 flex gap-2">
                     <button
                       onClick={() => handlePreset("team", "1")}
-                      className="preset badge"
+                      className={presetButtonClass}
                     >
                       +1
                     </button>
                     <button
                       onClick={() => handlePreset("team", "5")}
-                      className="preset badge"
+                      className={presetButtonClass}
                     >
                       +5
                     </button>
                     <button
                       onClick={() => handlePreset("team", "10")}
-                      className="preset badge"
+                      className={presetButtonClass}
                     >
                       +10
                     </button>
                     <button
                       onClick={() => handlePreset("team", "reset")}
-                      className="preset badge"
+                      className={presetButtonClass}
                     >
                       Reset
                     </button>
@@ -529,26 +584,27 @@ export default function Affiliate() {
                 </div>
 
                 {/* Annual toggle */}
-                <div className="mt-6 flex items-center gap-3">
-                  <span className="text-sm text-slate-400">
+                <div className="flex items-center gap-3 pt-4 border-t border-black/10">
+                  <span className="text-sm text-slate-600">
                     Show annual estimate
                   </span>
                   <button
                     onClick={() => setShowAnnual(!showAnnual)}
-                    className="relative inline-flex h-7 w-12 items-center rounded-full bg-white/10"
+                    className={`relative inline-flex h-7 w-12 items-center rounded-full border-2 border-black transition-colors ${
+                      showAnnual ? "bg-purple-500" : "bg-white/50"
+                    }`}
                   >
                     <span
-                      id="annualDot"
-                      className={`inline-block h-5 w-5 translate-x-1 rounded-full bg-white transition ${
-                        showAnnual ? "ml-6" : ""
+                      className={`inline-block h-5 w-5 rounded-full bg-white border border-black/20 transition-transform ${
+                        showAnnual ? "translate-x-5" : "translate-x-0.5"
                       }`}
                     ></span>
                   </button>
                 </div>
 
-                <p className="mt-3 text-xs text-slate-400">
+                <p className="mt-4 text-xs text-slate-500">
                   * Estimates assume{" "}
-                  <span className="font-semibold text-slate-300">
+                  <span className="font-semibold text-slate-700">
                     20% recurring commission
                   </span>{" "}
                   on live subscriptions. Actual results vary by audience and
@@ -557,38 +613,36 @@ export default function Affiliate() {
               </div>
 
               {/* Results */}
-              <div className="lg:col-span-5 rounded-2xl border border-white/10 bg-base-700/60 p-4 sm:p-6 shadow-glow">
-                <div className="flex items-center gap-2 text-xs text-slate-400">
+              <div className="lg:col-span-5 bg-[#F5F5DC] border-2 border-black rounded-2xl p-6 sm:p-8 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                <div className="flex items-center gap-2 text-sm text-slate-500 mb-4">
                   <div className="flex gap-1">
-                    <span className="h-2 w-2 rounded-full bg-red-500/70"></span>
-                    <span className="h-2 w-2 rounded-full bg-yellow-400/70"></span>
-                    <span className="h-2 w-2 rounded-full bg-emerald-400/70"></span>
+                    <span className="h-2.5 w-2.5 rounded-full bg-red-400"></span>
+                    <span className="h-2.5 w-2.5 rounded-full bg-yellow-400"></span>
+                    <span className="h-2.5 w-2.5 rounded-full bg-green-400"></span>
                   </div>
-                  <span className="truncate">Earnings Preview</span>
+                  <span>Earnings Preview</span>
                 </div>
 
-                <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-4">
-                  <div className="rounded-xl border border-white/10 bg-black/30 p-3 sm:p-4">
-                    <div className="text-[10px] sm:text-xs uppercase tracking-wide text-slate-400">
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="rounded-xl border-2 border-black/20 bg-white/50 p-4">
+                    <div className="text-xs uppercase tracking-wide text-slate-500 mb-1">
                       Monthly
                     </div>
                     <div
-                      id="outMonthly"
-                      className={`mt-1 text-xl sm:text-2xl lg:text-3xl font-extrabold break-all ${
-                        showAnnual ? "text-slate-400" : "text-white"
+                      className={`text-2xl sm:text-3xl font-bold break-all ${
+                        showAnnual ? "text-slate-400" : "text-black"
                       }`}
                     >
                       {currency(monthly)}
                     </div>
                   </div>
-                  <div className="rounded-xl border border-white/10 bg-black/30 p-3 sm:p-4">
-                    <div className="text-[10px] sm:text-xs uppercase tracking-wide text-slate-400">
+                  <div className="rounded-xl border-2 border-black/20 bg-white/50 p-4">
+                    <div className="text-xs uppercase tracking-wide text-slate-500 mb-1">
                       Annual
                     </div>
                     <div
-                      id="outAnnual"
-                      className={`mt-1 text-xl sm:text-2xl lg:text-3xl font-extrabold break-all ${
-                        showAnnual ? "text-white" : "text-slate-400"
+                      className={`text-2xl sm:text-3xl font-bold break-all ${
+                        showAnnual ? "text-black" : "text-slate-400"
                       }`}
                     >
                       {currency(annual)}
@@ -597,32 +651,26 @@ export default function Affiliate() {
                 </div>
 
                 {/* Breakdown */}
-                <div className="mt-4 sm:mt-6 rounded-xl border border-white/10 bg-black/20 p-3 sm:p-4">
-                  <div className="text-xs sm:text-sm font-semibold">
+                <div className="rounded-xl border-2 border-black/10 bg-white/30 p-4 mb-6">
+                  <div className="text-sm font-semibold text-black mb-3">
                     Breakdown
                   </div>
-                  <ul className="mt-2 space-y-1 text-xs sm:text-sm text-slate-300">
-                    <li className="break-all">
-                      Starter:{" "}
-                      <span
-                        id="breakStarter"
-                        className="font-semibold text-white"
-                      >
+                  <ul className="space-y-2 text-sm text-slate-600">
+                    <li className="flex justify-between">
+                      <span>Starter:</span>
+                      <span className="font-semibold text-black">
                         {currency(earnS)}/mo
                       </span>
                     </li>
-                    <li className="break-all">
-                      Growth:{" "}
-                      <span
-                        id="breakGrowth"
-                        className="font-semibold text-white"
-                      >
+                    <li className="flex justify-between">
+                      <span>Growth:</span>
+                      <span className="font-semibold text-black">
                         {currency(earnG)}/mo
                       </span>
                     </li>
-                    <li className="break-all">
-                      Team:{" "}
-                      <span id="breakTeam" className="font-semibold text-white">
+                    <li className="flex justify-between">
+                      <span>Team:</span>
+                      <span className="font-semibold text-black">
                         {currency(earnT)}/mo
                       </span>
                     </li>
@@ -630,29 +678,26 @@ export default function Affiliate() {
                 </div>
 
                 {/* Progress bars */}
-                <div className="mt-4 sm:mt-6 space-y-2 sm:space-y-3">
-                  <div className="text-[10px] sm:text-xs text-slate-400">
+                <div className="space-y-3 mb-6">
+                  <div className="text-xs text-slate-500 mb-2">
                     Relative earnings by tier
                   </div>
 
-                  <div className="h-2 rounded bg-white/10">
+                  <div className="h-2.5 rounded-full bg-black/10 overflow-hidden">
                     <div
-                      id="barStarter"
-                      className="h-2 rounded bg-white/40"
+                      className="h-2.5 rounded-full bg-slate-400 transition-all"
                       style={{ width: `${(earnS / max) * 100}%` }}
                     ></div>
                   </div>
-                  <div className="h-2 rounded bg-white/10">
+                  <div className="h-2.5 rounded-full bg-black/10 overflow-hidden">
                     <div
-                      id="barGrowth"
-                      className="h-2 rounded bg-accent-blue/70"
+                      className="h-2.5 rounded-full bg-purple-500 transition-all"
                       style={{ width: `${(earnG / max) * 100}%` }}
                     ></div>
                   </div>
-                  <div className="h-2 rounded bg-white/10">
+                  <div className="h-2.5 rounded-full bg-black/10 overflow-hidden">
                     <div
-                      id="barTeam"
-                      className="h-2 rounded bg-accent-violet/70"
+                      className="h-2.5 rounded-full bg-green-500 transition-all"
                       style={{ width: `${(earnT / max) * 100}%` }}
                     ></div>
                   </div>
@@ -660,7 +705,7 @@ export default function Affiliate() {
 
                 <a
                   href="#apply"
-                  className="mt-4 sm:mt-6 inline-flex w-full justify-center rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-4 py-2 text-sm sm:text-base font-semibold"
+                  className={`${primaryButtonClass} w-full justify-center`}
                 >
                   Apply & start earning
                 </a>
@@ -670,64 +715,67 @@ export default function Affiliate() {
         </section>
 
         {/* WHAT YOU'RE PROMOTING */}
-        <section id="promote" className="relative">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-            <div className="max-w-2xl">
-              <h2 className="text-2xl sm:text-3xl font-bold">
+        <section id="promote" className="py-16 md:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2
+                className="text-2xl sm:text-3xl md:text-4xl font-normal text-black mb-4"
+                style={headingStyle}
+              >
                 What you're promoting
               </h2>
-              <p className="mt-3 text-sm sm:text-base text-slate-300">
+              <p className="text-lg text-slate-600 max-w-2xl mx-auto">
                 ContactJournalists.com helps founders get press without
                 expensive retainers.
               </p>
             </div>
-            <div className="mt-8 sm:mt-10 grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              <article className="rounded-2xl border border-white/10 bg-base-700/50 p-4 sm:p-6 hover:bg-white/5 transition">
-                <h3 className="font-semibold text-sm sm:text-base">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <article className="bg-[#F5F5DC] border-2 border-black rounded-2xl p-6 hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all duration-150">
+                <h3 className="font-bold text-black mb-2">
                   Verified Contacts
                 </h3>
-                <p className="mt-2 text-xs sm:text-sm text-slate-300">
+                <p className="text-slate-600 text-sm">
                   Global database of journalists, influencers, and anyone with a
                   platform — cleaned and deduped.
                 </p>
               </article>
-              <article className="rounded-2xl border border-white/10 bg-base-700/50 p-4 sm:p-6 hover:bg-white/5 transition">
-                <h3 className="font-semibold text-sm sm:text-base">
+              <article className="bg-[#F5F5DC] border-2 border-black rounded-2xl p-6 hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all duration-150">
+                <h3 className="font-bold text-black mb-2">
                   AI Pitch Generator
                 </h3>
-                <p className="mt-2 text-xs sm:text-sm text-slate-300">
+                <p className="text-slate-600 text-sm">
                   Angles and subject lines that actually get opened.
                 </p>
               </article>
-              <article className="rounded-2xl border border-white/10 bg-base-700/50 p-4 sm:p-6 hover:bg-white/5 transition">
-                <h3 className="font-semibold text-sm sm:text-base">
+              <article className="bg-[#F5F5DC] border-2 border-black rounded-2xl p-6 hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all duration-150">
+                <h3 className="font-bold text-black mb-2">
                   Smart Exports
                 </h3>
-                <p className="mt-2 text-xs sm:text-sm text-slate-300">
+                <p className="text-slate-600 text-sm">
                   Google Sheets & CSV with notes and easy follow-up flows.
                 </p>
               </article>
-              <article className="rounded-2xl border border-white/10 bg-base-700/50 p-4 sm:p-6 hover:bg-white/5 transition">
-                <h3 className="font-semibold text-sm sm:text-base">
+              <article className="bg-[#F5F5DC] border-2 border-black rounded-2xl p-6 hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all duration-150">
+                <h3 className="font-bold text-black mb-2">
                   Reply Templates
                 </h3>
-                <p className="mt-2 text-xs sm:text-sm text-slate-300">
+                <p className="text-slate-600 text-sm">
                   Faster responses to journalist tweets and press queries.
                 </p>
               </article>
-              <article className="rounded-2xl border border-white/10 bg-base-700/50 p-4 sm:p-6 hover:bg-white/5 transition">
-                <h3 className="font-semibold text-sm sm:text-base">
+              <article className="bg-[#F5F5DC] border-2 border-black rounded-2xl p-6 hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all duration-150">
+                <h3 className="font-bold text-black mb-2">
                   GDPR-respectful
                 </h3>
-                <p className="mt-2 text-xs sm:text-sm text-slate-300">
+                <p className="text-slate-600 text-sm">
                   We respect inboxes. Export responsibly and honor opt-outs.
                 </p>
               </article>
-              <article className="rounded-2xl border border-white/10 bg-base-700/50 p-4 sm:p-6 hover:bg-white/5 transition">
-                <h3 className="font-semibold text-sm sm:text-base">
+              <article className="bg-[#F5F5DC] border-2 border-black rounded-2xl p-6 hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all duration-150">
+                <h3 className="font-bold text-black mb-2">
                   Built in The UK
                 </h3>
-                <p className="mt-2 text-xs sm:text-sm text-slate-300">
+                <p className="text-slate-600 text-sm">
                   Founder-led, responsive support, early feature access.
                 </p>
               </article>
@@ -736,65 +784,92 @@ export default function Affiliate() {
         </section>
 
         {/* WHO IT'S FOR + HOW IT WORKS */}
-        <section id="how" className="relative">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-            <div className="grid lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-              <div className="lg:col-span-6">
-                <h2 className="text-2xl sm:text-3xl font-bold">
+        <section id="how" className="py-16 md:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-12 items-start">
+              <div>
+                <h2
+                  className="text-2xl sm:text-3xl md:text-4xl font-normal text-black mb-6"
+                  style={headingStyle}
+                >
                   Who it's perfect for
                 </h2>
-                <ul className="mt-6 space-y-3 text-sm sm:text-base text-slate-300">
+                <ul className="space-y-4 text-slate-600">
                   <li className="flex items-start gap-3">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-accent-blue"></span>{" "}
+                    <span className="mt-1.5 h-2 w-2 rounded-full bg-purple-500 flex-shrink-0"></span>
                     Newsletter writers and business creators
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-accent-blue"></span>{" "}
+                    <span className="mt-1.5 h-2 w-2 rounded-full bg-purple-500 flex-shrink-0"></span>
                     Marketing coaches and PR agencies
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-accent-blue"></span>{" "}
+                    <span className="mt-1.5 h-2 w-2 rounded-full bg-purple-500 flex-shrink-0"></span>
                     Startup community owners and growth consultants
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-accent-blue"></span>{" "}
+                    <span className="mt-1.5 h-2 w-2 rounded-full bg-purple-500 flex-shrink-0"></span>
                     LinkedIn educators and YouTube creators
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-accent-blue"></span>{" "}
+                    <span className="mt-1.5 h-2 w-2 rounded-full bg-purple-500 flex-shrink-0"></span>
                     Founders recommending tools they actually use
                   </li>
                 </ul>
               </div>
-              <div className="lg:col-span-6">
-                <h2 className="text-2xl sm:text-3xl font-bold">How it works</h2>
-                <ol className="mt-6 space-y-3 text-sm sm:text-base text-slate-300 list-decimal list-inside">
-                  <li>
-                    <span className="font-semibold text-white">Apply</span>{" "}
-                    using the form below (free to join).
+              <div>
+                <h2
+                  className="text-2xl sm:text-3xl md:text-4xl font-normal text-black mb-6"
+                  style={headingStyle}
+                >
+                  How it works
+                </h2>
+                <ol className="space-y-4 text-slate-600">
+                  <li className="flex items-start gap-3">
+                    <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-purple-100 text-purple-700 text-sm font-bold flex-shrink-0">
+                      1
+                    </span>
+                    <span>
+                      <span className="font-semibold text-black">Apply</span>{" "}
+                      using the form below (free to join).
+                    </span>
                   </li>
-                  <li>
-                    <span className="font-semibold text-white">
-                      Get your unique link
-                    </span>{" "}
-                    and ready-to-use assets.
+                  <li className="flex items-start gap-3">
+                    <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-purple-100 text-purple-700 text-sm font-bold flex-shrink-0">
+                      2
+                    </span>
+                    <span>
+                      <span className="font-semibold text-black">
+                        Get your unique link
+                      </span>{" "}
+                      and ready-to-use assets.
+                    </span>
                   </li>
-                  <li>
-                    <span className="font-semibold text-white">Share</span> in
-                    newsletters, socials, client docs, or trainings.
+                  <li className="flex items-start gap-3">
+                    <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-purple-100 text-purple-700 text-sm font-bold flex-shrink-0">
+                      3
+                    </span>
+                    <span>
+                      <span className="font-semibold text-black">Share</span> in
+                      newsletters, socials, client docs, or trainings.
+                    </span>
                   </li>
-                  <li>
-                    <span className="font-semibold text-white">
-                      Earn 20% monthly
-                    </span>{" "}
-                    for every active subscriber you refer.
+                  <li className="flex items-start gap-3">
+                    <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-purple-100 text-purple-700 text-sm font-bold flex-shrink-0">
+                      4
+                    </span>
+                    <span>
+                      <span className="font-semibold text-black">
+                        Earn 20% monthly
+                      </span>{" "}
+                      for every active subscriber you refer.
+                    </span>
                   </li>
                 </ol>
-                <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-sm text-slate-300">
-                    ✨{" "}
-                    <span className="font-semibold text-white">
-                      Early Partner Advantage:
+                <div className="mt-8 bg-purple-50 border-2 border-purple-300 rounded-2xl p-6">
+                  <p className="text-slate-600">
+                    <span className="font-semibold text-black">
+                      ✨ Early Partner Advantage:
                     </span>{" "}
                     join now to lock in 20% lifetime commission. We'll never
                     reduce your rate.
@@ -806,25 +881,30 @@ export default function Affiliate() {
         </section>
 
         {/* APPLY FORM */}
-        <section id="apply" className="relative">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-            <div className="mx-auto max-w-2xl text-center">
-              <h2 className="text-2xl sm:text-3xl font-bold">Apply to join</h2>
-              <p className="mt-3 text-sm sm:text-base text-slate-300">
+        <section id="apply" className="py-16 md:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-2xl text-center mb-12">
+              <h2
+                className="text-2xl sm:text-3xl md:text-4xl font-normal text-black mb-4"
+                style={headingStyle}
+              >
+                Apply to join
+              </h2>
+              <p className="text-lg text-slate-600">
                 We approve partners who genuinely help founders and growing
                 brands.
               </p>
             </div>
 
             {/* Custom Styled Form */}
-            <div className="mx-auto mt-6 sm:mt-8 max-w-xl">
-              <div className="rounded-2xl border border-white/10 bg-base-700/60 p-4 sm:p-8 shadow-glow">
-                <h3 className="text-base sm:text-lg font-semibold mb-2">
+            <div className="mx-auto max-w-xl">
+              <div className="bg-[#F5F5DC] border-2 border-black rounded-2xl p-6 sm:p-8 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                <h3 className="text-lg font-bold text-black mb-2">
                   Affiliates: Turn those links into 20% revenue!
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-300 mb-4 sm:mb-6">
+                <p className="text-sm text-slate-600 mb-6">
                   Enter your email address to find out when we launch
-                  <span className="text-red-400">*</span>
+                  <span className="text-red-500">*</span>
                 </p>
 
                 <form
@@ -839,14 +919,14 @@ export default function Affiliate() {
                       placeholder="EMAIL"
                       required
                       disabled={isSubmitting}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm placeholder:text-slate-500 focus:outline-none focus-visible:outline-2 focus-visible:outline-accent-blue focus-visible:outline-offset-2 disabled:opacity-50"
+                      className="w-full rounded-xl border-2 border-black bg-white/50 px-4 py-3 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 disabled:opacity-50 transition-all"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full rounded-xl bg-gradient-to-r from-accent-blue to-accent-violet px-6 py-3 font-semibold text-white shadow-glow hover:opacity-95 transition-opacity disabled:opacity-50"
+                    className={`${primaryButtonClass} w-full justify-center disabled:opacity-50`}
                   >
                     {isSubmitting ? "SUBSCRIBING..." : "SUBSCRIBE"}
                   </button>
@@ -855,8 +935,8 @@ export default function Affiliate() {
                     <p
                       className={`text-sm text-center ${
                         submitMessage.startsWith("✓")
-                          ? "text-emerald-400"
-                          : "text-red-400"
+                          ? "text-green-600"
+                          : "text-red-500"
                       }`}
                     >
                       {submitMessage}
@@ -867,11 +947,11 @@ export default function Affiliate() {
             </div>
 
             <div className="mt-6 text-center">
-              <p className="text-xs text-slate-400">
+              <p className="text-sm text-slate-500">
                 We'll reply within 2 business days. By applying you agree to our{" "}
                 <a
-                  href="#"
-                  className="underline decoration-dotted underline-offset-4"
+                  href="/terms-of-service"
+                  className="text-purple-600 hover:text-purple-700 hover:underline transition-colors"
                 >
                   terms
                 </a>
@@ -882,17 +962,20 @@ export default function Affiliate() {
         </section>
 
         {/* FAQ */}
-        <section id="faq" className="relative">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <section id="faq" className="py-16 md:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-3xl">
-              <h2 className="text-2xl sm:text-3xl font-bold text-center">
+              <h2
+                className="text-2xl sm:text-3xl md:text-4xl font-normal text-black text-center mb-12"
+                style={headingStyle}
+              >
                 Affiliate FAQ
               </h2>
-              <div className="mt-8 divide-y divide-white/5 border border-white/10 rounded-2xl overflow-hidden">
-                <details className="group open:bg-white/5">
-                  <summary className="flex cursor-pointer items-center justify-between px-5 py-4 text-left font-medium hover:bg-white/5">
+              <div className="divide-y divide-black/10 border-2 border-black rounded-2xl overflow-hidden">
+                <details className="group">
+                  <summary className="flex cursor-pointer items-center justify-between px-6 py-5 text-left font-semibold text-black hover:bg-white/50 transition-colors">
                     Is 20% really recurring?
-                    <span className="ml-4 text-slate-400 group-open:rotate-180 transition">
+                    <span className="ml-4 text-slate-400 group-open:rotate-180 transition-transform">
                       <svg
                         className="h-5 w-5"
                         viewBox="0 0 20 20"
@@ -905,15 +988,15 @@ export default function Affiliate() {
                       </svg>
                     </span>
                   </summary>
-                  <div className="px-5 pb-5 text-slate-300">
+                  <div className="px-6 pb-5 text-slate-600">
                     Yes. You earn 20% every month your referral remains
                     subscribed. It's not a one-time bounty.
                   </div>
                 </details>
                 <details className="group">
-                  <summary className="flex cursor-pointer items-center justify-between px-5 py-4 text-left font-medium hover:bg-white/5">
+                  <summary className="flex cursor-pointer items-center justify-between px-6 py-5 text-left font-semibold text-black hover:bg-white/50 transition-colors">
                     How do I get paid?
-                    <span className="ml-4 text-slate-400 group-open:rotate-180 transition">
+                    <span className="ml-4 text-slate-400 group-open:rotate-180 transition-transform">
                       <svg
                         className="h-5 w-5"
                         viewBox="0 0 20 20"
@@ -926,15 +1009,15 @@ export default function Affiliate() {
                       </svg>
                     </span>
                   </summary>
-                  <div className="px-5 pb-5 text-slate-300">
+                  <div className="px-6 pb-5 text-slate-600">
                     Monthly via Stripe or PayPal. Your dashboard shows live
                     clicks, trials, and conversions.
                   </div>
                 </details>
                 <details className="group">
-                  <summary className="flex cursor-pointer items-center justify-between px-5 py-4 text-left font-medium hover:bg-white/5">
+                  <summary className="flex cursor-pointer items-center justify-between px-6 py-5 text-left font-semibold text-black hover:bg-white/50 transition-colors">
                     Any promotion rules?
-                    <span className="ml-4 text-slate-400 group-open:rotate-180 transition">
+                    <span className="ml-4 text-slate-400 group-open:rotate-180 transition-transform">
                       <svg
                         className="h-5 w-5"
                         viewBox="0 0 20 20"
@@ -947,15 +1030,15 @@ export default function Affiliate() {
                       </svg>
                     </span>
                   </summary>
-                  <div className="px-5 pb-5 text-slate-300">
+                  <div className="px-6 pb-5 text-slate-600">
                     Be honest. Don't run misleading ads. Disclose affiliate
                     links where required. Keep it GDPR-friendly.
                   </div>
                 </details>
                 <details className="group">
-                  <summary className="flex cursor-pointer items-center justify-between px-5 py-4 text-left font-medium hover:bg-white/5">
+                  <summary className="flex cursor-pointer items-center justify-between px-6 py-5 text-left font-semibold text-black hover:bg-white/50 transition-colors">
                     Do you offer custom deals for big partners?
-                    <span className="ml-4 text-slate-400 group-open:rotate-180 transition">
+                    <span className="ml-4 text-slate-400 group-open:rotate-180 transition-transform">
                       <svg
                         className="h-5 w-5"
                         viewBox="0 0 20 20"
@@ -968,7 +1051,7 @@ export default function Affiliate() {
                       </svg>
                     </span>
                   </summary>
-                  <div className="px-5 pb-5 text-slate-300">
+                  <div className="px-6 pb-5 text-slate-600">
                     Yes. If you can drive meaningful volume, we'll discuss
                     tiered rates and co-marketing.
                   </div>
@@ -979,18 +1062,15 @@ export default function Affiliate() {
         </section>
 
         {/* CTA STRIP */}
-        <section className="border-t border-white/5 bg-gradient-to-r from-accent-blue/10 to-accent-violet/10">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-slate-200">
+        <section className="border-t-2 border-black bg-purple-50">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-slate-700 text-center sm:text-left">
               Ready to partner with a tool founders love?{" "}
-              <span className="text-slate-400">
+              <span className="text-slate-500">
                 Earn 20% recurring for every referral.
               </span>
             </p>
-            <a
-              href="#apply"
-              className="inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-4 py-2 font-semibold hover:bg-white/10"
-            >
+            <a href="#apply" className={secondaryButtonClass}>
               Apply to the Affiliate Program
             </a>
           </div>
@@ -998,102 +1078,98 @@ export default function Affiliate() {
       </main>
 
       {/* FOOTER */}
-      <footer className="border-t border-white/5">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 text-sm">
-          <div>
-            <div className="font-extrabold text-lg">
-              Contact<span className="text-slate-400">Journalists</span>
+      <footer className="border-t border-black/10 bg-[#F5F5DC]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid gap-8 grid-cols-2 lg:grid-cols-4">
+            <div className="col-span-2 lg:col-span-1">
+              <a
+                href="/"
+                className="flex items-center gap-2 font-extrabold text-lg tracking-tight text-black"
+              >
+                <span className="inline-block h-2.5 w-2.5 rounded-sm bg-gradient-to-br from-purple-500 to-violet-600"></span>
+                Contact<span className="text-slate-500">Journalists</span>
+              </a>
+              <p className="mt-3 text-sm text-slate-600">
+                Made in London. GDPR-respectful outreach.
+              </p>
             </div>
-            <p className="mt-3 text-slate-400">
-              Made in London. GDPR-respectful outreach.
-            </p>
-          </div>
-          <div>
-            <h3 className="font-semibold">Product</h3>
-            <ul className="mt-3 space-y-2 text-slate-300">
-              <li>
-                <a
-                  className="hover:underline underline-offset-4"
-                  href="/#features"
-                >
-                  Features
-                </a>
-              </li>
-              <li>
-                <a
-                  className="hover:underline underline-offset-4"
-                  href="/#pricing"
-                >
-                  Pricing
-                </a>
-              </li>
-              <li>
-                <a className="hover:underline underline-offset-4" href="#">
-                  Roadmap
-                </a>
-              </li>
-              <li>
-                <a className="hover:underline underline-offset-4" href="#">
-                  Changelog
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="font-semibold">Company</h3>
-            <ul className="mt-3 space-y-2 text-slate-300">
-              <li>
-                <a className="hover:underline underline-offset-4" href="#">
-                  About
-                </a>
-              </li>
-              <li>
-                <a className="hover:underline underline-offset-4" href="#">
-                  Careers
-                </a>
-              </li>
-              <li>
-                <a
-                  className="hover:underline underline-offset-4"
-                  href="mailto:hello@contactjournalists.com"
-                >
-                  Contact
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="font-semibold">Resources</h3>
-            <ul className="mt-3 space-y-2 text-slate-300">
-              <li>
-                <a className="hover:underline underline-offset-4" href="#faq">
-                  Affiliate FAQ
-                </a>
-              </li>
-              <li>
-                <a className="hover:underline underline-offset-4" href="#">
-                  Press Kit
-                </a>
-              </li>
-              <li>
-                <a className="hover:underline underline-offset-4" href="#">
-                  Privacy
-                </a>
-              </li>
-              <li>
-                <a className="hover:underline underline-offset-4" href="#">
-                  Terms
-                </a>
-              </li>
-            </ul>
+            <div>
+              <h3 className="font-semibold text-sm text-black">Product</h3>
+              <ul className="mt-3 space-y-2 text-sm text-slate-600">
+                <li>
+                  <a
+                    className="hover:text-black transition-colors"
+                    href="/#features"
+                  >
+                    Features
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="hover:text-black transition-colors"
+                    href="/#pricing"
+                  >
+                    Pricing
+                  </a>
+                </li>
+                <li>
+                  <a className="hover:text-black transition-colors" href="#">
+                    Roadmap
+                  </a>
+                </li>
+                <li>
+                  <a className="hover:text-black transition-colors" href="#">
+                    Changelog
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold text-sm text-black">Company</h3>
+              <ul className="mt-3 space-y-2 text-sm text-slate-600">
+                <li>
+                  <a className="hover:text-black transition-colors" href="#">
+                    About
+                  </a>
+                </li>
+                <li>
+                  <a className="hover:text-black transition-colors" href="#">
+                    Careers
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="hover:text-black transition-colors"
+                    href="mailto:hello@contactjournalists.com"
+                  >
+                    Contact
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold text-sm text-black">Legal</h3>
+              <ul className="mt-3 space-y-2 text-sm text-slate-600">
+                {FOOTER_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <Link className="hover:text-black transition-colors" to={link.href}>
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
-        <div className="border-t border-white/5">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+        <div className="border-t border-black/5">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-500">
             <p>
               © {new Date().getFullYear()} ContactJournalists.com · London, UK
             </p>
-            <a className="hover:underline underline-offset-4" href="/">
+            <a
+              className="text-purple-600 hover:text-purple-700 hover:underline transition-colors"
+              href="/"
+            >
               Back to Home
             </a>
           </div>

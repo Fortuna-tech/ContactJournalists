@@ -67,33 +67,35 @@ export function FounderDashboardSidebar() {
   const location = useLocation();
 
   return (
-    <Sidebar className="bg-background border-none mt-10">
+    <Sidebar className="bg-[#F5F5DC] border-none mt-10">
       <SidebarContent className="pl-4">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="gap-2">
-              {items.map((item) => (
-                <SidebarMenuItem
-                  className="py-1 pl-4 text- w-auto hover:bg-muted rounded-full hover:text-primary"
-                  key={item.title}
-                >
-                  <SidebarMenuButton
-                    asChild
-                    isActive={
-                      item.end
-                        ? location.pathname === item.url
-                        : location.pathname.startsWith(item.url)
-                    }
+              {items.map((item) => {
+                const isActive = item.end
+                  ? location.pathname === item.url
+                  : location.pathname.startsWith(item.url);
+                return (
+                  <SidebarMenuItem
+                    className={`py-1 pl-4 w-auto rounded-full transition-all duration-150 ${
+                      isActive
+                        ? "bg-[#D8B4FE] border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                        : "hover:bg-white/50 border-2 border-transparent"
+                    }`}
+                    key={item.title}
                   >
-                    <Link to={item.url}>
-                      <item.icon />
-                      <span className="text-lg font-light tracking-tight">
-                        {item.title}
-                      </span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+                    <SidebarMenuButton asChild isActive={isActive}>
+                      <Link to={item.url} className="text-black">
+                        <item.icon className="text-black" />
+                        <span className="text-lg font-light tracking-tight text-black">
+                          {item.title}
+                        </span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

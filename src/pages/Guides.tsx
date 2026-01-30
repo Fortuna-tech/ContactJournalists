@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 import { blogTheme } from "@/styles/blogTheme";
 import BlogLayout from "@/layouts/BlogLayout";
+import { FOOTER_LINKS } from "@/components/Footer";
 
 const CATEGORIES = [
   { id: "all", label: "All Guides", icon: "📚" },
@@ -389,13 +391,25 @@ const Guides = () => {
       {/* Footer */}
       <footer className={blogTheme.footer}>
         <div className={blogTheme.containerWide + " py-8"}>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col items-center gap-4">
             <a href="/" className={blogTheme.logo}>
               <span className={blogTheme.logoIcon}></span>
               Contact<span className={blogTheme.logoText}>Journalists</span>
             </a>
+            <div className="flex flex-wrap justify-center gap-1 text-sm text-slate-600">
+              {FOOTER_LINKS.map((link, index) => (
+                <span key={link.href} className="flex items-center">
+                  <Link className="hover:text-black hover:underline" to={link.href}>
+                    {link.label}
+                  </Link>
+                  {index < FOOTER_LINKS.length - 1 && (
+                    <span className="mx-2 text-slate-400">|</span>
+                  )}
+                </span>
+              ))}
+            </div>
             <p className={blogTheme.footerText}>
-              © {new Date().getFullYear()} ContactJournalists.com
+              © {new Date().getFullYear()} ContactJournalists.com. Built in London with ☕️
             </p>
           </div>
         </div>

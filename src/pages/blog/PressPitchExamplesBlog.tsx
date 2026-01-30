@@ -1,9 +1,11 @@
 import { ArrowLeft } from "lucide-react";
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 import founderLaptopImage from "@assets/pexels-vlada-karpovich-4050316_1763395875996.jpg";
 import coffeeShopWorkImage from "@assets/pexels-iamloe-722244_1763395878473.jpg";
 import { blogTheme } from "@/styles/blogTheme";
 import BlogLayout from "@/layouts/BlogLayout";
+import { FOOTER_LINKS } from "@/components/Footer";
 
 const PressPitchExamplesBlog = () => {
   return (
@@ -374,9 +376,21 @@ const PressPitchExamplesBlog = () => {
 
         <footer className={blogTheme.footer}>
           <div className={blogTheme.footerInner}>
+            <div className="flex flex-wrap justify-center gap-1 text-sm text-slate-600 mb-4">
+              {FOOTER_LINKS.map((link, index) => (
+                <span key={link.href} className="flex items-center">
+                  <Link className="hover:text-black hover:underline" to={link.href}>
+                    {link.label}
+                  </Link>
+                  {index < FOOTER_LINKS.length - 1 && (
+                    <span className="mx-2 text-slate-400">|</span>
+                  )}
+                </span>
+              ))}
+            </div>
             <div className="text-center">
               <p className={blogTheme.footerText}>
-                © 2025 ContactJournalists.com. Built for founders, by a founder.
+                © 2026 ContactJournalists.com. Built for founders, by a founder.
               </p>
             </div>
           </div>

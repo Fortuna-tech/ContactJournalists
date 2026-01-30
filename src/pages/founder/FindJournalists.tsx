@@ -192,10 +192,10 @@ const FindJournalists = () => {
                   <TableCell className="text-right">
                     {isSaved(journalist.userId) ? (
                       <div className="flex items-center justify-end gap-2">
-                        <Mail className="h-4 w-4 text-muted-foreground" />
+                        <Mail className="h-4 w-4 text-slate-500" />
                         <a
                           href={`mailto:${getEmail(journalist.userId)}`}
-                          className="text-primary hover:underline"
+                          className="text-black font-medium hover:text-purple-600 hover:underline transition-colors"
                           onClick={(e) => e.stopPropagation()}
                         >
                           {getEmail(journalist.userId)}

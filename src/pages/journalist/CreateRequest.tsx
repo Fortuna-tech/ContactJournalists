@@ -11,7 +11,7 @@ export default function CreateRequest() {
           Tell founders exactly what you need. You control visibility.
         </p>
       </div>
-      <div className="bg-card border rounded-lg p-6 shadow-sm">
+      <div className="bg-white/60 border-2 border-black rounded-2xl p-6 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
         <SubmitRequestForm />
       </div>
     </div>
