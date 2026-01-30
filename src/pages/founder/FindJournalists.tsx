@@ -105,6 +105,10 @@ const FindJournalists = () => {
           <Button className="w-32">Search</Button>
         </div>
 
+        <p className="text-sm text-muted-foreground mb-4">
+          Popular topics journalists often cover include: AI, ADHD, Mental Health, Parenting, Motherhood, Fatherhood, Marketing, Startups, Wellness, Fashion, Beauty.
+        </p>
+
         <div className="flex flex-wrap gap-2 items-center text-sm text-muted-foreground mb-4">
           <span className="font-medium text-foreground mr-2">Filters:</span>
           {["Technology", "Business", "Finance", "Healthcare", "Lifestyle"].map(
