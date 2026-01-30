@@ -23,6 +23,7 @@ export interface AdminJournalistProfile {
   linkedin: string | null;
   x_handle: string | null;
   categories: string[];
+  niches: string[] | null;
   created_at: string;
   meta?: Record<string, unknown>;
   billing_account?: {
@@ -222,6 +223,7 @@ export const getJournalistsAdmin = async ({
       linkedin: p.linkedin as string | null,
       x_handle: p.x_handle as string | null,
       categories: (p.categories as string[]) || [],
+      niches: (p.niches as string[] | null) || null,
       created_at: p.created_at as string,
       meta: p.meta as Record<string, unknown> | undefined,
       billing_account: Array.isArray(p.billing_accounts)
@@ -243,6 +245,7 @@ export const updateJournalistAdmin = async (
     linkedin?: string;
     x_handle?: string;
     categories?: string[];
+    niches?: string[] | null;
   }
 ): Promise<AdminJournalistProfile> => {
   const data = await callJournalistsAdminFunction<Record<string, unknown>>(
@@ -262,6 +265,7 @@ export const updateJournalistAdmin = async (
     linkedin: data.linkedin as string | null,
     x_handle: data.x_handle as string | null,
     categories: (data.categories as string[]) || [],
+    niches: (data.niches as string[] | null) || null,
     created_at: data.created_at as string,
   };
 };

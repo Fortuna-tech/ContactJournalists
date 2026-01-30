@@ -30,6 +30,7 @@ interface JournalistData {
   linkedin?: string;
   x_handle?: string;
   categories?: string[];
+  niches?: string[] | null;
   email_screenshot?: string;
 }
 
@@ -486,7 +487,7 @@ serve(async (req: Request) => {
         let query = supabaseAdmin
           .from("profiles")
           .select(
-            "id, email, full_name, role, press, company, website, linkedin, x_handle, categories, created_at, meta, billing_accounts(status, plan_id, current_period_end, cancel_at_period_end)",
+            "id, email, full_name, role, press, company, website, linkedin, x_handle, categories, niches, created_at, meta, billing_accounts(status, plan_id, current_period_end, cancel_at_period_end)",
             { count: "exact" }
           )
           .eq("role", "journalist")

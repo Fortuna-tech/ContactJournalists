@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, KeyboardEvent } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -16,10 +16,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2, Trash2 } from "lucide-react";
+import { Loader2, Trash2, X } from "lucide-react";
 
 const formSchema = z.object({
   full_name: z.string().min(1, "Name is required"),
@@ -29,6 +30,7 @@ const formSchema = z.object({
   website: z.string().optional(),
   linkedin: z.string().optional(),
   x_handle: z.string().optional(),
+  niches: z.array(z.string()).optional().nullable(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -67,6 +69,8 @@ export function JournalistForm({
     }
   };
 
+  const [nicheInput, setNicheInput] = useState("");
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -77,8 +81,31 @@ export function JournalistForm({
       website: defaultValues?.website || "",
       linkedin: defaultValues?.linkedin || "",
       x_handle: defaultValues?.x_handle || "",
+      niches: defaultValues?.niches || [],
     },
   });
+
+  const handleAddNiche = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      const value = nicheInput.trim().replace(/,/g, "");
+      if (value && value.length > 0) {
+        const currentNiches = form.getValues("niches") || [];
+        if (!currentNiches.includes(value)) {
+          form.setValue("niches", [...currentNiches, value]);
+        }
+        setNicheInput("");
+      }
+    }
+  };
+
+  const handleRemoveNiche = (nicheToRemove: string) => {
+    const currentNiches = form.getValues("niches") || [];
+    form.setValue(
+      "niches",
+      currentNiches.filter((n) => n !== nicheToRemove)
+    );
+  };
 
   const handleSubmit = async (data: FormData) => {
     setIsSubmitting(true);
@@ -205,6 +232,50 @@ export function JournalistForm({
                   <FormControl>
                     <Input placeholder="@johndoe" {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Niches Tag Input */}
+            <FormField
+              control={form.control}
+              name="niches"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Niches / Beats</FormLabel>
+                  <FormControl>
+                    <div>
+                      <Input
+                        placeholder="Type a niche and press Enter..."
+                        value={nicheInput}
+                        onChange={(e) => setNicheInput(e.target.value)}
+                        onKeyDown={handleAddNiche}
+                      />
+                      {field.value && field.value.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {field.value.map((niche) => (
+                            <span
+                              key={niche}
+                              className="inline-flex items-center gap-1 bg-purple-100 text-purple-800 text-sm px-2.5 py-1 rounded-full border border-purple-200"
+                            >
+                              {niche}
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveNiche(niche)}
+                                className="hover:text-purple-600 focus:outline-none"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </FormControl>
+                  <FormDescription>
+                    Topics this journalist covers (e.g., AI, Startups, Finance)
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
