@@ -12,10 +12,67 @@ import { ProfileForm, ProfileFormData } from "@/components/profile/ProfileForm";
 const Onboarding = () => {
   const [step, setStep] = useState<"role" | "details" | "pricing">("role");
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
+
+  // Auth protection: redirect to /auth if not logged in
+  useEffect(() => {
+    let mounted = true;
+
+    const checkAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!mounted) return;
+
+        if (!session) {
+          // Not logged in - redirect to auth
+          navigate("/auth", { replace: true });
+          return;
+        }
+
+        // Check if user already completed onboarding
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("onboarding_complete, role")
+          .eq("id", session.user.id)
+          .maybeSingle();
+
+        if (!mounted) return;
+
+        if (profile?.onboarding_complete) {
+          // Already completed onboarding - redirect based on role
+          if (profile.role === "journalist") {
+            navigate("/journalist/dashboard", { replace: true });
+          } else {
+            navigate("/feed", { replace: true });
+          }
+          return;
+        }
+
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error("Onboarding auth check error:", error);
+        if (mounted) {
+          navigate("/auth", { replace: true });
+        }
+      } finally {
+        if (mounted) {
+          setIsAuthChecking(false);
+        }
+      }
+    };
+
+    checkAuth();
+
+    return () => {
+      mounted = false;
+    };
+  }, [navigate]);
 
   useEffect(() => {
     const forcedStep = searchParams.get("step");
@@ -62,7 +119,7 @@ const Onboarding = () => {
       });
 
       if (selectedRole === "journalist") {
-        navigate("/feed");
+        navigate("/journalist/dashboard");
       } else {
         setStep("pricing");
       }
@@ -78,10 +135,27 @@ const Onboarding = () => {
     completeMutation.mutate(data);
   };
 
+  // Show loading while checking auth
+  if (isAuthChecking) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render if not authenticated (will redirect)
+  if (!isAuthenticated) {
+    return null;
+  }
+
   if (step === "pricing") {
     return (
       <div className="min-h-screen flex items-center justify-center p-8 bg-background">
-        <PricingSelection onSkip={() => navigate("/feed")} />
+        <PricingSelection />
       </div>
     );
   }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import JournalistFeed from "@/components/feed/JournalistFeed";
 import AgencyFounderFeed from "@/components/feed/AgencyFounderFeed";
@@ -14,40 +14,71 @@ import MyActivity from "@/pages/founder/MyActivity";
 import Settings from "@/pages/founder/Settings";
 import Help from "@/pages/founder/Help";
 
+/**
+ * Feed component - assumes route guards handle auth/subscription checks.
+ * Does NOT perform independent redirects that could race with hydration.
+ * Only fetches role to determine which layout to show.
+ */
 const Feed = () => {
-  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [authReady, setAuthReady] = useState(false);
+
+  // Preserve debug param for child components
+  const debugParam = searchParams.get("debug") === "1" ? "?debug=1" : "";
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+    let mounted = true;
 
-      if (!session) {
-        navigate("/auth");
-        return;
+    const fetchRole = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (!mounted) return;
+
+        // Mark auth as ready after first check
+        setAuthReady(true);
+
+        if (!session) {
+          // No session - but DON'T redirect here.
+          // Let parent route guards handle unauthenticated users.
+          // Just show loading state and let the guard redirect if needed.
+          setLoading(false);
+          return;
+        }
+
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role, onboarding_complete")
+          .eq("id", session.user.id)
+          .maybeSingle();
+
+        if (!mounted) return;
+
+        // If profile check fails or incomplete, don't redirect - let guards handle it
+        if (profile) {
+          setRole(profile.role);
+        }
+        
+        setLoading(false);
+      } catch (error) {
+        console.error("Feed: Error fetching role:", error);
+        if (mounted) {
+          setLoading(false);
+          setAuthReady(true);
+        }
       }
-
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role, onboarding_complete")
-        .eq("id", session.user.id)
-        .maybeSingle();
-
-      if (!profile?.onboarding_complete) {
-        navigate("/onboarding");
-        return;
-      }
-
-      setRole(profile.role);
-      setLoading(false);
     };
 
-    checkAuth();
-  }, [navigate]);
+    fetchRole();
 
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  // Loading state - no redirects during load
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -59,12 +90,25 @@ const Feed = () => {
     );
   }
 
-  if (!role) return null;
-
-  if (role === "journalist") {
-    return <Navigate to="/journalist/dashboard" replace />;
+  // No role determined - show minimal state, don't redirect
+  // BillingGuard or auth guards will handle unauthorized access
+  if (!role) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="text-muted-foreground">Checking access...</p>
+        </div>
+      </div>
+    );
   }
 
+  // Journalist role - redirect to journalist dashboard (no subscription needed)
+  if (role === "journalist") {
+    return <Navigate to={`/journalist/dashboard${debugParam}`} replace />;
+  }
+
+  // Founder/Agency/Admin roles - wrap in BillingGuard for subscription check
   return (
     <BillingGuard>
       <Routes>

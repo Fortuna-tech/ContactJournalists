@@ -1,31 +1,56 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import AuthDebugPanel from "@/components/ui/AuthDebugPanel";
 
-/**
- * AuthCallback handles magic link / OAuth code exchange only.
- * After successful auth, redirects to /feed and lets BillingGuard handle subscription checks.
- * This avoids duplicate subscription checks and race conditions.
- */
+type AuthState = "processing" | "error" | "success";
+type RedirectReason = "none" | "onboarding" | "journalist" | "feed" | "auth_failed" | "no_session" | "exchange_failed";
+
 const AuthCallback = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
-  const [isProcessing, setIsProcessing] = useState(true);
+  
+  const [authState, setAuthState] = useState<AuthState>("processing");
+  const [authReady, setAuthReady] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [sessionUserId, setSessionUserId] = useState<string | null>(null);
+  const [lastRedirectReason, setLastRedirectReason] = useState<RedirectReason>("none");
+
+  const showDebug = searchParams.get("debug") === "1";
 
   useEffect(() => {
     let mounted = true;
 
     const handleAuthCallback = async () => {
       try {
-        // Exchange code for session (handles magic link and OAuth)
-        const { data, error } = await supabase.auth.getSession();
+        // Step 1: Explicitly exchange the code/token from URL
+        // This handles magic link tokens and OAuth codes
+        const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(window.location.href);
+        
+        if (exchangeError) {
+          // exchangeCodeForSession may fail if there's no code in URL (e.g., already exchanged)
+          // In that case, we still try getSession below
+          console.warn("Exchange code warning (may be expected):", exchangeError.message);
+        }
 
-        if (error) throw error;
+        // Step 2: After exchange attempt, confirm session exists
+        const { data, error: sessionError } = await supabase.auth.getSession();
+
+        if (sessionError) {
+          throw sessionError;
+        }
 
         if (!mounted) return;
 
+        // Mark auth as ready - we've completed the exchange and session check
+        setAuthReady(true);
+
         if (data.session) {
+          setSessionUserId(data.session.user.id);
+
           // Check if user has completed onboarding
           const { data: profile } = await supabase
             .from("profiles")
@@ -36,36 +61,38 @@ const AuthCallback = () => {
           if (!mounted) return;
 
           if (!profile?.onboarding_complete) {
+            setLastRedirectReason("onboarding");
+            setAuthState("success");
             navigate("/onboarding", { replace: true });
             return;
           }
 
           // Journalists go directly to their dashboard (no subscription required)
           if (profile.role === "journalist") {
+            setLastRedirectReason("journalist");
+            setAuthState("success");
             navigate("/journalist/dashboard", { replace: true });
             return;
           }
 
           // All other roles (founder, agency, admin) go to /feed
           // BillingGuard will handle subscription check with grace period
+          setLastRedirectReason("feed");
+          setAuthState("success");
           navigate("/feed", { replace: true });
         } else {
-          // No session - redirect to auth
-          navigate("/auth", { replace: true });
+          // No session after exchange - this is a real failure
+          setLastRedirectReason("no_session");
+          setErrorMessage("Login didn't complete. Please request a new magic link.");
+          setAuthState("error");
         }
       } catch (error) {
         console.error("Auth callback error:", error);
         if (mounted) {
-          toast({
-            title: "Authentication error",
-            description: "Failed to sign in. Please try again.",
-            variant: "destructive",
-          });
-          navigate("/auth", { replace: true });
-        }
-      } finally {
-        if (mounted) {
-          setIsProcessing(false);
+          setAuthReady(true);
+          setLastRedirectReason("exchange_failed");
+          setErrorMessage("Login didn't complete. Please request a new magic link.");
+          setAuthState("error");
         }
       }
     };
@@ -77,19 +104,57 @@ const AuthCallback = () => {
     };
   }, [navigate, toast]);
 
-  // Always show loading while processing - no redirects until complete
-  if (isProcessing) {
+  const handleRequestNewLink = () => {
+    navigate("/auth", { replace: true });
+  };
+
+  // Error state - show error UI, don't silently redirect
+  if (authState === "error") {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="text-muted-foreground">Completing sign in...</p>
+        <div className="text-center space-y-4 max-w-md px-4">
+          <div className="text-red-500 text-5xl mb-4">⚠️</div>
+          <h2 className="text-xl font-semibold text-foreground">Sign In Issue</h2>
+          <p className="text-muted-foreground">
+            {errorMessage || "Login didn't complete. Please request a new magic link."}
+          </p>
+          <Button onClick={handleRequestNewLink} className="mt-4">
+            Request New Magic Link
+          </Button>
+          
+          {showDebug && (
+            <AuthDebugPanel
+              route="/auth/callback"
+              authReady={authReady}
+              sessionUserId={sessionUserId}
+              subscriptionStatus="unknown"
+              lastRedirectReason={lastRedirectReason}
+            />
+          )}
         </div>
       </div>
     );
   }
 
-  return null;
+  // Processing state - show loading
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center space-y-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+        <p className="text-muted-foreground">Completing sign in...</p>
+        
+        {showDebug && (
+          <AuthDebugPanel
+            route="/auth/callback"
+            authReady={authReady}
+            sessionUserId={sessionUserId}
+            subscriptionStatus="unknown"
+            lastRedirectReason={lastRedirectReason}
+          />
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default AuthCallback;
