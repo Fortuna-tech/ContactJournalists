@@ -58,7 +58,7 @@ export const ProfileForm = ({
     }
   }, [initialData]);
 
-  const { data: allCategories = [], isLoading: isLoadingCategories } = useQuery(
+  const { data: allCategories = [], isLoading: isLoadingCategories, isError: isCategoriesError } = useQuery(
     {
       queryKey: ["categories"],
       queryFn: getCategories,
@@ -67,7 +67,12 @@ export const ProfileForm = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    // Default to "Uncategorised" if no categories selected
+    const dataToSave = {
+      ...formData,
+      categories: formData.categories.length > 0 ? formData.categories : ["Uncategorised"],
+    };
+    onSave(dataToSave);
   };
 
   const handleCategoryToggle = (categoryId: string) => {
@@ -102,7 +107,7 @@ export const ProfileForm = ({
             <Button
               type="submit"
               variant="outline"
-              disabled={formData.categories.length === 0 || isSaving}
+              disabled={isSaving}
             >
               {isSaving ? "Saving..." : saveButtonText}
             </Button>
@@ -205,7 +210,11 @@ export const ProfileForm = ({
                 : "Categories you want to be featured in"}
             </Label>
             <div className="flex flex-wrap gap-2">
-              {allCategories.length > 0 ? (
+              {isCategoriesError || (!isLoadingCategories && allCategories.length === 0) ? (
+                <p className="text-sm text-muted-foreground">
+                  Categories coming soon
+                </p>
+              ) : (
                 allCategories.map((category) => (
                   <Badge
                     key={category.id}
@@ -220,10 +229,6 @@ export const ProfileForm = ({
                     {category.title}
                   </Badge>
                 ))
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  No categories available
-                </p>
               )}
             </div>
           </div>
