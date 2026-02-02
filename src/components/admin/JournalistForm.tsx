@@ -16,10 +16,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2, Trash2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Loader2, Trash2, X } from "lucide-react";
+import { TOPIC_LIST } from "@/lib/smart-topics";
 
 const formSchema = z.object({
   full_name: z.string().min(1, "Name is required"),
@@ -29,6 +32,7 @@ const formSchema = z.object({
   website: z.string().optional(),
   linkedin: z.string().optional(),
   x_handle: z.string().optional(),
+  categories: z.array(z.string()).optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -55,6 +59,7 @@ export function JournalistForm({
   const [internalOpen, setInternalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showAllTopics, setShowAllTopics] = useState(false);
 
   // Support both controlled and uncontrolled mode
   const isControlled = controlledOpen !== undefined;
@@ -77,8 +82,12 @@ export function JournalistForm({
       website: defaultValues?.website || "",
       linkedin: defaultValues?.linkedin || "",
       x_handle: defaultValues?.x_handle || "",
+      categories: defaultValues?.categories || [],
     },
   });
+
+  const PRIMARY_TOPICS = TOPIC_LIST.slice(0, 12);
+  const displayedTopics = showAllTopics ? TOPIC_LIST : PRIMARY_TOPICS;
 
   const handleSubmit = async (data: FormData) => {
     setIsSubmitting(true);
@@ -204,6 +213,61 @@ export function JournalistForm({
                   <FormLabel>X Handle</FormLabel>
                   <FormControl>
                     <Input placeholder="@johndoe" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="categories"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Topics</FormLabel>
+                  <FormDescription>
+                    Select topics this journalist covers
+                  </FormDescription>
+                  <FormControl>
+                    <div className="space-y-2">
+                      <div className="flex flex-wrap gap-1.5">
+                        {displayedTopics.map((topic) => {
+                          const isSelected = field.value?.includes(topic);
+                          return (
+                            <Badge
+                              key={topic}
+                              variant={isSelected ? "default" : "outline"}
+                              className="cursor-pointer hover:opacity-80 text-xs"
+                              onClick={() => {
+                                const current = field.value || [];
+                                if (isSelected) {
+                                  field.onChange(current.filter((t) => t !== topic));
+                                } else {
+                                  field.onChange([...current, topic]);
+                                }
+                              }}
+                            >
+                              {topic}
+                              {isSelected && <X className="h-3 w-3 ml-1" />}
+                            </Badge>
+                          );
+                        })}
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="text-xs text-muted-foreground hover:text-foreground h-6 px-2"
+                          onClick={() => setShowAllTopics(!showAllTopics)}
+                        >
+                          {showAllTopics ? "Show less" : `+${TOPIC_LIST.length - PRIMARY_TOPICS.length} more`}
+                        </Button>
+                      </div>
+                      {field.value && field.value.length > 0 && (
+                        <p className="text-xs text-muted-foreground">
+                          Selected: {field.value.join(", ")}
+                        </p>
+                      )}
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

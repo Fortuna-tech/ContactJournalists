@@ -10,8 +10,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, Mail, Eye } from "lucide-react";
-import { useState } from "react";
+import { Search, Mail, Eye, X } from "lucide-react";
+import { useState, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import {
@@ -21,24 +21,62 @@ import {
 } from "@/lib/api";
 import { JournalistProfile } from "@/types";
 import { useToast } from "@/hooks/use-toast";
+import {
+  TOPIC_LIST,
+  getTopicsForJournalist,
+  journalistMatchesTopics,
+} from "@/lib/smart-topics";
+
+// Primary topics shown by default (most relevant for founders)
+const PRIMARY_TOPICS = [
+  "AI",
+  "Startups",
+  "Technology",
+  "Business",
+  "Marketing",
+  "Finance",
+  "Wellness",
+  "Mental Health",
+  "Parenting",
+  "Lifestyle",
+];
 
 const FindJournalists = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+  const [showAllTopics, setShowAllTopics] = useState(false);
   const { toast } = useToast();
   const [savingId, setSavingId] = useState<string | null>(null);
 
-  const { data: journalists = [], isLoading } = useQuery({
-    queryKey: ["journalists", searchTerm, selectedCategory],
+  // Fetch all journalists (we filter client-side for topics)
+  const { data: allJournalists = [], isLoading } = useQuery({
+    queryKey: ["journalists", searchTerm],
     queryFn: () =>
       searchJournalists({
         searchTerm: searchTerm || undefined,
-        category: selectedCategory || undefined,
       }),
     enabled: true,
   });
+
+  // Apply topic filtering client-side
+  const journalists = useMemo(() => {
+    if (selectedTopics.length === 0) return allJournalists;
+    return allJournalists.filter((j) => journalistMatchesTopics(j, selectedTopics));
+  }, [allJournalists, selectedTopics]);
+
+  const toggleTopic = (topic: string) => {
+    setSelectedTopics((prev) =>
+      prev.includes(topic) ? prev.filter((t) => t !== topic) : [...prev, topic]
+    );
+  };
+
+  const clearFilters = () => {
+    setSelectedTopics([]);
+  };
+
+  const displayedTopics = showAllTopics ? TOPIC_LIST : PRIMARY_TOPICS;
 
   // Get saved contacts with emails
   const { data: savedEmails = {}, refetch: refetchSaved } = useQuery({
@@ -105,31 +143,56 @@ const FindJournalists = () => {
           <Button className="w-32">Search</Button>
         </div>
 
-        <p className="text-sm text-muted-foreground mb-4">
-          <span className="font-medium">Keywords:</span> Topics journalists regularly cover: AI, ADHD, Mental Health, Parenting, Motherhood, Fatherhood, Marketing, Startups, Wellness, Fashion, Beauty.
-        </p>
-
-        <div className="flex flex-wrap gap-2 items-center text-sm text-muted-foreground mb-4">
-          <span className="font-medium text-foreground mr-2">Filters:</span>
-          {["Technology", "Business", "Finance", "Healthcare", "Lifestyle"].map(
-            (category) => (
+        <div className="space-y-3">
+          <div className="flex flex-wrap gap-2 items-center">
+            <span className="font-medium text-foreground text-sm mr-2">Topics:</span>
+            {displayedTopics.map((topic) => (
               <Badge
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                className="cursor-pointer hover:opacity-80"
-                onClick={() =>
-                  setSelectedCategory(
-                    selectedCategory === category ? null : category
-                  )
-                }
+                key={topic}
+                variant={selectedTopics.includes(topic) ? "default" : "outline"}
+                className="cursor-pointer hover:opacity-80 transition-all"
+                onClick={() => toggleTopic(topic)}
               >
-                {category}
+                {topic}
               </Badge>
-            )
+            ))}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-xs text-muted-foreground hover:text-foreground"
+              onClick={() => setShowAllTopics(!showAllTopics)}
+            >
+              {showAllTopics ? "Show less" : `+${TOPIC_LIST.length - PRIMARY_TOPICS.length} more`}
+            </Button>
+          </div>
+
+          {selectedTopics.length > 0 && (
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-muted-foreground">Active filters:</span>
+              {selectedTopics.map((topic) => (
+                <Badge
+                  key={topic}
+                  variant="secondary"
+                  className="cursor-pointer gap-1"
+                  onClick={() => toggleTopic(topic)}
+                >
+                  {topic}
+                  <X className="h-3 w-3" />
+                </Badge>
+              ))}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-xs text-muted-foreground hover:text-foreground h-6 px-2"
+                onClick={clearFilters}
+              >
+                Clear all
+              </Button>
+            </div>
           )}
         </div>
 
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-muted-foreground mt-4">
           All journalist data shown is processed under legitimate interest per
           GDPR Article 6(1)(f).
         </p>
@@ -175,22 +238,34 @@ const FindJournalists = () => {
                     {journalist.press || "Unknown Publication"}
                   </TableCell>
                   <TableCell>
-                    <div className="flex flex-wrap gap-1">
-                      {journalist.categories?.slice(0, 3).map((cat) => (
-                        <Badge
-                          key={cat}
-                          variant="secondary"
-                          className="text-xs"
-                        >
-                          {cat}
-                        </Badge>
-                      ))}
-                      {journalist.categories?.length > 3 && (
-                        <Badge variant="secondary" className="text-xs">
-                          +{journalist.categories.length - 3}
-                        </Badge>
-                      )}
-                    </div>
+                    {(() => {
+                      const topics = getTopicsForJournalist(journalist);
+                      if (topics.length === 0) {
+                        return (
+                          <Badge variant="outline" className="text-xs text-muted-foreground">
+                            Uncategorised
+                          </Badge>
+                        );
+                      }
+                      return (
+                        <div className="flex flex-wrap gap-1">
+                          {topics.slice(0, 3).map((topic) => (
+                            <Badge
+                              key={topic}
+                              variant="secondary"
+                              className="text-xs"
+                            >
+                              {topic}
+                            </Badge>
+                          ))}
+                          {topics.length > 3 && (
+                            <Badge variant="secondary" className="text-xs">
+                              +{topics.length - 3}
+                            </Badge>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </TableCell>
                   <TableCell>{journalist.queryCount}</TableCell>
                   <TableCell className="text-right">

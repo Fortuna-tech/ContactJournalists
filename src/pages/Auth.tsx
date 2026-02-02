@@ -1,35 +1,80 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import type { Session } from "@supabase/supabase-js";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [isAuthLoading, setIsAuthLoading] = useState(true);
+  const [session, setSession] = useState<Session | null>(null);
+  const hydrationComplete = useRef(false);
 
   const navigate = useNavigate();
 
+  // Primary hydration: getSession() on mount with timeout failsafe
   useEffect(() => {
     let mounted = true;
 
-    const checkAuth = async () => {
-      // Wait for initial session check
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
-      if (!mounted) return;
-
-      if (!session) {
-        // No session - user needs to log in, stop loading
+    // Hard timeout failsafe: force loading to complete after 1500ms
+    const timeoutId = setTimeout(() => {
+      if (mounted && !hydrationComplete.current) {
+        console.warn("[Auth] Hydration timeout: forcing isAuthLoading = false after 1500ms");
+        hydrationComplete.current = true;
         setIsAuthLoading(false);
-        return;
       }
+    }, 1500);
 
-      // User is logged in, check onboarding
+    const hydrateSession = async () => {
+      try {
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        
+        if (!mounted) return;
+        
+        // Set session state from result
+        setSession(initialSession);
+      } catch (error) {
+        console.warn("[Auth] getSession() failed:", error);
+      } finally {
+        // Always set isAuthLoading = false after getSession() resolves
+        if (mounted && !hydrationComplete.current) {
+          hydrationComplete.current = true;
+          setIsAuthLoading(false);
+        }
+      }
+    };
+
+    hydrateSession();
+
+    return () => {
+      mounted = false;
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
+  // Supplementary: onAuthStateChange updates session (not required for hydration)
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, newSession) => {
+        setSession(newSession);
+      }
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  // Handle redirect when session exists (after hydration completes)
+  useEffect(() => {
+    if (isAuthLoading || !session) return;
+
+    let mounted = true;
+
+    const redirectLoggedInUser = async () => {
       const { data: profile } = await supabase
         .from("profiles")
         .select("onboarding_complete")
@@ -39,43 +84,18 @@ const Auth = () => {
       if (!mounted) return;
 
       if (profile?.onboarding_complete) {
-        // Logged in and onboarded - go to feed (BillingGuard handles subscription)
         navigate("/feed", { replace: true });
       } else {
         navigate("/onboarding", { replace: true });
       }
     };
 
-    // Subscribe to auth state changes to handle hydration
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (!mounted) return;
-
-        if (event === "SIGNED_IN" && session) {
-          const { data: profile } = await supabase
-            .from("profiles")
-            .select("onboarding_complete")
-            .eq("id", session.user.id)
-            .maybeSingle();
-
-          if (!mounted) return;
-
-          if (profile?.onboarding_complete) {
-            navigate("/feed", { replace: true });
-          } else {
-            navigate("/onboarding", { replace: true });
-          }
-        }
-      }
-    );
-
-    checkAuth();
+    redirectLoggedInUser();
 
     return () => {
       mounted = false;
-      subscription.unsubscribe();
     };
-  }, [navigate]);
+  }, [isAuthLoading, session, navigate]);
 
   const { toast } = useToast();
 

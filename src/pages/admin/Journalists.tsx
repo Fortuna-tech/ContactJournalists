@@ -318,6 +318,7 @@ export default function JournalistsPage() {
                           website: journalist.website || "",
                           linkedin: journalist.linkedin || "",
                           x_handle: journalist.x_handle || "",
+                          categories: journalist.categories || [],
                         }}
                         onSubmit={handleUpdate(journalist)}
                         title="Edit Journalist"
