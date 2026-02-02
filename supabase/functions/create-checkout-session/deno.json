@@ -1,5 +1,8 @@
 {
   "imports": {
-    "stripe": "https://esm.sh/stripe@13.10.0?target=deno"
+    "stripe": "https://esm.sh/stripe@14?target=denonext"
+  },
+  "permissions": {
+    "env": ["STRIPE_SECRET_KEY", "SUPABASE_URL", "SUPABASE_ANON_KEY"]
   }
 }
