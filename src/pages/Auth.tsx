@@ -1,41 +1,80 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkOnboarding = async () => {
+    let mounted = true;
+
+    const checkAuth = async () => {
+      // Wait for initial session check
       const {
         data: { session },
       } = await supabase.auth.getSession();
 
+      if (!mounted) return;
+
       if (!session) {
+        // No session - user needs to log in, stop loading
+        setIsAuthLoading(false);
         return;
       }
 
+      // User is logged in, check onboarding
       const { data: profile } = await supabase
         .from("profiles")
         .select("onboarding_complete")
         .eq("id", session.user.id)
         .maybeSingle();
 
+      if (!mounted) return;
+
       if (profile?.onboarding_complete) {
-        navigate("/feed");
+        // Logged in and onboarded - go to feed (BillingGuard handles subscription)
+        navigate("/feed", { replace: true });
       } else {
-        navigate("/onboarding");
+        navigate("/onboarding", { replace: true });
       }
     };
 
-    checkOnboarding();
+    // Subscribe to auth state changes to handle hydration
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (!mounted) return;
+
+        if (event === "SIGNED_IN" && session) {
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("onboarding_complete")
+            .eq("id", session.user.id)
+            .maybeSingle();
+
+          if (!mounted) return;
+
+          if (profile?.onboarding_complete) {
+            navigate("/feed", { replace: true });
+          } else {
+            navigate("/onboarding", { replace: true });
+          }
+        }
+      }
+    );
+
+    checkAuth();
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, [navigate]);
 
   const { toast } = useToast();
@@ -94,6 +133,18 @@ const Auth = () => {
   const handleGoogleLogin = () => {
     googleMutation.mutate();
   };
+
+  // Show loading while auth state is hydrating
+  if (isAuthLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2">

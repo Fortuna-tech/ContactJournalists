@@ -1,91 +1,95 @@
-import { useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import { useToast } from "@/hooks/use-toast";
-import { getBillingAccount } from "@/lib/api";
 
-const ACTIVE_STATUSES = ["active", "trialing", "past_due"];
-
+/**
+ * AuthCallback handles magic link / OAuth code exchange only.
+ * After successful auth, redirects to /feed and lets BillingGuard handle subscription checks.
+ * This avoids duplicate subscription checks and race conditions.
+ */
 const AuthCallback = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const { toast } = useToast();
+  const [isProcessing, setIsProcessing] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
+
     const handleAuthCallback = async () => {
       try {
+        // Exchange code for session (handles magic link and OAuth)
         const { data, error } = await supabase.auth.getSession();
 
         if (error) throw error;
 
+        if (!mounted) return;
+
         if (data.session) {
-          // Check if user has completed onboarding and get their role
+          // Check if user has completed onboarding
           const { data: profile } = await supabase
             .from("profiles")
             .select("onboarding_complete, role")
             .eq("id", data.session.user.id)
             .maybeSingle();
 
+          if (!mounted) return;
+
           if (!profile?.onboarding_complete) {
-            navigate("/onboarding");
+            navigate("/onboarding", { replace: true });
             return;
           }
 
-          // Journalists go directly to their dashboard (unchanged behaviour)
+          // Journalists go directly to their dashboard (no subscription required)
           if (profile.role === "journalist") {
-            navigate("/journalist/dashboard");
+            navigate("/journalist/dashboard", { replace: true });
             return;
           }
 
-          // For founders and agencies: check Stripe subscription status
-          if (profile.role === "founder" || profile.role === "agency") {
-            try {
-              const billing = await getBillingAccount();
-              const status = billing?.status?.toLowerCase();
-              const hasActivePlan = billing && status && ACTIVE_STATUSES.includes(status);
-
-              if (!hasActivePlan) {
-                // Founder without active subscription -> pricing page
-                const nextPath = searchParams.get("next") || "/feed";
-                navigate(`/pricing?reason=subscribe&next=${encodeURIComponent(nextPath)}`);
-                return;
-              }
-            } catch (billingError) {
-              // If billing check fails, redirect to pricing to be safe
-              console.error("Billing check failed:", billingError);
-              navigate("/pricing?reason=subscribe&next=%2Ffeed");
-              return;
-            }
-          }
-
-          // User has active subscription or is admin -> go to feed (or next param)
-          const nextPath = searchParams.get("next") || "/feed";
-          navigate(nextPath);
+          // All other roles (founder, agency, admin) go to /feed
+          // BillingGuard will handle subscription check with grace period
+          navigate("/feed", { replace: true });
         } else {
-          navigate("/auth");
+          // No session - redirect to auth
+          navigate("/auth", { replace: true });
         }
       } catch (error) {
         console.error("Auth callback error:", error);
-        toast({
-          title: "Authentication error",
-          description: "Failed to sign in. Please try again.",
-          variant: "destructive",
-        });
-        navigate("/auth");
+        if (mounted) {
+          toast({
+            title: "Authentication error",
+            description: "Failed to sign in. Please try again.",
+            variant: "destructive",
+          });
+          navigate("/auth", { replace: true });
+        }
+      } finally {
+        if (mounted) {
+          setIsProcessing(false);
+        }
       }
     };
 
     handleAuthCallback();
-  }, [navigate, searchParams, toast]);
 
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center space-y-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-        <p className="text-muted-foreground">Completing sign in...</p>
+    return () => {
+      mounted = false;
+    };
+  }, [navigate, toast]);
+
+  // Always show loading while processing - no redirects until complete
+  if (isProcessing) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="text-muted-foreground">Completing sign in...</p>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  return null;
 };
 
 export default AuthCallback;

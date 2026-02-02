@@ -32,7 +32,7 @@ export const createCheckoutSession = async (
   const requestBody = {
     priceId,
     customerEmail: user?.email, // Optional - Stripe will collect email if not provided
-    successUrl: `${window.location.origin}/auth?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+    successUrl: `${window.location.origin}/feed`,
     cancelUrl: cancelUrl || `${window.location.origin}/pricing`,
   };
 
