@@ -17,16 +17,10 @@ export const createCheckoutSession = async (
   priceId: string,
   cancelUrl?: string
 ) => {
+  // Get user/session if available, but don't require it
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session) throw new Error("No session");
 
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   
@@ -37,15 +31,15 @@ export const createCheckoutSession = async (
 
   const requestBody = {
     priceId,
-    customerEmail: user.email,
-    successUrl: `${window.location.origin}/feed?session_id={CHECKOUT_SESSION_ID}`,
-    cancelUrl: cancelUrl || `${window.location.origin}/pricing?reason=subscribe`,
+    customerEmail: user?.email, // Optional - Stripe will collect email if not provided
+    successUrl: `${window.location.origin}/auth?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+    cancelUrl: cancelUrl || `${window.location.origin}/pricing`,
   };
 
   console.log("Creating checkout session:", {
     url: `${supabaseUrl}/functions/v1/create-checkout-session`,
     priceId,
-    customerEmail: user.email,
+    customerEmail: user?.email || "(not logged in)",
   });
 
   const response = await fetch(
@@ -53,7 +47,6 @@ export const createCheckoutSession = async (
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${session.access_token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(requestBody),
