@@ -15,7 +15,7 @@ import { normalizeCategoryId, sanitizeCategoryTitle } from "./categories";
 
 export const createCheckoutSession = async (
   priceId: string,
-  cancelUrl: string
+  cancelUrl?: string
 ) => {
   const {
     data: { user },
@@ -29,6 +29,25 @@ export const createCheckoutSession = async (
   if (!session) throw new Error("No session");
 
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  
+  if (!supabaseUrl) {
+    console.error("VITE_SUPABASE_URL is not configured");
+    throw new Error("Supabase URL is not configured");
+  }
+
+  const requestBody = {
+    priceId,
+    customerEmail: user.email,
+    successUrl: `${window.location.origin}/feed?session_id={CHECKOUT_SESSION_ID}`,
+    cancelUrl: cancelUrl || `${window.location.origin}/pricing?reason=subscribe`,
+  };
+
+  console.log("Creating checkout session:", {
+    url: `${supabaseUrl}/functions/v1/create-checkout-session`,
+    priceId,
+    customerEmail: user.email,
+  });
+
   const response = await fetch(
     `${supabaseUrl}/functions/v1/create-checkout-session`,
     {
@@ -37,21 +56,23 @@ export const createCheckoutSession = async (
         Authorization: `Bearer ${session.access_token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        priceId,
-        customerEmail: user.email,
-        successUrl: `${window.location.origin}/feed?session_id={CHECKOUT_SESSION_ID}`,
-        cancelUrl:
-          cancelUrl || `${window.location.origin}/pricing?reason=subscribe`,
-      }),
+      body: JSON.stringify(requestBody),
     }
   );
 
   const data = await response.json();
+  
   if (!response.ok) {
+    console.error("Checkout session creation failed:", {
+      status: response.status,
+      statusText: response.statusText,
+      error: data.error,
+      data,
+    });
     throw new Error(data.error || "Failed to create checkout session");
   }
 
+  console.log("Checkout session created successfully:", { url: data.url });
   return data;
 };
 

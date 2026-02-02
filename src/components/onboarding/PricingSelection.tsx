@@ -24,16 +24,21 @@ const PricingSelection = ({ onSkip }: PricingSelectionProps) => {
         ? plan.price.annual.priceId
         : plan.price.monthly.priceId;
 
+      console.log("Starting checkout for plan:", plan.id, "priceId:", priceId);
       const { url } = await createCheckoutSession(priceId);
 
       if (url) {
+        console.log("Redirecting to Stripe checkout:", url);
         window.location.href = url;
+      } else {
+        throw new Error("No checkout URL returned from Stripe");
       }
     } catch (error) {
-      console.error(error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      console.error("Checkout session error:", errorMessage, error);
       toast({
-        title: "Error",
-        description: "Failed to start checkout session. Please try again.",
+        title: "Checkout Error",
+        description: errorMessage || "Failed to start checkout session. Please try again.",
         variant: "destructive",
       });
       setLoading(null);

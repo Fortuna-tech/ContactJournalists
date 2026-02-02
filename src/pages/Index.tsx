@@ -45,16 +45,16 @@ const Index = () => {
       image: "/assets/we-connect-you-with-top-journalists.png",
       title: "Find your media match",
       description: "Search by topic or outlet. No spreadsheets, no stress.",
-      cta: "Start searching for free",
-      ctaLink: "/auth",
+      cta: "Start your free trial",
+      ctaLink: "/pricing",
     },
     "media-requests": {
       image: "/assets/new-media-requests-on-desk.png",
       title: "See what journalists are asking for right now",
       description:
         "New media requests appear in real time, so you can respond while the opportunity is still hot.",
-      cta: "Try AI",
-      ctaLink: "/auth",
+      cta: "Start your free trial",
+      ctaLink: "/pricing",
     },
     "ai-pitch": {
       image: "/assets/ai-pitch-suggestions.png",
@@ -62,15 +62,15 @@ const Index = () => {
       description:
         "Use AI to draft clear, relevant pitches in seconds — then tweak them to sound like you.",
       cta: "Start your free trial",
-      ctaLink: "/auth",
+      ctaLink: "/pricing",
     },
     "easy-lists": {
       image: "/assets/live-requests-on-macbook.png",
       title: "Keep everything in one place",
       description:
         "Save journalists, requests, and pitches into simple lists, so nothing slips through the cracks.",
-      cta: "Start organising for free",
-      ctaLink: "/auth",
+      cta: "Start your free trial",
+      ctaLink: "/pricing",
     },
   };
 
