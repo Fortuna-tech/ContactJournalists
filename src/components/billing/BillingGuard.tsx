@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState, useRef } from "react";
-import { Navigate, useLocation, useSearchParams } from "react-router-dom";
+import { Navigate, useLocation, useSearchParams, useNavigate } from "react-router-dom";
 import { useSubscriptionStatus } from "@/hooks/use-subscription";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
@@ -9,9 +9,10 @@ import AuthDebugPanel from "@/components/ui/AuthDebugPanel";
 const ACTIVE_STATUSES = ["active", "trialing", "past_due"];
 const MAX_POLL_ATTEMPTS = 5; // 5 seconds grace period
 const POLL_INTERVAL_MS = 1000;
+const AUTH_CHECK_TIMEOUT_MS = 8000; // Hard timeout to prevent infinite loading
 
 type SubscriptionDisplayStatus = "active" | "inactive" | "unknown" | "error";
-type RedirectReason = "none" | "no_subscription" | "waiting" | "error_retry";
+type RedirectReason = "none" | "no_subscription" | "waiting" | "error_retry" | "no_session" | "timeout";
 
 interface BillingGuardProps {
   children: ReactNode;
@@ -25,9 +26,11 @@ interface BillingGuardProps {
  * - NEVER redirects to /pricing on error or unknown state
  * - Shows retry UI on error instead of bouncing user
  * - Only redirects when subscription is definitively inactive
+ * - Has hard timeout to prevent infinite loading
  */
 const BillingGuard = ({ children }: BillingGuardProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const queryClient = useQueryClient();
   const { data, isLoading, isError, refetch } = useSubscriptionStatus();
@@ -37,7 +40,9 @@ const BillingGuard = ({ children }: BillingGuardProps) => {
   const [authReady, setAuthReady] = useState(false);
   const [sessionUserId, setSessionUserId] = useState<string | null>(null);
   const [lastRedirectReason, setLastRedirectReason] = useState<RedirectReason>("none");
+  const [hasTimedOut, setHasTimedOut] = useState(false);
   const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const authCheckComplete = useRef(false);
 
   const showDebug = searchParams.get("debug") === "1";
 
@@ -53,15 +58,55 @@ const BillingGuard = ({ children }: BillingGuardProps) => {
     return "inactive";
   };
 
-  // Check auth state on mount
+  // Check auth state on mount with hard timeout
   useEffect(() => {
+    let mounted = true;
+
+    // Hard timeout failsafe
+    const timeoutId = setTimeout(() => {
+      if (mounted && !authCheckComplete.current) {
+        console.error("[BillingGuard] Auth check timeout after 8 seconds");
+        authCheckComplete.current = true;
+        setHasTimedOut(true);
+        setAuthReady(true);
+        setLastRedirectReason("timeout");
+      }
+    }, AUTH_CHECK_TIMEOUT_MS);
+
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setSessionUserId(session?.user?.id || null);
-      setAuthReady(true);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!mounted) return;
+
+        // If no session, redirect to auth immediately
+        if (!session) {
+          authCheckComplete.current = true;
+          setLastRedirectReason("no_session");
+          navigate("/auth", { replace: true });
+          return;
+        }
+
+        authCheckComplete.current = true;
+        setSessionUserId(session.user.id);
+        setAuthReady(true);
+      } catch (error) {
+        console.error("[BillingGuard] Auth check error:", error);
+        if (mounted && !authCheckComplete.current) {
+          authCheckComplete.current = true;
+          setHasTimedOut(true);
+          setAuthReady(true);
+        }
+      }
     };
+
     checkAuth();
-  }, []);
+
+    return () => {
+      mounted = false;
+      clearTimeout(timeoutId);
+    };
+  }, [navigate]);
 
   // Start polling if subscription is not active and we haven't exhausted retries
   useEffect(() => {
@@ -71,7 +116,8 @@ const BillingGuard = ({ children }: BillingGuardProps) => {
     // 3. Haven't exceeded max poll attempts
     // 4. Not already polling
     // 5. NOT in error state (don't poll on errors)
-    if (!isLoading && !hasActivePlan && !isError && pollCount < MAX_POLL_ATTEMPTS && !isPolling) {
+    // 6. Auth is ready
+    if (authReady && !isLoading && !hasActivePlan && !isError && pollCount < MAX_POLL_ATTEMPTS && !isPolling && !hasTimedOut) {
       setIsPolling(true);
       setLastRedirectReason("waiting");
       
@@ -103,7 +149,7 @@ const BillingGuard = ({ children }: BillingGuardProps) => {
         pollIntervalRef.current = null;
       }
     };
-  }, [isLoading, hasActivePlan, isError, pollCount, isPolling, queryClient, refetch]);
+  }, [authReady, isLoading, hasActivePlan, isError, pollCount, isPolling, hasTimedOut, queryClient, refetch]);
 
   // Stop polling immediately if we detect an active plan
   useEffect(() => {
@@ -118,9 +164,13 @@ const BillingGuard = ({ children }: BillingGuardProps) => {
   const handleRetry = async () => {
     setPollCount(0);
     setIsPolling(false);
-    setLastRedirectReason("error_retry");
+    setHasTimedOut(false);
     await queryClient.invalidateQueries({ queryKey: ["billingAccount"] });
     refetch();
+  };
+
+  const handleBackToAuth = () => {
+    navigate("/auth", { replace: true });
   };
 
   const debugPanel = showDebug && (
@@ -133,7 +183,44 @@ const BillingGuard = ({ children }: BillingGuardProps) => {
     />
   );
 
-  // Show loading during initial load or while polling for subscription
+  // Timeout state - show error with back to auth option
+  if (hasTimedOut) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-4 max-w-md px-4">
+          <div className="text-yellow-500 text-5xl mb-4">⏳</div>
+          <h2 className="text-xl font-semibold text-foreground">Taking too long...</h2>
+          <p className="text-muted-foreground">
+            We couldn't verify your access. Please try signing in again.
+          </p>
+          <div className="flex flex-col gap-2">
+            <Button onClick={handleRetry}>
+              Retry
+            </Button>
+            <Button variant="outline" onClick={handleBackToAuth}>
+              Back to Sign In
+            </Button>
+          </div>
+          {debugPanel}
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading during initial auth check
+  if (!authReady) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto" />
+          <p className="text-muted-foreground text-sm">Checking session...</p>
+          {debugPanel}
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading during initial subscription load or while polling
   if (isLoading || (isPolling && pollCount < MAX_POLL_ATTEMPTS)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -151,7 +238,6 @@ const BillingGuard = ({ children }: BillingGuardProps) => {
   // ERROR STATE: Show retry UI instead of redirecting to pricing
   // This prevents paid users from being bounced due to API errors
   if (isError || data === undefined) {
-    setLastRedirectReason("error_retry");
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center space-y-4 max-w-md px-4">
@@ -177,7 +263,6 @@ const BillingGuard = ({ children }: BillingGuardProps) => {
   if (!hasActivePlan) {
     // Final check: only redirect if we're sure about the state
     if (authReady && sessionUserId && !isError && data !== undefined) {
-      setLastRedirectReason("no_subscription");
       const redirectPath = encodeURIComponent(location.pathname);
       return (
         <>

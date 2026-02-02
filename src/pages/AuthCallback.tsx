@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import { useToast } from "@/hooks/use-toast";
@@ -6,7 +6,10 @@ import { Button } from "@/components/ui/button";
 import AuthDebugPanel from "@/components/ui/AuthDebugPanel";
 
 type AuthState = "processing" | "error" | "success";
-type RedirectReason = "none" | "onboarding" | "journalist" | "feed" | "auth_failed" | "no_session" | "exchange_failed";
+type RedirectReason = "none" | "onboarding" | "journalist" | "feed" | "auth_failed" | "no_session" | "exchange_failed" | "timeout";
+
+// Hard timeout to prevent infinite loading
+const AUTH_TIMEOUT_MS = 8000;
 
 const AuthCallback = () => {
   const navigate = useNavigate();
@@ -18,11 +21,24 @@ const AuthCallback = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [sessionUserId, setSessionUserId] = useState<string | null>(null);
   const [lastRedirectReason, setLastRedirectReason] = useState<RedirectReason>("none");
+  const hasCompleted = useRef(false);
 
   const showDebug = searchParams.get("debug") === "1";
 
   useEffect(() => {
     let mounted = true;
+
+    // Hard timeout failsafe - prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      if (mounted && !hasCompleted.current) {
+        console.error("[AuthCallback] Timeout after 8 seconds");
+        hasCompleted.current = true;
+        setAuthReady(true);
+        setLastRedirectReason("timeout");
+        setErrorMessage("Sign in took too long. Please try again.");
+        setAuthState("error");
+      }
+    }, AUTH_TIMEOUT_MS);
 
     const handleAuthCallback = async () => {
       try {
@@ -43,9 +59,10 @@ const AuthCallback = () => {
           throw sessionError;
         }
 
-        if (!mounted) return;
+        if (!mounted || hasCompleted.current) return;
 
-        // Mark auth as ready - we've completed the exchange and session check
+        // Mark as completed to prevent timeout from firing
+        hasCompleted.current = true;
         setAuthReady(true);
 
         if (data.session) {
@@ -88,7 +105,8 @@ const AuthCallback = () => {
         }
       } catch (error) {
         console.error("Auth callback error:", error);
-        if (mounted) {
+        if (mounted && !hasCompleted.current) {
+          hasCompleted.current = true;
           setAuthReady(true);
           setLastRedirectReason("exchange_failed");
           setErrorMessage("Login didn't complete. Please request a new magic link.");
@@ -101,6 +119,7 @@ const AuthCallback = () => {
 
     return () => {
       mounted = false;
+      clearTimeout(timeoutId);
     };
   }, [navigate, toast]);
 

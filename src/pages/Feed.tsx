@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
-import { Routes, Route, Navigate, useSearchParams } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
+import { Routes, Route, Navigate, useSearchParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import JournalistFeed from "@/components/feed/JournalistFeed";
 import AgencyFounderFeed from "@/components/feed/AgencyFounderFeed";
 import FounderLayout from "@/layouts/FounderLayout";
-import JournalistLayout from "@/layouts/JournalistLayout";
 import BillingGuard from "@/components/billing/BillingGuard";
 import FindJournalists from "@/pages/founder/FindJournalists";
 import PressPitchGenerator from "@/pages/founder/PressPitchGenerator";
@@ -13,17 +12,25 @@ import SavedContacts from "@/pages/founder/SavedContacts";
 import MyActivity from "@/pages/founder/MyActivity";
 import Settings from "@/pages/founder/Settings";
 import Help from "@/pages/founder/Help";
+import { Button } from "@/components/ui/button";
+
+// Hard timeout to prevent infinite loading
+const FEED_TIMEOUT_MS = 8000;
 
 /**
  * Feed component - assumes route guards handle auth/subscription checks.
  * Does NOT perform independent redirects that could race with hydration.
  * Only fetches role to determine which layout to show.
+ * Has hard timeout to prevent infinite loading.
  */
 const Feed = () => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [authReady, setAuthReady] = useState(false);
+  const [hasTimedOut, setHasTimedOut] = useState(false);
+  const [noSession, setNoSession] = useState(false);
+  const fetchComplete = useRef(false);
 
   // Preserve debug param for child components
   const debugParam = searchParams.get("debug") === "1" ? "?debug=1" : "";
@@ -31,19 +38,26 @@ const Feed = () => {
   useEffect(() => {
     let mounted = true;
 
+    // Hard timeout failsafe
+    const timeoutId = setTimeout(() => {
+      if (mounted && !fetchComplete.current) {
+        console.error("[Feed] Timeout after 8 seconds");
+        fetchComplete.current = true;
+        setHasTimedOut(true);
+        setLoading(false);
+      }
+    }, FEED_TIMEOUT_MS);
+
     const fetchRole = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
 
-        if (!mounted) return;
-
-        // Mark auth as ready after first check
-        setAuthReady(true);
+        if (!mounted || fetchComplete.current) return;
 
         if (!session) {
-          // No session - but DON'T redirect here.
-          // Let parent route guards handle unauthenticated users.
-          // Just show loading state and let the guard redirect if needed.
+          // No session - redirect to auth
+          fetchComplete.current = true;
+          setNoSession(true);
           setLoading(false);
           return;
         }
@@ -54,19 +68,24 @@ const Feed = () => {
           .eq("id", session.user.id)
           .maybeSingle();
 
-        if (!mounted) return;
+        if (!mounted || fetchComplete.current) return;
 
-        // If profile check fails or incomplete, don't redirect - let guards handle it
-        if (profile) {
-          setRole(profile.role);
+        fetchComplete.current = true;
+
+        // If no profile or not onboarded, redirect to onboarding
+        if (!profile?.onboarding_complete) {
+          navigate("/onboarding", { replace: true });
+          return;
         }
-        
+
+        setRole(profile.role);
         setLoading(false);
       } catch (error) {
         console.error("Feed: Error fetching role:", error);
-        if (mounted) {
+        if (mounted && !fetchComplete.current) {
+          fetchComplete.current = true;
+          setHasTimedOut(true);
           setLoading(false);
-          setAuthReady(true);
         }
       }
     };
@@ -75,10 +94,38 @@ const Feed = () => {
 
     return () => {
       mounted = false;
+      clearTimeout(timeoutId);
     };
-  }, []);
+  }, [navigate]);
 
-  // Loading state - no redirects during load
+  const handleBackToAuth = () => {
+    navigate("/auth", { replace: true });
+  };
+
+  // No session - redirect to auth
+  if (noSession) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  // Timeout state - show error with back to auth option
+  if (hasTimedOut) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-4 max-w-md px-4">
+          <div className="text-yellow-500 text-5xl mb-4">⏳</div>
+          <h2 className="text-xl font-semibold text-foreground">Taking too long...</h2>
+          <p className="text-muted-foreground">
+            We couldn't load your dashboard. Please try signing in again.
+          </p>
+          <Button onClick={handleBackToAuth}>
+            Back to Sign In
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -90,17 +137,9 @@ const Feed = () => {
     );
   }
 
-  // No role determined - show minimal state, don't redirect
-  // BillingGuard or auth guards will handle unauthorized access
+  // No role determined - redirect to onboarding
   if (!role) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="text-muted-foreground">Checking access...</p>
-        </div>
-      </div>
-    );
+    return <Navigate to="/onboarding" replace />;
   }
 
   // Journalist role - redirect to journalist dashboard (no subscription needed)
