@@ -60,10 +60,17 @@ const AdminLayoutInner = ({ children }: { children?: React.ReactNode }) => {
   useEffect(() => {
     const checkAdminAccess = async () => {
       try {
-        // Check if user is authenticated
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
+        // First try getSession() which uses cached/localStorage session
+        // This prevents race condition where getUser() fires before session hydration
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        // If no session found, try getUser() as fallback (makes network request)
+        let user = session?.user;
+        if (!user) {
+          const { data: { user: fetchedUser } } = await supabase.auth.getUser();
+          user = fetchedUser;
+        }
+        
         if (!user) {
           setAdminState("not-authenticated");
           return;

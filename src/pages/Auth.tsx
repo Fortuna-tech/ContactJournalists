@@ -7,11 +7,21 @@ import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import type { Session } from "@supabase/supabase-js";
 
+// Log Supabase URL in development only for debugging
+if (import.meta.env.DEV) {
+  console.log("[AUTH] Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
+}
+
+const MAGIC_LINK_COOLDOWN_MS = 60000; // 60 seconds
+
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
+  const [otpError, setOtpError] = useState<string | null>(null);
+  const [cooldownRemaining, setCooldownRemaining] = useState(0);
   const hydrationComplete = useRef(false);
+  const lastOtpRequestTime = useRef<number>(0);
 
   const navigate = useNavigate();
 
@@ -99,15 +109,41 @@ const Auth = () => {
 
   const { toast } = useToast();
 
+  // Cooldown timer effect
+  useEffect(() => {
+    if (cooldownRemaining <= 0) return;
+    const timer = setInterval(() => {
+      setCooldownRemaining((prev) => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [cooldownRemaining]);
+
   const emailMutation = useMutation({
     mutationFn: async (email: string) => {
-      const { error } = await supabase.auth.signInWithOtp({
+      // Clear any previous error
+      setOtpError(null);
+
+      console.log("[AUTH OTP] sending to", email);
+      console.log("[AUTH OTP] redirect URL:", `${window.location.origin}/auth/callback`);
+
+      const { data, error } = await supabase.auth.signInWithOtp({
         email,
         options: {
           emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
-      if (error) throw error;
+
+      console.log("[AUTH OTP] result", { data, error });
+
+      if (error) {
+        // Set inline error for visibility
+        setOtpError(error.message);
+        throw error;
+      }
+
+      // Only record successful request time for cooldown
+      lastOtpRequestTime.current = Date.now();
+      setCooldownRemaining(Math.ceil(MAGIC_LINK_COOLDOWN_MS / 1000));
     },
     onSuccess: () => {
       toast({
@@ -116,8 +152,9 @@ const Auth = () => {
       });
     },
     onError: (error: Error) => {
+      console.error("[AUTH OTP] Error:", error.message);
       toast({
-        title: "Error",
+        title: "Error sending magic link",
         description: error.message,
         variant: "destructive",
       });
@@ -145,6 +182,17 @@ const Auth = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Check cooldown to prevent spam clicking
+    if (cooldownRemaining > 0) {
+      toast({
+        title: "Please wait",
+        description: `You can request another link in ${cooldownRemaining} seconds.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (email) {
       emailMutation.mutate(email);
     }
@@ -196,19 +244,29 @@ const Auth = () => {
                 type="email"
                 placeholder="Enter your email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="h-12"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  // Clear error when user starts typing
+                  if (otpError) setOtpError(null);
+                }}
+                className={`h-12 ${otpError ? "border-destructive" : ""}`}
                 required
               />
+              {/* Inline error message */}
+              {otpError && (
+                <p className="text-sm text-destructive">{otpError}</p>
+              )}
             </div>
 
             <Button
               type="submit"
               className="w-full h-12"
-              disabled={emailMutation.isPending}
+              disabled={emailMutation.isPending || cooldownRemaining > 0}
             >
               {emailMutation.isPending
                 ? "Sending magic link..."
+                : cooldownRemaining > 0
+                ? `Wait ${cooldownRemaining}s before resending`
                 : "Continue with Email"}
             </Button>
           </form>
