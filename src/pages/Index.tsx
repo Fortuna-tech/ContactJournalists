@@ -192,7 +192,7 @@ const Index = () => {
             <li>
               <a
                 className="ml-2 inline-flex items-center rounded-full bg-black px-4 py-2 font-semibold text-white hover:bg-black/90 transition-colors"
-                href="/auth"
+                href="/auth?next=%2Fpricing%3Freason%3Dsubscribe%26next%3D%2Ffeed"
                 data-testid="button-get-started"
               >
                 Get Started
@@ -284,7 +284,7 @@ const Index = () => {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                   <a
-                    href="/auth"
+                    href="/auth?next=%2Fpricing%3Freason%3Dsubscribe%26next%3D%2Ffeed"
                     className={primaryButtonClass}
                     data-testid="hero-start-trial"
                   >
@@ -590,7 +590,7 @@ const Index = () => {
                 </ul>
 
                 <a
-                  href="/auth"
+                  href="/auth?next=%2Fpricing%3Freason%3Dsubscribe%26next%3D%2Ffeed"
                   className="block w-full text-center rounded-full bg-[#D8B4FE] px-6 py-3 font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150"
                 >
                   Start Your Free Trial
@@ -638,7 +638,7 @@ const Index = () => {
                 </ul>
 
                 <a
-                  href="/auth"
+                  href="/auth?next=%2Fpricing%3Freason%3Dsubscribe%26next%3D%2Ffeed"
                   className="block w-full text-center rounded-full bg-[#D8B4FE] px-6 py-3 font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150"
                 >
                   Start Your Free Trial

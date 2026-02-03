@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import PricingSelection from "@/components/onboarding/PricingSelection";
 
@@ -19,6 +19,7 @@ import PricingSelection from "@/components/onboarding/PricingSelection";
  */
 const Pricing = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const [isAuthChecking, setIsAuthChecking] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -36,8 +37,9 @@ const Pricing = () => {
         if (!mounted) return;
 
         if (!session) {
-          // Not logged in - redirect to auth
-          navigate("/auth", { replace: true });
+          // Not logged in - redirect to auth with current path preserved
+          const currentUrl = location.pathname + location.search;
+          navigate(`/auth?next=${encodeURIComponent(currentUrl)}`, { replace: true });
           return;
         }
 
