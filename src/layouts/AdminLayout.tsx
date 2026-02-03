@@ -51,25 +51,34 @@ const EmergencyBypassLayout = ({ children }: { children?: React.ReactNode }) => 
 
 const AdminLayoutInner = ({ children }: { children?: React.ReactNode }) => {
   const [adminState, setAdminState] = useState<AdminState>("loading");
+  const [authReady, setAuthReady] = useState(false);
 
   // Load fonts
   useEffect(() => {
     return loadAdminFonts();
   }, []);
 
+  // Wait for auth to be ready via onAuthStateChange
   useEffect(() => {
+    // onAuthStateChange fires immediately with current state when subscribed
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      setAuthReady(true);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  // Only check admin access after auth is ready
+  useEffect(() => {
+    if (!authReady) return;
+
     const checkAdminAccess = async () => {
       try {
-        // First try getSession() which uses cached/localStorage session
-        // This prevents race condition where getUser() fires before session hydration
+        // Auth is ready, now safe to get session
         const { data: { session } } = await supabase.auth.getSession();
-        
-        // If no session found, try getUser() as fallback (makes network request)
-        let user = session?.user;
-        if (!user) {
-          const { data: { user: fetchedUser } } = await supabase.auth.getUser();
-          user = fetchedUser;
-        }
+        const user = session?.user;
         
         if (!user) {
           setAdminState("not-authenticated");
@@ -113,7 +122,7 @@ const AdminLayoutInner = ({ children }: { children?: React.ReactNode }) => {
     };
 
     checkAdminAccess();
-  }, []);
+  }, [authReady]);
 
   // Loading state
   if (adminState === "loading") {
