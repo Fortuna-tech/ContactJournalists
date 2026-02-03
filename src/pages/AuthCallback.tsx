@@ -11,6 +11,9 @@ type RedirectReason = "none" | "onboarding" | "journalist" | "feed" | "auth_fail
 // Hard timeout to prevent infinite loading
 const AUTH_TIMEOUT_MS = 8000;
 
+// Gate debug logs: only in dev or with ?debug param
+const DEBUG_AUTH = import.meta.env.DEV || new URLSearchParams(window.location.search).has("debug");
+
 const AuthCallback = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -40,69 +43,108 @@ const AuthCallback = () => {
       }
     }, AUTH_TIMEOUT_MS);
 
+    // Helper to handle redirect after confirmed session
+    const handleRedirectWithSession = async (userId: string) => {
+      if (!mounted || hasCompleted.current) return;
+      
+      hasCompleted.current = true;
+      setAuthReady(true);
+      setSessionUserId(userId);
+
+      // Check if user has completed onboarding
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("onboarding_complete, role")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (!mounted) return;
+
+      if (!profile?.onboarding_complete) {
+        setLastRedirectReason("onboarding");
+        setAuthState("success");
+        if (DEBUG_AUTH) console.log("[CALLBACK] redirecting to /onboarding");
+        navigate("/onboarding", { replace: true });
+        return;
+      }
+
+      // Journalists go directly to their dashboard (no subscription required)
+      if (profile.role === "journalist") {
+        setLastRedirectReason("journalist");
+        setAuthState("success");
+        if (DEBUG_AUTH) console.log("[CALLBACK] redirecting to /journalist/dashboard");
+        navigate("/journalist/dashboard", { replace: true });
+        return;
+      }
+
+      // All other roles (founder, agency, admin) go to /feed
+      setLastRedirectReason("feed");
+      setAuthState("success");
+      if (DEBUG_AUTH) console.log("[CALLBACK] redirecting to /feed");
+      navigate("/feed", { replace: true });
+    };
+
     const handleAuthCallback = async () => {
       try {
+        // TEMP DEBUG: Log incoming URL
+        if (DEBUG_AUTH) console.log("[CALLBACK] url", window.location.href);
+        
+        // Set up auth state listener BEFORE exchanging code
+        // This ensures we catch the SIGNED_IN event
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+          async (event, session) => {
+            if (DEBUG_AUTH) console.log("[CALLBACK] auth state change", { event, hasSession: !!session });
+            
+            if (event === "SIGNED_IN" && session) {
+              if (DEBUG_AUTH) console.log("[CALLBACK] SIGNED_IN event received, session confirmed");
+              await handleRedirectWithSession(session.user.id);
+            }
+          }
+        );
+
         // Step 1: Explicitly exchange the code/token from URL
-        // This handles magic link tokens and OAuth codes
-        const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(window.location.href);
+        const { data: exchangeData, error: exchangeError } = await supabase.auth.exchangeCodeForSession(window.location.href);
+        
+        // TEMP DEBUG: Log exchange result
+        if (DEBUG_AUTH) console.log("[CALLBACK] exchange result", { data: exchangeData, error: exchangeError });
         
         if (exchangeError) {
-          // exchangeCodeForSession may fail if there's no code in URL (e.g., already exchanged)
-          // In that case, we still try getSession below
-          console.warn("Exchange code warning (may be expected):", exchangeError.message);
-        }
-
-        // Step 2: After exchange attempt, confirm session exists
-        const { data, error: sessionError } = await supabase.auth.getSession();
-
-        if (sessionError) {
-          throw sessionError;
-        }
-
-        if (!mounted || hasCompleted.current) return;
-
-        // Mark as completed to prevent timeout from firing
-        hasCompleted.current = true;
-        setAuthReady(true);
-
-        if (data.session) {
-          setSessionUserId(data.session.user.id);
-
-          // Check if user has completed onboarding
-          const { data: profile } = await supabase
-            .from("profiles")
-            .select("onboarding_complete, role")
-            .eq("id", data.session.user.id)
-            .maybeSingle();
-
-          if (!mounted) return;
-
-          if (!profile?.onboarding_complete) {
-            setLastRedirectReason("onboarding");
-            setAuthState("success");
-            navigate("/onboarding", { replace: true });
-            return;
+          console.error("[CALLBACK] Exchange failed:", exchangeError.message);
+          
+          // Check if we already have a session (code might have been used already)
+          const { data: existingSession } = await supabase.auth.getSession();
+          if (DEBUG_AUTH) console.log("[CALLBACK] existing session check", { hasSession: !!existingSession?.session });
+          
+          if (existingSession?.session) {
+            // Session exists, proceed with redirect
+            await handleRedirectWithSession(existingSession.session.user.id);
+          } else {
+            // No session and exchange failed - real error
+            if (mounted && !hasCompleted.current) {
+              hasCompleted.current = true;
+              setAuthReady(true);
+              setLastRedirectReason("exchange_failed");
+              setErrorMessage("Login link expired or already used. Please request a new magic link.");
+              setAuthState("error");
+            }
           }
-
-          // Journalists go directly to their dashboard (no subscription required)
-          if (profile.role === "journalist") {
-            setLastRedirectReason("journalist");
-            setAuthState("success");
-            navigate("/journalist/dashboard", { replace: true });
-            return;
-          }
-
-          // All other roles (founder, agency, admin) go to /feed
-          // BillingGuard will handle subscription check with grace period
-          setLastRedirectReason("feed");
-          setAuthState("success");
-          navigate("/feed", { replace: true });
-        } else {
-          // No session after exchange - this is a real failure
-          setLastRedirectReason("no_session");
-          setErrorMessage("Login didn't complete. Please request a new magic link.");
-          setAuthState("error");
+          subscription.unsubscribe();
+          return;
         }
+
+        // Exchange succeeded - the onAuthStateChange listener will handle redirect
+        // But also verify session directly as a fallback
+        const { data } = await supabase.auth.getSession();
+        if (DEBUG_AUTH) console.log("[SESSION] after exchange", { session: data?.session ? "exists" : "null", userId: data?.session?.user?.id });
+
+        if (data?.session && !hasCompleted.current) {
+          // Session confirmed, proceed with redirect
+          await handleRedirectWithSession(data.session.user.id);
+        }
+
+        // Cleanup subscription after handling
+        setTimeout(() => subscription.unsubscribe(), 1000);
+
       } catch (error) {
         console.error("Auth callback error:", error);
         if (mounted && !hasCompleted.current) {

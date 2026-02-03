@@ -14,6 +14,9 @@ import Settings from "@/pages/founder/Settings";
 import Help from "@/pages/founder/Help";
 import { Button } from "@/components/ui/button";
 
+// Gate debug logs: only in dev or with ?debug param
+const DEBUG_AUTH = import.meta.env.DEV || new URLSearchParams(window.location.search).has("debug");
+
 // Hard timeout to prevent infinite loading
 const FEED_TIMEOUT_MS = 8000;
 
@@ -50,12 +53,16 @@ const Feed = () => {
 
     const fetchRole = async () => {
       try {
+        // TEMP DEBUG: Log session check on Feed
+        if (DEBUG_AUTH) console.log("[FEED] checking session...");
         const { data: { session } } = await supabase.auth.getSession();
+        if (DEBUG_AUTH) console.log("[FEED] session result", { session: session ? "exists" : "null", userId: session?.user?.id });
 
         if (!mounted || fetchComplete.current) return;
 
         if (!session) {
           // No session - redirect to auth
+          if (DEBUG_AUTH) console.log("[FEED] no session, redirecting to /auth");
           fetchComplete.current = true;
           setNoSession(true);
           setLoading(false);
