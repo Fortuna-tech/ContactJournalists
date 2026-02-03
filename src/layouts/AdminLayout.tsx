@@ -1,11 +1,25 @@
-import { Outlet, Navigate } from "react-router-dom";
+import { Outlet, Navigate, Link } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AdminDashboardSidebar } from "@/components/sidebars/AdminDashboardSidebar";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { hasTOTPFactor, getAAL } from "@/lib/mfa";
+import {
+  hasTOTPFactor,
+  getAAL,
+  getVerifiedTOTPFactor,
+  createChallenge,
+  verifyTOTP,
+} from "@/lib/mfa";
 import { adminTheme, loadAdminFonts } from "@/styles/adminTheme";
 import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { ShieldCheck, Loader2, LogOut, LogIn } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 type AdminState =
   | "loading"
@@ -20,9 +34,244 @@ type AdminState =
 const isMfaBypassed = import.meta.env.VITE_ADMIN_REQUIRE_MFA === "false";
 
 // Emergency URL query param bypass: ?mfa=off
-const isEmergencyBypass = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("mfa") === "off";
+const isEmergencyBypass =
+  typeof window !== "undefined" &&
+  new URLSearchParams(window.location.search).get("mfa") === "off";
 
-// Emergency bypass layout - renders admin immediately without any MFA checks
+// ============================================================================
+// Signed Out Message (inline on /admin, no redirect)
+// ============================================================================
+const SignedOutMessage = () => {
+  return (
+    <div
+      className={adminTheme.page + " flex items-center justify-center p-4"}
+      style={adminTheme.bodyStyle}
+    >
+      <div className="bg-white rounded-xl shadow-lg border border-slate-200 w-full max-w-md p-8 text-center space-y-6">
+        <div className="mx-auto h-14 w-14 rounded-full bg-slate-100 flex items-center justify-center">
+          <LogIn className="h-7 w-7 text-slate-600" />
+        </div>
+        <div className="space-y-2">
+          <h1 className="text-2xl font-semibold text-slate-900">
+            You're signed out
+          </h1>
+          <p className="text-slate-600">Please sign in to continue to admin.</p>
+        </div>
+        <Button asChild className="w-full">
+          <Link to="/auth?next=/admin">Sign in</Link>
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+// ============================================================================
+// Not Authorised Message (inline on /admin, no redirect)
+// ============================================================================
+const NotAuthorisedMessage = () => {
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    window.location.reload();
+  };
+
+  return (
+    <div
+      className={adminTheme.page + " flex items-center justify-center p-4"}
+      style={adminTheme.bodyStyle}
+    >
+      <div className="bg-white rounded-xl shadow-lg border border-slate-200 w-full max-w-md p-8 text-center space-y-6">
+        <div className="mx-auto h-14 w-14 rounded-full bg-red-100 flex items-center justify-center">
+          <ShieldCheck className="h-7 w-7 text-red-600" />
+        </div>
+        <div className="space-y-2">
+          <h1 className="text-2xl font-semibold text-slate-900">
+            Not authorised
+          </h1>
+          <p className="text-slate-600">
+            You don't have admin privileges. Contact support if you believe this
+            is an error.
+          </p>
+        </div>
+        <Button variant="outline" className="w-full" onClick={handleSignOut}>
+          <LogOut className="mr-2 h-4 w-4" />
+          Sign out
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+// ============================================================================
+// Inline MFA Verification (shown on /admin, no redirect)
+// ============================================================================
+const InlineMfaVerify = ({ onSuccess }: { onSuccess: () => void }) => {
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(true);
+  const [factorId, setFactorId] = useState<string | null>(null);
+  const [challengeId, setChallengeId] = useState<string | null>(null);
+  const [code, setCode] = useState("");
+  const [verifying, setVerifying] = useState(false);
+
+  useEffect(() => {
+    const initVerification = async () => {
+      try {
+        // Get the verified TOTP factor
+        const factor = await getVerifiedTOTPFactor();
+        if (!factor) {
+          // This shouldn't happen since we checked hasTOTPFactor before
+          toast({
+            title: "Error",
+            description: "No TOTP factor found. Please set up MFA first.",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        setFactorId(factor.id);
+
+        // Create a challenge
+        const challenge = await createChallenge(factor.id);
+        setChallengeId(challenge.id);
+      } catch (error) {
+        console.error("Failed to initialize MFA verification:", error);
+        toast({
+          title: "Error",
+          description: "Failed to start verification. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initVerification();
+  }, [toast]);
+
+  const handleVerify = async () => {
+    if (!factorId || !challengeId || code.length !== 6) return;
+
+    setVerifying(true);
+    try {
+      await verifyTOTP(factorId, challengeId, code);
+      toast({
+        title: "Verified",
+        description: "Two-factor authentication successful.",
+      });
+      onSuccess();
+    } catch (error) {
+      console.error("Verification failed:", error);
+      toast({
+        title: "Invalid Code",
+        description: "The code you entered is incorrect. Please try again.",
+        variant: "destructive",
+      });
+      setCode("");
+
+      // Create a new challenge for retry
+      try {
+        const challenge = await createChallenge(factorId);
+        setChallengeId(challenge.id);
+      } catch (e) {
+        console.error("Failed to create new challenge:", e);
+      }
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    window.location.reload();
+  };
+
+  if (loading) {
+    return (
+      <div
+        className={adminTheme.page + " flex items-center justify-center"}
+        style={adminTheme.bodyStyle}
+      >
+        <div className="text-center space-y-4">
+          <div className={adminTheme.loadingSpinner + " mx-auto"}></div>
+          <p className="text-slate-500">Preparing verification...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={adminTheme.page + " flex items-center justify-center p-4"}
+      style={adminTheme.bodyStyle}
+    >
+      <div className="bg-white rounded-xl shadow-lg border border-slate-200 w-full max-w-md">
+        <div className="p-6 text-center border-b border-slate-100">
+          <div className="mx-auto mb-4 h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
+            <ShieldCheck className="h-7 w-7 text-primary" />
+          </div>
+          <h1 className="text-2xl font-semibold text-slate-900">
+            Two-Factor Authentication
+          </h1>
+          <p className="text-slate-600 mt-2">
+            Enter the 6-digit code from your authenticator app to continue.
+          </p>
+        </div>
+        <div className="p-6 space-y-6">
+          {/* OTP Input */}
+          <div className="space-y-4">
+            <div className="flex justify-center">
+              <InputOTP
+                maxLength={6}
+                value={code}
+                onChange={setCode}
+                onComplete={handleVerify}
+                autoFocus
+              >
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
+            </div>
+            <Button
+              className="w-full"
+              onClick={handleVerify}
+              disabled={code.length !== 6 || verifying}
+            >
+              {verifying ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Verifying...
+                </>
+              ) : (
+                "Verify"
+              )}
+            </Button>
+          </div>
+
+          {/* Sign out option */}
+          <div className="pt-4 border-t border-slate-100">
+            <Button
+              variant="ghost"
+              className="w-full text-muted-foreground"
+              onClick={handleSignOut}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Sign in with a different account
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ============================================================================
+// Emergency bypass layout
+// ============================================================================
 const EmergencyBypassLayout = ({ children }: { children?: React.ReactNode }) => {
   useEffect(() => {
     return loadAdminFonts();
@@ -41,7 +290,9 @@ const EmergencyBypassLayout = ({ children }: { children?: React.ReactNode }) => 
           <div className="px-6 sm:px-8 pt-4 pb-0">
             <p className={adminTheme.greeting}>Hi Fortuna! 💕✨🚗</p>
           </div>
-          <div className={adminTheme.content + " flex-1 pt-2"}>{children || <Outlet />}</div>
+          <div className={adminTheme.content + " flex-1 pt-2"}>
+            {children || <Outlet />}
+          </div>
           <Footer />
         </main>
       </SidebarProvider>
@@ -49,6 +300,9 @@ const EmergencyBypassLayout = ({ children }: { children?: React.ReactNode }) => 
   );
 };
 
+// ============================================================================
+// Main Admin Layout Inner
+// ============================================================================
 const AdminLayoutInner = ({ children }: { children?: React.ReactNode }) => {
   const [adminState, setAdminState] = useState<AdminState>("loading");
   const [authReady, setAuthReady] = useState(false);
@@ -61,7 +315,9 @@ const AdminLayoutInner = ({ children }: { children?: React.ReactNode }) => {
   // Wait for auth to be ready via onAuthStateChange
   useEffect(() => {
     // onAuthStateChange fires immediately with current state when subscribed
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(() => {
       setAuthReady(true);
     });
 
@@ -77,9 +333,11 @@ const AdminLayoutInner = ({ children }: { children?: React.ReactNode }) => {
     const checkAdminAccess = async () => {
       try {
         // Auth is ready, now safe to get session
-        const { data: { session } } = await supabase.auth.getSession();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
         const user = session?.user;
-        
+
         if (!user) {
           setAdminState("not-authenticated");
           return;
@@ -124,35 +382,44 @@ const AdminLayoutInner = ({ children }: { children?: React.ReactNode }) => {
     checkAdminAccess();
   }, [authReady]);
 
-  // Loading state
+  // Callback for when MFA verification succeeds
+  const handleMfaSuccess = () => {
+    setAdminState("authorized");
+  };
+
+  // Loading state (while auth hydrates or checks run)
   if (adminState === "loading") {
     return (
-      <div className={adminTheme.page + " flex items-center justify-center"} style={adminTheme.bodyStyle}>
+      <div
+        className={adminTheme.page + " flex items-center justify-center"}
+        style={adminTheme.bodyStyle}
+      >
         <div className={adminTheme.loadingSpinner}></div>
       </div>
     );
   }
 
-  // Not authenticated
+  // Not authenticated - show message inline (NO redirect)
   if (adminState === "not-authenticated") {
-    return <Navigate to="/auth" replace />;
+    return <SignedOutMessage />;
   }
 
-  // Not staff
+  // Not staff - show not authorised inline (NO redirect)
   if (adminState === "not-staff") {
-    return <Navigate to="/" replace />;
+    return <NotAuthorisedMessage />;
   }
 
-  // Needs MFA setup
+  // Needs MFA setup - still redirect to setup page (user needs to scan QR)
   if (adminState === "needs-mfa-setup") {
     return <Navigate to="/admin/mfa-setup" replace />;
   }
 
-  // Needs MFA verification
+  // Needs MFA verification - show TOTP input inline (NO redirect)
   if (adminState === "needs-mfa-verify") {
-    return <Navigate to="/admin/mfa-verify" replace />;
+    return <InlineMfaVerify onSuccess={handleMfaSuccess} />;
   }
 
+  // Authorized - render admin dashboard
   return (
     <div className={adminTheme.page} style={adminTheme.bodyStyle}>
       <SidebarProvider>
@@ -161,14 +428,17 @@ const AdminLayoutInner = ({ children }: { children?: React.ReactNode }) => {
           {/* MFA bypass warning banner */}
           {isMfaBypassed && (
             <div className="bg-amber-500 text-amber-950 px-4 py-2 text-center font-medium">
-              MFA is temporarily disabled. Re-enable by setting VITE_ADMIN_REQUIRE_MFA=true.
+              MFA is temporarily disabled. Re-enable by setting
+              VITE_ADMIN_REQUIRE_MFA=true.
             </div>
           )}
           {/* Friendly greeting - purely presentational */}
           <div className="px-6 sm:px-8 pt-4 pb-0">
             <p className={adminTheme.greeting}>Hi Fortuna! 💕✨🚗</p>
           </div>
-          <div className={adminTheme.content + " flex-1 pt-2"}>{children || <Outlet />}</div>
+          <div className={adminTheme.content + " flex-1 pt-2"}>
+            {children || <Outlet />}
+          </div>
           <Footer />
         </main>
       </SidebarProvider>
@@ -176,7 +446,9 @@ const AdminLayoutInner = ({ children }: { children?: React.ReactNode }) => {
   );
 };
 
-// Main export - checks for emergency bypass FIRST, before any MFA logic
+// ============================================================================
+// Main export - checks for emergency bypass FIRST
+// ============================================================================
 const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
   // EMERGENCY BYPASS: Skip ALL MFA logic if ?mfa=off is in URL
   if (isEmergencyBypass) {
