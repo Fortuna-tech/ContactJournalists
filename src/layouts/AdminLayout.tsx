@@ -1,7 +1,7 @@
 import { Outlet, Navigate, Link } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AdminDashboardSidebar } from "@/components/sidebars/AdminDashboardSidebar";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import {
   hasTOTPFactor,
@@ -305,20 +305,31 @@ const EmergencyBypassLayout = ({ children }: { children?: React.ReactNode }) => 
 // ============================================================================
 const AdminLayoutInner = ({ children }: { children?: React.ReactNode }) => {
   const [adminState, setAdminState] = useState<AdminState>("loading");
-  const [authReady, setAuthReady] = useState(false);
+  const [checkTrigger, setCheckTrigger] = useState(0);
+
+  // Ref to track the current run ID - prevents stale async runs from updating state
+  const runIdRef = useRef(0);
 
   // Load fonts
   useEffect(() => {
     return loadAdminFonts();
   }, []);
 
-  // Wait for auth to be ready via onAuthStateChange
+  // Subscribe to auth state changes - triggers re-check on relevant events
   useEffect(() => {
-    // onAuthStateChange fires immediately with current state when subscribed
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(() => {
-      setAuthReady(true);
+    } = supabase.auth.onAuthStateChange((event) => {
+      // Re-check admin access on these events
+      if (
+        event === "SIGNED_IN" ||
+        event === "TOKEN_REFRESHED" ||
+        event === "USER_UPDATED" ||
+        event === "MFA_CHALLENGE_VERIFIED" ||
+        event === "SIGNED_OUT"
+      ) {
+        setCheckTrigger((prev) => prev + 1);
+      }
     });
 
     return () => {
@@ -326,66 +337,136 @@ const AdminLayoutInner = ({ children }: { children?: React.ReactNode }) => {
     };
   }, []);
 
-  // Only check admin access after auth is ready
+  // Check admin access - runs on mount and when checkTrigger changes
   useEffect(() => {
-    if (!authReady) return;
+    // Increment runId for this run - any previous runs become stale
+    const thisRunId = ++runIdRef.current;
+
+    // Helper to check if this run is still current
+    const isCurrentRun = () => runIdRef.current === thisRunId;
+
+    // Helper to safely set state only if this run is still current
+    const safeSetState = (state: AdminState) => {
+      if (isCurrentRun()) {
+        setAdminState(state);
+      }
+    };
 
     const checkAdminAccess = async () => {
       try {
-        // Auth is ready, now safe to get session
+        // Step 1: Try getSession() first (reads from memory/storage)
         const {
           data: { session },
         } = await supabase.auth.getSession();
-        const user = session?.user;
 
+        if (!isCurrentRun()) return;
+
+        let user = session?.user ?? null;
+
+        // Step 2: Belt + braces - if session is null, call getUser() (network call)
+        // This catches the case where user is signed in but session isn't hydrated yet
         if (!user) {
-          setAdminState("not-authenticated");
+          const {
+            data: { user: networkUser },
+          } = await supabase.auth.getUser();
+
+          if (!isCurrentRun()) return;
+
+          user = networkUser;
+
+          // If getUser() returns a user but session was null, we have auth but
+          // session may not be fully hydrated. Run the full check sequence.
+          // Do NOT show "signed out" - the user IS authenticated.
+        }
+
+        // Truly not authenticated - both session and getUser() returned null
+        if (!user) {
+          safeSetState("not-authenticated");
           return;
         }
 
-        // Check if user is staff
+        // User exists - check if staff
         const { data: staffRecord } = await supabase
           .from("staff_privileges")
           .select("user_id")
           .eq("user_id", user.id)
           .maybeSingle();
 
+        if (!isCurrentRun()) return;
+
         if (!staffRecord) {
-          setAdminState("not-staff");
+          safeSetState("not-staff");
           return;
         }
 
         // Staff user - check MFA status (unless bypassed)
         if (!isMfaBypassed) {
           const hasTotp = await hasTOTPFactor();
+          if (!isCurrentRun()) return;
+
           if (!hasTotp) {
-            setAdminState("needs-mfa-setup");
+            safeSetState("needs-mfa-setup");
             return;
           }
 
-          // Check AAL level
+          // Check AAL level using getAuthenticatorAssuranceLevel
           const { currentLevel } = await getAAL();
+          if (!isCurrentRun()) return;
+
           if (currentLevel !== "aal2") {
-            setAdminState("needs-mfa-verify");
+            safeSetState("needs-mfa-verify");
             return;
           }
         }
 
         // All checks passed (or MFA bypassed)
-        setAdminState("authorized");
+        safeSetState("authorized");
       } catch (error) {
         console.error("Error checking admin access:", error);
-        setAdminState("not-authenticated");
+        if (!isCurrentRun()) return;
+
+        // On error, fallback to not-authenticated only if we truly have no user
+        try {
+          const {
+            data: { user },
+          } = await supabase.auth.getUser();
+          if (!isCurrentRun()) return;
+
+          if (user) {
+            // User exists but something else failed - show MFA verify as safe default
+            // (safer than showing "signed out" when user IS signed in)
+            safeSetState("needs-mfa-verify");
+          } else {
+            safeSetState("not-authenticated");
+          }
+        } catch {
+          if (isCurrentRun()) {
+            safeSetState("not-authenticated");
+          }
+        }
       }
     };
 
     checkAdminAccess();
-  }, [authReady]);
 
-  // Callback for when MFA verification succeeds
-  const handleMfaSuccess = () => {
-    setAdminState("authorized");
-  };
+    // Cleanup: mark this run as stale (runIdRef will have been incremented by next run)
+    // No explicit cleanup needed since we use runIdRef comparison
+  }, [checkTrigger]);
+
+  // Callback for when MFA verification succeeds - triggers re-check
+  // Uses belt + braces: immediate check + fallback timeout
+  const handleMfaSuccess = useCallback(async () => {
+    // First, wait a tick for Supabase to update session/AAL internally
+    await supabase.auth.getSession();
+
+    // Trigger immediate re-check
+    setCheckTrigger((prev) => prev + 1);
+
+    // Fallback: trigger another re-check after 250ms in case the first was too early
+    setTimeout(() => {
+      setCheckTrigger((prev) => prev + 1);
+    }, 250);
+  }, []);
 
   // Loading state (while auth hydrates or checks run)
   if (adminState === "loading") {
