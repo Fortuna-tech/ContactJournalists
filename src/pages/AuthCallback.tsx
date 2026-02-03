@@ -124,6 +124,7 @@ const AuthCallback = () => {
 
         // Set up auth state listener to catch session from any flow
         // (PKCE code exchange OR hash-based token detection)
+        if (DEBUG_AUTH) console.log("[CALLBACK] Setting up auth state listener...");
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
           async (event, session) => {
             if (DEBUG_AUTH) console.log("[CALLBACK] auth state change", { event, hasSession: !!session });
@@ -137,8 +138,9 @@ const AuthCallback = () => {
         );
 
         // Check if we already have a session (handles page refresh or detectSessionInUrl already processed)
+        if (DEBUG_AUTH) console.log("[CALLBACK] Calling getSession()...");
         const { data: existingSessionData } = await supabase.auth.getSession();
-        if (DEBUG_AUTH) console.log("[CALLBACK] existing session check", { hasSession: !!existingSessionData?.session });
+        if (DEBUG_AUTH) console.log("[CALLBACK] getSession() returned", { hasSession: !!existingSessionData?.session });
         
         if (existingSessionData?.session && !hasCompleted.current) {
           if (DEBUG_AUTH) console.log("[CALLBACK] Already have session, redirecting...");
@@ -156,9 +158,10 @@ const AuthCallback = () => {
         
         if (code) {
           // PKCE flow - exchange code for session
-          if (DEBUG_AUTH) console.log("[CALLBACK] Found code, exchanging...");
+          if (DEBUG_AUTH) console.log("[CALLBACK] Found code, calling exchangeCodeForSession...");
           
           const { data: exchangeData, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+          if (DEBUG_AUTH) console.log("[CALLBACK] exchangeCodeForSession returned");
           
           if (DEBUG_AUTH) console.log("[CALLBACK] exchange result", { 
             hasSession: !!exchangeData?.session, 
