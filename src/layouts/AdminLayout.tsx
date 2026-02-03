@@ -305,6 +305,7 @@ const EmergencyBypassLayout = ({ children }: { children?: React.ReactNode }) => 
 // ============================================================================
 const AdminLayoutInner = ({ children }: { children?: React.ReactNode }) => {
   const [adminState, setAdminState] = useState<AdminState>("loading");
+  const [authReady, setAuthReady] = useState(false);
   const [checkTrigger, setCheckTrigger] = useState(0);
 
   // Ref to track the current run ID - prevents stale async runs from updating state
@@ -315,12 +316,20 @@ const AdminLayoutInner = ({ children }: { children?: React.ReactNode }) => {
     return loadAdminFonts();
   }, []);
 
-  // Subscribe to auth state changes - triggers re-check on relevant events
+  // Subscribe to auth state changes - wait for initial hydration, then trigger re-checks
   useEffect(() => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event) => {
-      // Re-check admin access on these events
+      // INITIAL_SESSION fires when Supabase loads session from storage
+      // This is our signal that auth is hydrated and ready to check
+      if (event === "INITIAL_SESSION") {
+        setAuthReady(true);
+        setCheckTrigger((prev) => prev + 1);
+        return;
+      }
+
+      // Re-check admin access on these events (only after auth is ready)
       if (
         event === "SIGNED_IN" ||
         event === "TOKEN_REFRESHED" ||
@@ -328,6 +337,7 @@ const AdminLayoutInner = ({ children }: { children?: React.ReactNode }) => {
         event === "MFA_CHALLENGE_VERIFIED" ||
         event === "SIGNED_OUT"
       ) {
+        setAuthReady(true); // Ensure authReady is true
         setCheckTrigger((prev) => prev + 1);
       }
     });
@@ -337,8 +347,11 @@ const AdminLayoutInner = ({ children }: { children?: React.ReactNode }) => {
     };
   }, []);
 
-  // Check admin access - runs on mount and when checkTrigger changes
+  // Check admin access - only runs after auth is hydrated (authReady=true)
   useEffect(() => {
+    // Don't run until auth is hydrated
+    if (!authReady) return;
+
     // Increment runId for this run - any previous runs become stale
     const thisRunId = ++runIdRef.current;
 
@@ -451,7 +464,7 @@ const AdminLayoutInner = ({ children }: { children?: React.ReactNode }) => {
 
     // Cleanup: mark this run as stale (runIdRef will have been incremented by next run)
     // No explicit cleanup needed since we use runIdRef comparison
-  }, [checkTrigger]);
+  }, [authReady, checkTrigger]);
 
   // Callback for when MFA verification succeeds - triggers re-check
   // Uses belt + braces: immediate check + fallback timeout
