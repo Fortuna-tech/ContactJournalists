@@ -3,6 +3,17 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+// Redirect auth code to /auth/callback if landing on wrong page
+// This handles Supabase magic links that redirect to Site URL (/) with ?code=
+if (
+  window.location.search.includes("code=") &&
+  !window.location.pathname.startsWith("/auth/callback")
+) {
+  window.location.replace(
+    `/auth/callback${window.location.search}${window.location.hash || ""}`
+  );
+}
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
