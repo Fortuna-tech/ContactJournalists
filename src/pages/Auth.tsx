@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import type { Session } from "@supabase/supabase-js";
 
-// Log Supabase URL in development only for debugging
+// Log config in development only for debugging
 if (import.meta.env.DEV) {
   console.log("[AUTH] Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
 }
@@ -124,14 +124,9 @@ const Auth = () => {
       setOtpError(null);
 
       console.log("[AUTH OTP] sending to", email);
-      console.log("[AUTH OTP] redirect URL:", `${window.location.origin}/auth/callback`);
 
-      const { data, error } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
+      // Let Supabase use its configured Site URL for redirect
+      const { data, error } = await supabase.auth.signInWithOtp({ email });
 
       console.log("[AUTH OTP] result", { data, error });
 
@@ -163,11 +158,11 @@ const Auth = () => {
 
   const googleMutation = useMutation({
     mutationFn: async () => {
+      console.log("[AUTH GOOGLE] initiating OAuth");
+      
+      // Let Supabase use its configured Site URL for redirect
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
       });
       if (error) throw error;
     },

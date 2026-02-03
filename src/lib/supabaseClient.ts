@@ -15,10 +15,15 @@ if (!supabaseAnonKey) {
   );
 }
 
+// Single source of truth for site URL - use env var in production, fallback to origin in dev
+export const SITE_URL =
+  import.meta.env.VITE_SITE_URL || window.location.origin;
+
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: true,
+    flowType: "pkce",
   },
 });

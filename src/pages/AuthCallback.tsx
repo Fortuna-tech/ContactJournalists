@@ -1,18 +1,23 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase, SITE_URL } from "@/lib/supabaseClient";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import AuthDebugPanel from "@/components/ui/AuthDebugPanel";
 
 type AuthState = "processing" | "error" | "success";
-type RedirectReason = "none" | "onboarding" | "journalist" | "feed" | "auth_failed" | "no_session" | "exchange_failed" | "timeout";
+type RedirectReason = "none" | "onboarding" | "journalist" | "feed" | "next_param" | "auth_failed" | "no_session" | "exchange_failed" | "timeout";
 
 // Hard timeout to prevent infinite loading
 const AUTH_TIMEOUT_MS = 8000;
 
 // Gate debug logs: only in dev or with ?debug param
 const DEBUG_AUTH = import.meta.env.DEV || new URLSearchParams(window.location.search).has("debug");
+
+// Log SITE_URL on mount for debugging
+if (DEBUG_AUTH) {
+  console.log("[CALLBACK] SITE_URL:", SITE_URL);
+}
 
 const AuthCallback = () => {
   const navigate = useNavigate();
@@ -50,6 +55,18 @@ const AuthCallback = () => {
       hasCompleted.current = true;
       setAuthReady(true);
       setSessionUserId(userId);
+
+      console.log("[CALLBACK] exchangeCodeForSession succeeded, userId:", userId);
+
+      // Check for `next` query param for custom redirect
+      const nextParam = searchParams.get("next");
+      if (nextParam && nextParam.startsWith("/")) {
+        setLastRedirectReason("next_param");
+        setAuthState("success");
+        if (DEBUG_AUTH) console.log("[CALLBACK] redirecting to next param:", nextParam);
+        navigate(nextParam, { replace: true });
+        return;
+      }
 
       // Check if user has completed onboarding
       const { data: profile } = await supabase
@@ -163,7 +180,7 @@ const AuthCallback = () => {
       mounted = false;
       clearTimeout(timeoutId);
     };
-  }, [navigate, toast]);
+  }, [navigate, toast, searchParams]);
 
   const handleRequestNewLink = () => {
     navigate("/auth", { replace: true });
