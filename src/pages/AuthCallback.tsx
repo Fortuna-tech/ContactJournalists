@@ -63,25 +63,37 @@ const AuthCallback = () => {
       if (nextParam && nextParam.startsWith("/")) {
         setLastRedirectReason("next_param");
         setAuthState("success");
-        if (DEBUG_AUTH) console.log("[CALLBACK] redirecting to next param:", nextParam);
-        navigate(nextParam, { replace: true });
+        console.log("[CALLBACK] redirecting to next param:", nextParam);
+        window.location.href = nextParam;
         return;
       }
 
       // Check if user has completed onboarding
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("onboarding_complete, role")
-        .eq("id", userId)
-        .maybeSingle();
+      let profile = null;
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("onboarding_complete, role")
+          .eq("id", userId)
+          .maybeSingle();
+        
+        if (error) {
+          console.error("[CALLBACK] Profile fetch error:", error.message);
+        }
+        profile = data;
+        console.log("[CALLBACK] profile:", profile);
+      } catch (err) {
+        console.error("[CALLBACK] Profile fetch exception:", err);
+      }
 
       if (!mounted) return;
 
+      // No profile or onboarding not complete -> go to onboarding
       if (!profile?.onboarding_complete) {
         setLastRedirectReason("onboarding");
         setAuthState("success");
-        if (DEBUG_AUTH) console.log("[CALLBACK] redirecting to /onboarding");
-        navigate("/onboarding", { replace: true });
+        console.log("[CALLBACK] redirecting to /onboarding");
+        window.location.href = "/onboarding";
         return;
       }
 
@@ -89,81 +101,105 @@ const AuthCallback = () => {
       if (profile.role === "journalist") {
         setLastRedirectReason("journalist");
         setAuthState("success");
-        if (DEBUG_AUTH) console.log("[CALLBACK] redirecting to /journalist/dashboard");
-        navigate("/journalist/dashboard", { replace: true });
+        console.log("[CALLBACK] redirecting to /journalist/dashboard");
+        window.location.href = "/journalist/dashboard";
         return;
       }
 
       // All other roles (founder, agency, admin) go to /feed
       setLastRedirectReason("feed");
       setAuthState("success");
-      if (DEBUG_AUTH) console.log("[CALLBACK] redirecting to /feed");
-      navigate("/feed", { replace: true });
+      console.log("[CALLBACK] redirecting to /feed");
+      window.location.href = "/feed";
     };
 
     const handleAuthCallback = async () => {
       try {
-        // TEMP DEBUG: Log incoming URL
-        if (DEBUG_AUTH) console.log("[CALLBACK] url", window.location.href);
+        // Log incoming URL always for production debugging
+        console.log("[CALLBACK] url", window.location.href);
+        console.log("[CALLBACK] search params", window.location.search);
         
-        // Set up auth state listener BEFORE exchanging code
-        // This ensures we catch the SIGNED_IN event
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(
-          async (event, session) => {
-            if (DEBUG_AUTH) console.log("[CALLBACK] auth state change", { event, hasSession: !!session });
-            
-            if (event === "SIGNED_IN" && session) {
-              if (DEBUG_AUTH) console.log("[CALLBACK] SIGNED_IN event received, session confirmed");
-              await handleRedirectWithSession(session.user.id);
-            }
-          }
-        );
+        // First check if we already have a session (handles page refresh case)
+        const { data: existingSessionData } = await supabase.auth.getSession();
+        console.log("[CALLBACK] existing session check", { hasSession: !!existingSessionData?.session });
+        
+        if (existingSessionData?.session && !hasCompleted.current) {
+          console.log("[CALLBACK] Already have session, redirecting...");
+          await handleRedirectWithSession(existingSessionData.session.user.id);
+          return;
+        }
 
-        // Step 1: Explicitly exchange the code/token from URL
-        const { data: exchangeData, error: exchangeError } = await supabase.auth.exchangeCodeForSession(window.location.href);
+        // Check if we have a code to exchange
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get("code");
         
-        // TEMP DEBUG: Log exchange result
-        if (DEBUG_AUTH) console.log("[CALLBACK] exchange result", { data: exchangeData, error: exchangeError });
+        if (!code) {
+          console.error("[CALLBACK] No code in URL and no existing session");
+          if (mounted && !hasCompleted.current) {
+            hasCompleted.current = true;
+            setAuthReady(true);
+            setLastRedirectReason("exchange_failed");
+            setErrorMessage("No authentication code found. Please request a new magic link.");
+            setAuthState("error");
+          }
+          return;
+        }
+
+        console.log("[CALLBACK] Found code, exchanging...");
+
+        // Exchange the code for a session
+        const { data: exchangeData, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+        
+        console.log("[CALLBACK] exchange result", { 
+          hasSession: !!exchangeData?.session, 
+          error: exchangeError?.message 
+        });
         
         if (exchangeError) {
           console.error("[CALLBACK] Exchange failed:", exchangeError.message);
           
           // Check if we already have a session (code might have been used already)
-          const { data: existingSession } = await supabase.auth.getSession();
-          if (DEBUG_AUTH) console.log("[CALLBACK] existing session check", { hasSession: !!existingSession?.session });
+          const { data: retrySession } = await supabase.auth.getSession();
+          console.log("[CALLBACK] retry session check", { hasSession: !!retrySession?.session });
           
-          if (existingSession?.session) {
+          if (retrySession?.session) {
             // Session exists, proceed with redirect
-            await handleRedirectWithSession(existingSession.session.user.id);
+            await handleRedirectWithSession(retrySession.session.user.id);
           } else {
             // No session and exchange failed - real error
             if (mounted && !hasCompleted.current) {
               hasCompleted.current = true;
               setAuthReady(true);
               setLastRedirectReason("exchange_failed");
-              setErrorMessage("Login link expired or already used. Please request a new magic link.");
+              setErrorMessage(`Login link expired or already used: ${exchangeError.message}`);
               setAuthState("error");
             }
           }
-          subscription.unsubscribe();
           return;
         }
 
-        // Exchange succeeded - the onAuthStateChange listener will handle redirect
-        // But also verify session directly as a fallback
-        const { data } = await supabase.auth.getSession();
-        if (DEBUG_AUTH) console.log("[SESSION] after exchange", { session: data?.session ? "exists" : "null", userId: data?.session?.user?.id });
-
-        if (data?.session && !hasCompleted.current) {
-          // Session confirmed, proceed with redirect
-          await handleRedirectWithSession(data.session.user.id);
+        // Exchange succeeded - get session and redirect
+        if (exchangeData?.session && !hasCompleted.current) {
+          console.log("[CALLBACK] Exchange succeeded, session userId:", exchangeData.session.user.id);
+          await handleRedirectWithSession(exchangeData.session.user.id);
+        } else {
+          // Fallback: try getSession
+          const { data: fallbackSession } = await supabase.auth.getSession();
+          console.log("[CALLBACK] fallback session", { hasSession: !!fallbackSession?.session });
+          
+          if (fallbackSession?.session && !hasCompleted.current) {
+            await handleRedirectWithSession(fallbackSession.session.user.id);
+          } else if (!hasCompleted.current) {
+            hasCompleted.current = true;
+            setAuthReady(true);
+            setLastRedirectReason("no_session");
+            setErrorMessage("Session could not be established. Please try again.");
+            setAuthState("error");
+          }
         }
 
-        // Cleanup subscription after handling
-        setTimeout(() => subscription.unsubscribe(), 1000);
-
       } catch (error) {
-        console.error("Auth callback error:", error);
+        console.error("[CALLBACK] Auth callback error:", error);
         if (mounted && !hasCompleted.current) {
           hasCompleted.current = true;
           setAuthReady(true);
