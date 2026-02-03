@@ -125,8 +125,16 @@ const Auth = () => {
 
       console.log("[AUTH OTP] sending to", email);
 
-      // Let Supabase use its configured Site URL for redirect
-      const { data, error } = await supabase.auth.signInWithOtp({ email });
+      // Explicitly set redirect to current origin to ensure PKCE code verifier matches
+      const redirectTo = `${window.location.origin}/auth/callback`;
+      console.log("[AUTH OTP] redirectTo:", redirectTo);
+
+      const { data, error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: redirectTo,
+        },
+      });
 
       console.log("[AUTH OTP] result", { data, error });
 
@@ -160,9 +168,15 @@ const Auth = () => {
     mutationFn: async () => {
       console.log("[AUTH GOOGLE] initiating OAuth");
       
-      // Let Supabase use its configured Site URL for redirect
+      // Explicitly set redirect to current origin to ensure PKCE code verifier matches
+      const redirectTo = `${window.location.origin}/auth/callback`;
+      console.log("[AUTH GOOGLE] redirectTo:", redirectTo);
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
+        options: {
+          redirectTo,
+        },
       });
       if (error) throw error;
     },
