@@ -963,7 +963,7 @@ const Index = () => {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {/* Featured Blog Post – How to Reach Food, Fitness, Beauty & Tech Journalists */}
+              {/* Featured Blog Post – Contacting Journalists for Product Launches */}
               <article className="md:col-span-2 lg:col-span-3 rounded-2xl border-2 border-green-500 bg-[#F5F5DC] p-4 sm:p-6 md:p-8 hover:shadow-lg transition-all relative">
                 <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 bg-gradient-to-r from-purple-500 to-green-500 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold text-white uppercase tracking-wide shadow-lg">
                   Latest Guide
@@ -973,47 +973,41 @@ const Index = () => {
                     Featured Guide
                   </span>
                   <span className="text-[10px] sm:text-xs text-slate-500">•</span>
-                  <span className="text-[10px] sm:text-xs text-slate-500">January 2026</span>
+                  <span className="text-[10px] sm:text-xs text-slate-500">February 2026</span>
                 </div>
 
                 <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-black mb-3 sm:mb-4">
-                  How to Reach{" "}
+                  Contacting Journalists for{" "}
                   <mark className="bg-green-200 text-green-800 px-1 sm:px-2 py-0.5 sm:py-1 rounded text-base sm:text-lg md:text-2xl">
-                    Food, Fitness, Beauty & Tech
-                  </mark>{" "}
-                  Journalists
+                    Product Launches
+                  </mark>
                 </h3>
 
                 <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
                   <img
-                    src="/assets/fortuna-founder-feathers.png"
-                    alt="Fortuna Burke, founder of ContactJournalists.com"
+                    src="/assets/product-launch-pr-1.png"
+                    alt="Founder workspace - cozy laptop setup"
                     className="w-full md:w-48 h-40 sm:h-48 object-cover rounded-xl flex-shrink-0"
                   />
                   <div className="flex-1">
                     <p className="text-sm sm:text-base text-slate-600 mb-3 sm:mb-4">
-                      If you're trying to reach food, fitness, beauty, or tech
-                      journalists, the hardest part isn't writing a pitch — it's
-                      finding the{" "}
+                      Product launch PR feels awful because founders and journalists are working to{" "}
                       <mark className="bg-purple-200 text-purple-800 px-1 rounded">
-                        right people, in the right places, at the right moment
+                        completely different clocks
                       </mark>
-                      .
+                      . Most launch outreach fails quietly, not because the product is boring, but because it's sent when journalists aren't looking.
                     </p>
 
                     <p className="text-sm sm:text-base text-slate-600 mb-3 sm:mb-4">
-                      This guide breaks down where journalists in each niche
-                      actually hang out now, how they prefer to be contacted,
-                      and why journalist requests flip PR from "guessing" to
-                      "responding".
+                      A founder's honest guide to when PR actually works during a launch, why silence isn't personal, and how to stop guessing.
                     </p>
 
                     <a
-                      href="/blog/how-to-reach-food-fitness-beauty-tech-journalists"
+                      href="/blog/contacting-journalists-for-product-launches"
                       onClick={(e) => {
                         e.preventDefault();
                         window.location.href =
-                          "/blog/how-to-reach-food-fitness-beauty-tech-journalists";
+                          "/blog/contacting-journalists-for-product-launches";
                       }}
                       className="inline-flex items-center gap-2 rounded-full bg-[#D8B4FE] px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-black border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150"
                     >
@@ -1034,6 +1028,59 @@ const Index = () => {
                     </a>
                   </div>
                 </div>
+              </article>
+
+              {/* How to Reach Food, Fitness, Beauty & Tech Journalists */}
+              <article className="rounded-2xl border-2 border-purple-500 bg-[#F5F5DC] p-4 sm:p-6 hover:shadow-lg transition-all relative">
+                <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 bg-gradient-to-r from-purple-500 to-green-500 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold text-white uppercase tracking-wide shadow-lg">
+                  Popular
+                </div>
+                <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                  <span className="text-[10px] sm:text-xs font-semibold text-purple-600 uppercase tracking-wide">
+                    Featured Guide
+                  </span>
+                  <span className="text-[10px] sm:text-xs text-slate-500">•</span>
+                  <span className="text-[10px] sm:text-xs text-slate-500">January 2026</span>
+                </div>
+
+                <h3 className="text-base sm:text-lg md:text-xl font-bold text-black mb-2 sm:mb-3">
+                  How to Reach Food, Fitness, Beauty & Tech Journalists
+                </h3>
+
+                <p className="text-xs sm:text-sm text-slate-600 mb-3 sm:mb-4">
+                  The hardest part isn't writing a pitch — it's finding the right people. This guide breaks down where journalists in each niche actually hang out now.
+                </p>
+
+                <div className="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-slate-500 mb-3 sm:mb-4">
+                  <time>January 2026</time>
+                  <span>•</span>
+                  <span>25 min read</span>
+                </div>
+
+                <a
+                  href="/blog/how-to-reach-food-fitness-beauty-tech-journalists"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href =
+                      "/blog/how-to-reach-food-fitness-beauty-tech-journalists";
+                  }}
+                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-500 to-green-500 px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white hover:opacity-90 transition-opacity"
+                >
+                  Read Full Guide
+                  <svg
+                    className="h-3 w-3 sm:h-4 sm:w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
               </article>
 
               {/* How to Build a Media List - NEW */}
